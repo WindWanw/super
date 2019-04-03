@@ -1,0 +1,333 @@
+<template>
+  <div class="agent">
+    <div class="table_title">
+      <el-button
+        type="primary"
+        size="small"
+        icon="el-icon-plus"
+        @click="openAddEditDialog('add')"
+      >添加代理商</el-button>
+      <div class="search_wrap">
+        <el-input clearable v-model="username" placeholder="请输入名称" size="small" style="width:200px"></el-input>
+        <el-select clearable v-model="status" placeholder="请选择用户类型" size="small">
+          <el-option label="正常" :value="1"></el-option>
+          <el-option label="禁用" :value="-1"></el-option>
+        </el-select>
+        <el-date-picker
+          value-format="timestamp"
+          size="small"
+          v-model="date"
+          type="daterange"
+          align="right"
+          unlink-panels
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          :picker-options="pickerOptions"
+        ></el-date-picker>
+        <el-button type="primary" icon="el-icon-search" size="small" @click="search">搜索</el-button>
+      </div>
+    </div>
+    <div class="content" style="width:100%">
+      <el-table :data="dataList.list" stripe border style="width:100%">
+        <el-table-column prop="username" label="代理商名称"></el-table-column>
+        <el-table-column prop="city" label="代理地区"></el-table-column>
+        <el-table-column prop="name" label="联系人姓名"></el-table-column>
+        <el-table-column prop="address" label="联系人地址"></el-table-column>
+        <el-table-column prop="tel" label="手机号码"></el-table-column>
+        <el-table-column prop="idcard" label="身份证号码"></el-table-column>
+        <el-table-column prop="city" label="附件信息">
+          <template slot-scope>
+            <el-button type="primary" size="mini">点击查看</el-button>
+          </template>
+        </el-table-column>
+        <el-table-column prop label="账号状态">
+          <template slot-scope="scope">
+            <el-button size="mini" :title="scope.row.status=='1'?'点击禁用':'点击解除禁用'" @click="userStop(scope.row.id)" :type="scope.row.status=='1'?'success':'info'">{{scope.row.status | userStatus}}</el-button>
+          </template>
+        </el-table-column>
+        <el-table-column prop="times" label="代理时间">
+          <template slot-scope="scope">{{scope.row.times | formatTimeStamp}}</template>
+        </el-table-column>
+        <el-table-column prop label="操作">
+          <template slot-scope="scope">
+            <div class="cz_btn">
+              <el-button
+                @click="openAddEditDialog('edit',scope.row)"
+                type="warning"
+                size="mini"
+                icon="el-icon-edit"
+              >编辑</el-button>
+            </div>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-pagination
+        background
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="page"
+        :page-sizes="[10, 20, 50, 100]"
+        :page-size="limit"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="dataList.total"
+      ></el-pagination>
+    </div>
+
+    <!-- 添加dialog -->
+    <el-dialog
+      top="20px"
+      :title="form.id?'编辑':'添加'"
+      :visible.sync="AddEditDialog"
+      width="650px"
+      @close="$refs['ruleForm'].resetFields()"
+    >
+      <el-form status-icon :model="form" :rules="rules" ref="ruleForm" label-width="120px">
+        <el-form-item label="代理商名称" prop="username">
+          <el-input v-model="form.username"></el-input>
+        </el-form-item>
+        <el-form-item label="代理地区" prop="city">
+          <el-input v-model="form.city"></el-input>
+        </el-form-item>
+        <el-form-item label="联系人姓名" prop="name">
+          <el-input v-model="form.name"></el-input>
+        </el-form-item>
+        <el-form-item label="联系人地址" prop="address">
+          <el-input v-model="form.address"></el-input>
+        </el-form-item>
+        <el-form-item label="手机号码" prop="tel">
+          <el-input v-model="form.tel"></el-input>
+        </el-form-item>
+        <el-form-item label="身份证号码" prop="idcard">
+          <el-input v-model="form.idcard"></el-input>
+        </el-form-item>
+        <el-form-item label="身份证正反面" prop="pic">
+          <upload :imgList="form.pic" :width="300" :height="150"></upload>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="AddEditDialog = false">取 消</el-button>
+        <el-button type="primary" @click="addEdit">确 定</el-button>
+      </div>
+    </el-dialog>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      pickerOptions: {
+        //快捷键
+        shortcuts: [
+          {
+            text: "最近一周",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit("pick", [start, end]);
+            }
+          },
+          {
+            text: "最近一个月",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit("pick", [start, end]);
+            }
+          },
+          {
+            text: "最近三个月",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              picker.$emit("pick", [start, end]);
+            }
+          }
+        ]
+      },
+      fileList: [],
+      username: "", //名称
+      date: "", //日期
+      status: "", //状态
+      page: 1, //页
+      limit: 10, //条
+      dataList: [], //数据源
+      AddEditDialog: false,
+      form: {
+        username: "",
+        city: "",
+        tel: "",
+        id: "",
+        name: "",
+        address: "",
+        idcard: "",
+        pic: []
+      },
+      rules: {
+        username: [
+          { required: true, message: "代理商名称不能为空", trigger: "blur" }
+        ],
+        city: [
+          { required: true, message: "代理地区不能为空", trigger: "blur" }
+        ],
+        tel: [
+          { validator: this.$rules.checkPhone, required: true, trigger: "blur" }
+        ],
+        name: [
+          { required: true, message: "联系人姓名不能为空", trigger: "blur" }
+        ],
+        address: [
+          { required: true, message: "联系地址不能为空", trigger: "blur" }
+        ],
+        idcard: [
+          { validator: this.$rules.checkId, required: true, trigger: "blur" }
+        ],
+        pic: [
+          { required: true, message: "身份证正反面不能为空", trigger: "blur" }
+        ]
+      }
+    }
+  },
+  methods: {
+    // 切换limit
+    handleSizeChange(val) {
+      this.limit = val;
+      this.getDataList();
+    },
+    //  切换page
+    handleCurrentChange(val) {
+      this.page = val;
+      this.getDataList();
+    },
+    //获取代理商列表
+    getDataList() {
+      this.$api
+        .getAgentList({
+          page: this.page,
+          limit: this.limit,
+          times: this.date,
+          status: this.status,
+          username: this.username
+        })
+        .then(res => {
+          this.dataList = res.data || [];
+        });
+    },
+    //查询
+    search() {
+      this.page = 1;
+      this.getDataList();
+    },
+    // 打开添加或修改
+    openAddEditDialog(type, item) {
+      let that = this;
+      if (type == "add") {
+        for (let i in that.form) {
+          if (i == "pic") {
+            that.form[i] = [];
+          } else {
+            that.form[i] = "";
+          }
+        }
+      } else {
+        that.form.id = item.id;
+        that.form.username = item.username;
+        that.form.city = item.city;
+        that.form.tel = item.tel;
+        that.form.address = item.address;
+        that.form.name = item.name;
+        that.form.idcard = item.idcard;
+        that.form.pic = that.$options.filters.copyArray(item.pic);
+      }
+
+      that.AddEditDialog = true;
+    },
+    
+    // 添加修改
+    addEdit(type, item) {
+      let that = this;
+      this.$refs.ruleForm.validate(valid => {
+        if (valid) {
+          that.$api
+            .addEditAgent({
+              id: that.form.id,
+              username: that.form.username,
+              password: that.form.password,
+              tel: that.form.tel,
+              city: that.form.city,
+              material: {
+                name: that.form.name,
+                sex: that.form.sex,
+                age: that.form.age,
+                id: that.form.id,
+                native_place: that.form.native_place,
+                pictrue: that.form.pictrue
+              }
+            })
+            .then(res => {
+              if (!res.code) {
+                that.$message.success(res.data.message);
+                if (!that.form.id) {
+                  this.page = 1;
+                }
+                that.getDataList();
+                this.openAddEditDialog = false;
+              } else {
+                that.$message.error(res.data.message);
+              }
+            });
+        } else {
+          return false;
+        }
+      });
+    },
+    // 停用用户
+    userStop(id) {
+      this.$confirm("确认进行该项操作吗?", "提示", { type: "warning" })
+        .then(() => {
+          this.$api
+            .userStop({
+              uid: id
+            })
+            .then(res => {
+              this.$message[res.code ? "warning" : "success"](res.data);
+              this.getDataList();
+            });
+        })
+        .catch(() => {
+          this.$message.info("已取消删除");
+        });
+    },
+  },
+  created() {
+    this.getDataList();
+  }
+};
+</script>
+
+<style scoped>
+.content {
+  background-color: #fff;
+  padding: 20px;
+  box-sizing: border-box;
+}
+.avatar {
+  width: 30px;
+  height: 30px;
+}
+.el-form {
+  width: 500px;
+  margin: 0 auto;
+}
+.img {
+  width: 80px;
+  height: 80px;
+  padding: 10px;
+  border: 1px dashed #ddd;
+  box-sizing: border-box;
+}
+</style>
