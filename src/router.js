@@ -16,7 +16,8 @@ const checkMenage = () => import(/* webpackChunkName: "checkMenage" */ './views/
 const agentSh = () => import(/* webpackChunkName: "agentSh" */ './views/checkMenage/agentSh.vue')
 const sellerSh = () => import(/* webpackChunkName: "sellerSh" */ './views/checkMenage/sellerSh.vue')
 
-
+const order = () => import(/* webpackChunkName: "order" */ './views/order.vue')
+const teacher = () => import(/* webpackChunkName: "teacher" */ './views/teacher.vue')
 const ad = () => import(/* webpackChunkName: "ad" */ './views/ad.vue')
 const systemArticle = () => import(/* webpackChunkName: "systenArticle" */ './views/systemArticle.vue')
 const userSetting = () => import(/* webpackChunkName: "userSetting" */ './views/userSetting.vue')
@@ -117,11 +118,29 @@ export const asyRouter = [
     ]
   },
   {
+    path: '/order',
+    name: 'order',
+    component: order,
+    meta: {
+      name: '订单管理',
+      iconfont: 'el-icon-loading',
+    }
+  },
+  {
     path: '/ad',
     name: 'ad',
     component: ad,
     meta: {
       name: '广告位管理',
+      iconfont: 'el-icon-loading',
+    }
+  },
+  {
+    path: '/teacher',
+    name: 'teacher',
+    component: teacher,
+    meta: {
+      name: '专引师管理',
       iconfont: 'el-icon-loading',
     }
   },

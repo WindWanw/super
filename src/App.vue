@@ -60,4 +60,36 @@ body,html,#app{
     margin-bottom: 0;
     width: 50%;
   }
+  /* 图片大小定义 */
+  .idcard_img{
+    display: inline-block;
+    width: 240px;
+    height: 150px;
+    border:1px dashed #ddd;
+    box-sizing: border-box;
+    margin-right: 20px;
+  }
+  .license_img{
+    display: inline-block;
+    width: 200px;
+    height: 300px;
+    border:1px dashed #ddd;
+    box-sizing: border-box;
+  }
+  .expand_wrap{
+    /* display: flex;
+    flex-wrap: wrap; */
+  }
+  .expand_wrap p{
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+  }
+  .expand_wrap p span{
+    width: 120px;
+    text-align: right;
+    padding-right: 20px;
+    box-sizing: border-box;
+    color: #99a9bf;
+  }
 </style>

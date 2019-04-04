@@ -30,17 +30,25 @@
     </div>
     <div class="content" style="width:100%">
       <el-table :data="dataList.list" stripe border style="width:100%">
-        <el-table-column prop="username" label="代理商名称"></el-table-column>
+        <el-table-column type="expand">
+      <template slot-scope="props">
+        <el-form label-position="left" inline class="demo-table-expand" label-width="120px">
+          <el-form-item label="身份证号码">
+            <span>{{ props.row.idcard }}</span>
+          </el-form-item>
+          <el-form-item label="身份证正反面">
+            <div style="display:flex;flex-wrap:wrap">
+              <img class="idcardImg" :src="item" v-for="(item,index) in props.row.pic" :key="index">
+            </div>
+          </el-form-item>
+        </el-form>
+      </template>
+    </el-table-column>
         <el-table-column prop="city" label="代理地区"></el-table-column>
+        <el-table-column prop="username" label="账号"></el-table-column>
         <el-table-column prop="name" label="联系人姓名"></el-table-column>
         <el-table-column prop="address" label="联系人地址"></el-table-column>
         <el-table-column prop="tel" label="手机号码"></el-table-column>
-        <el-table-column prop="idcard" label="身份证号码"></el-table-column>
-        <el-table-column prop="city" label="附件信息">
-          <template slot-scope>
-            <el-button type="primary" size="mini">点击查看</el-button>
-          </template>
-        </el-table-column>
         <el-table-column prop label="账号状态">
           <template slot-scope="scope">
             <el-button size="mini" :title="scope.row.status=='1'?'点击禁用':'点击解除禁用'" @click="userStop(scope.row.id)" :type="scope.row.status=='1'?'success':'info'">{{scope.row.status | userStatus}}</el-button>
@@ -83,11 +91,14 @@
       @close="$refs['ruleForm'].resetFields()"
     >
       <el-form status-icon :model="form" :rules="rules" ref="ruleForm" label-width="120px">
-        <el-form-item label="代理商名称" prop="username">
-          <el-input v-model="form.username"></el-input>
-        </el-form-item>
         <el-form-item label="代理地区" prop="city">
           <el-input v-model="form.city"></el-input>
+        </el-form-item>
+        <el-form-item label="账号" v-if="!form.id" :prop="form.id?'':'username'">
+          <el-input v-model="form.username"></el-input>
+        </el-form-item>
+        <el-form-item label="密码" :prop="form.id?'':'password'">
+          <el-input type="password" v-model="form.password"></el-input>
         </el-form-item>
         <el-form-item label="联系人姓名" prop="name">
           <el-input v-model="form.name"></el-input>
@@ -159,6 +170,7 @@ export default {
       AddEditDialog: false,
       form: {
         username: "",
+        password:'',
         city: "",
         tel: "",
         id: "",
@@ -169,7 +181,10 @@ export default {
       },
       rules: {
         username: [
-          { required: true, message: "代理商名称不能为空", trigger: "blur" }
+          { required: true, message: "账号不能为空", trigger: "blur" }
+        ],
+        password: [
+          { required: true, message: "密码不能为空", trigger: "blur" }
         ],
         city: [
           { required: true, message: "代理地区不能为空", trigger: "blur" }
@@ -235,7 +250,8 @@ export default {
         }
       } else {
         that.form.id = item.id;
-        that.form.username = item.username;
+        that.form.username=item.username;
+        that.form.password=item.password;
         that.form.city = item.city;
         that.form.tel = item.tel;
         that.form.address = item.address;
@@ -252,20 +268,17 @@ export default {
       let that = this;
       this.$refs.ruleForm.validate(valid => {
         if (valid) {
-          that.$api
-            .addEditAgent({
+          that.$api[that.form.id?'editAgent':'addAgent']({
               id: that.form.id,
-              username: that.form.username,
-              password: that.form.password,
-              tel: that.form.tel,
               city: that.form.city,
+              tel: that.form.tel,
+              username:that.form.username,
+              password:that.form.password || '',
               material: {
+                pic: that.form.pic,
                 name: that.form.name,
-                sex: that.form.sex,
-                age: that.form.age,
-                id: that.form.id,
-                native_place: that.form.native_place,
-                pictrue: that.form.pictrue
+                idcard: that.form.idcard,
+                address: that.form.address,
               }
             })
             .then(res => {
@@ -275,7 +288,7 @@ export default {
                   this.page = 1;
                 }
                 that.getDataList();
-                this.openAddEditDialog = false;
+                this.AddEditDialog = false;
               } else {
                 that.$message.error(res.data.message);
               }
@@ -315,19 +328,11 @@ export default {
   padding: 20px;
   box-sizing: border-box;
 }
-.avatar {
-  width: 30px;
-  height: 30px;
-}
-.el-form {
-  width: 500px;
-  margin: 0 auto;
-}
-.img {
-  width: 80px;
-  height: 80px;
-  padding: 10px;
-  border: 1px dashed #ddd;
-  box-sizing: border-box;
+.idcardImg{
+  width: 300px;
+  height: 150px;
+  border: 1px dashed #ccc;
+  margin-right: 10px;
+  margin-top: 10px;
 }
 </style>

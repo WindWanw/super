@@ -6,7 +6,15 @@
        <div class="content">
          <el-table :data="dataList.list" stripe border>
           <el-table-column prop="city" label="城市"></el-table-column>
-          <el-table-column prop="ads" label="广告内容"></el-table-column>
+          <el-table-column prop="ads" label="广告内容">
+            <template slot-scope="scope">
+              <div><span>标题:</span>{{JSON.parse(scope.row.ads).title}}</div>
+              <div><span>链接:</span>{{JSON.parse(scope.row.ads).url}}</div>
+              <div v-if="JSON.parse(scope.row.ads).pic" >
+                <img :src="item" v-for="(item,index) in JSON.parse(scope.row.ads).pic" :key="index">
+              </div>
+            </template>
+          </el-table-column>
           <el-table-column prop="page" label="页面"></el-table-column>
           <el-table-column prop="adder" label="添加人"></el-table-column>
           <el-table-column prop="checker" label="审核人"></el-table-column>
@@ -53,7 +61,7 @@
               <el-input v-model="form.title"></el-input>
             </el-form-item>
             <el-form-item label="广告图片" :prop="form.title?'':'pic'">
-                <upload :imgList="form.pic" @getPic="getPic"></upload>
+                <upload :imgList="form.pic"></upload>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
@@ -125,18 +133,14 @@ import upload from '../components/upload';
      openAddEditDialog(type,item){
        if(type=='add'){
          for(let i in this.form){
-           if(i=='pic'){
-             this.form[i]=[];
-           }else{
              this.form[i]="";
-           }
          }
        }else{
          this.form.page=item.page;
          this.form.city=item.city;
-         this.form.title=item.ads.title || '';
-         this.form.url=item.ads.url || '';
-         this.form.pic=that.$options.filters.copyArray(item.ads.pic);
+         this.form.title=JSON.parse(item.ads).title || '';
+         this.form.url=JSON.parse(item.ads).url || '';
+         this.form.pic=this.$options.filters.copyArray(JSON.parse(item.ads.pic));
          this.form.id=item.id;
        }
        this.AddEditDialog=true;
@@ -148,7 +152,7 @@ import upload from '../components/upload';
        let that=this;
        that.$refs.ruleForm.validate(valid=>{
          if(valid){
-          let ads=JSON.stringify([{'title':that.form.title},{'pic':that.form.pic},{'url':that.form.url}]);
+          let ads=JSON.stringify({'title':that.form.title},{'pic':that.form.pic},{'url':that.form.url});
            that.$api[that.form.id?'editAd':'addAd']({
              page:that.form.page,
              city:that.form.city,
@@ -156,7 +160,10 @@ import upload from '../components/upload';
              id:that.form.id
            })
            .then(res=>{
-             this.$message[res.code?'error':'success'](res.data.message);
+             if(!res.code){
+               that.AddEditDialog=false;
+             }
+             that.$message[res.code?'error':'success'](res.data.message);
            })
          }else{
            return false;

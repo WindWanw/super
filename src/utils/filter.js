@@ -36,6 +36,46 @@ function userStatus(type){
 function sexStatus(type){
     return type==0?'男':type==1?'女':'未知';
 }
+//订单类型
+function orderStatus(type){
+    switch(type){
+        case '1':
+        return '代付款';
+        break;
+        case '2':
+        return '代发货';
+        break;
+        case '3':
+        return '已发货';
+        break;
+        case '4':
+        return '退单'
+        break;
+        case '5':
+        return '交易成功'
+        break;
+    }
+}
+// 订单类型按钮颜色
+function payStatus(status){
+    switch(status){
+        case '1':
+        return 'info';
+        break;
+        case '2':
+        return 'primary';
+        break;
+        case '3':
+        return 'warning';
+        break;
+        case '4':
+        return 'danger'
+        break;
+        case '5':
+        return 'success'
+        break;
+    }
+}
 
 //数组深拷贝
 function copyArray(arr,result){
@@ -56,5 +96,7 @@ export default{
     formatTimeStamp,
     userStatus,
     sexStatus,
-    copyArray
+    copyArray,
+    orderStatus,
+    payStatus
 }

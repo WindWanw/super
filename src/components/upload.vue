@@ -1,10 +1,11 @@
 <template>
    <div class='upload'>
        <el-upload
-        action="http://47.110.67.134:9002/common/upload"
+        :action="action"
         accept="image/jpeg,image/gif,image/png,image/bmp"
-        multiple
+        :multiple="num==1?false:true"
         :before-upload="beforeAvatarUpload"
+        :limit="num"
         :show-file-list="false"
         :on-success="handleAvatarSuccess">
         <el-button size="small" type="primary">点击上传</el-button>
@@ -21,8 +22,26 @@
 
 <script>
    export default {
-       props:['imgList','width','height'],
        name:'upload',
+       props:{
+           imgList:{
+               required: true
+           },
+           width:{
+               default:50
+           },
+           height:{
+               default:50
+           },
+           action:{
+               default:'http://47.110.67.134:9002/common/upload'
+           },
+           num:{
+               default:9
+           },
+           
+       },
+       
      data () {
        return {
 
@@ -34,19 +53,26 @@
    methods:{
        //图片上传前
        beforeAvatarUpload(file){
-
+           
        },
        //上传成功回调
        handleAvatarSuccess(res,file,fileList){
            console.log(res);
            if(res.code){
                this.$message.info('已为你自动过滤不符合要求的图片');
+           }else if(this.num==1){
+               this.imgList=res.data.host+res.data.name;
            }else{
                this.imgList.push(res.data.host+res.data.name);
            }
        },
        del(index){
-           this.imgList.splice(index,1);
+           if(this.num==1){
+                this.imgList='';
+           }else{
+               this.imgList.splice(index,1);
+           }
+           
        }
    },
    

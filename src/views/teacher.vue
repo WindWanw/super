@@ -1,5 +1,5 @@
 <template>
-  <div class="agentSh">
+  <div class="teacher">
     <div class="table_title">
     <div class="search_wrap">
       <el-input clearable v-model="username" placeholder="请输入名称" size="small" style="width:200px"></el-input>
@@ -81,7 +81,7 @@
           <el-radio :label="1">通过</el-radio>
           <el-radio :label="0">驳回</el-radio>
         </el-radio-group>
-        <el-input v-if="pass==0" style="margin-top:20px" type="textarea" :rows="2" placeholder="请输入备注信息" v-model="remark"></el-input>
+        <el-input style="margin-top:20px" type="textarea" :rows="2" placeholder="请输入备注信息" v-model="remark"></el-input>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="sure">确 定</el-button>
@@ -134,13 +134,6 @@ export default {
     };
   },
   components: {},
-  watch:{
-    pass(newVal,oldVal){
-      if(newVal==1){
-        this.remark='';
-      }
-    }
-  },
   methods: {
     //获取数据列表
     getDataList() {
@@ -172,26 +165,12 @@ export default {
       this.getDataList();
     },
     //审核通过驳回
-   
     sure(){
-      console.log(this.pass)
-      if(this.pass===''){
+      if(this.pass==''){
         this.$message.warning('请选择通过或者驳回');
-      }else if(this.pass===0 && !this.remark){
-        this.$message.warning('请填写驳回原因');
       }else{
-        this.$api.userStop({
-          uid:this.id,
-          result:this.pass==1?'':1,
-          remark:this.remark
-        })
-        .then(res=>{
-            this.dialogVisible=res.code?false:true;
-            this.$message[res.code?'error':'success'](res.data.message);
-            this.getDataList();
-        })
+        
       }
-
     },
     // 展开
     // toogleExpand(row){

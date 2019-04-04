@@ -30,12 +30,16 @@ export default{
      * 获取列表
      * 添加修改代理商
      * 停用，启用
+     * 代理商审核列表（status:2）
      */
     getAgentList(params){
         return fetchPost('/Agent/agentList',params)
     },
-    addEditAgent(params){
+    addAgent(params){
         return fetchPost('/Agent/registAgent',params)
+    },
+    editAgent(params){
+        return fetchPost('/Agent/agentUpdate',params)
     },
     
 
@@ -103,4 +107,16 @@ export default{
         return fetchPost('/supplier/suplierDel',params)
     },
 
+
+    /**
+     * 订单管理
+     * 订单列表
+     * 删除订单
+     */
+    getOrderList(params){
+        return fetchPost('/orders/OrdersList',params)
+    },
+    delOrder(params){
+        return fetchPost('/orders/OrdersDelete',params)
+    }
 }
