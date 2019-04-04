@@ -1,18 +1,21 @@
 <template>
-   <div class='header'>
+   <div class='header theme-bg-blue'>
      <div class="left">
         <div class="logo">vue后台管理系统</div>
         <i class="iconfont mulu" title="收起/展开" @click="$emit('changeCollapse')"></i>
      </div>
+     
      <div class="right">
+       <theme-picker></theme-picker>
        <i class="iconfont zhanghao"></i>
-       <span>{{username}}</span>
+       <span class="username">{{username}}</span>
        <i class="iconfont dengchu" title="注销登录" @click="loginout"></i>
      </div>
    </div>
 </template>
 
 <script>
+import ThemePicker from "@/components/themePicker";
    export default {
      data () {
        return {
@@ -23,7 +26,7 @@
      
    },
    components: {
-
+     ThemePicker 
    },
    methods:{
      loginout(){
@@ -39,7 +42,7 @@
 .header{
   /* border-bottom: 1px solid #e8e9ed; */
   min-height: 60px;
-  background-color: #009DFB;
+  /* background-color: #009DFB; */
   color: #fff;
   display: flex;
   justify-content: space-between;
@@ -62,7 +65,10 @@
 .logo{
   font-size: 28px;
 }
-.right span{
+.iconfont.zhanghao{
+  margin-left: 10px;
+}
+.right .username{
   margin: 0 10px;
 }
 .iconfont.dengchu{

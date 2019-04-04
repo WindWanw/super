@@ -340,12 +340,12 @@ export default {
       let that=this;
       that.$refs.ruleForm.validate(valid => {
         if (valid) {
-          that.$api[that.form.id ? "addSeller" : "editSeller"]({
+          that.$api[that.form.id ? "editSeller" : "addSeller"]({
             username: that.form.username,
             password: that.form.password,
             tel: that.form.tel,
             city: that.form.city,
-            id: that.form.id,
+            id: that.form.id || '',
             material:{
               name: that.form.name,
               address: that.form.address,
@@ -361,7 +361,7 @@ export default {
               that.page = 1;
             }
             that.getDataList();
-            that.dialogVisible = res.code ? true : false;
+            that.AddEditDialog = res.code ? true : false;
           });
         } else {
           return false;
@@ -371,7 +371,15 @@ export default {
     //删除
     del(id) {
       this.$confirm("确认删除该项吗?", "提示", { type: "warning" })
-        .then(() => {})
+        .then(() => {
+          this.$api.delSeller({
+            id:id
+          })
+          .then(res=>{
+            this.$message[res.code?'error':'success'](res.data.message);
+            this.getDataList();
+          })
+        })
         .catch(() => {
           this.$message.info("已取消删除");
         });

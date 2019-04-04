@@ -19,6 +19,9 @@ body,html,#app{
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+.theme-bg-blue{
+  background-color: #409eff;
+}
 /* 标题样式 */
 .title{
    border-bottom: 1px solid #eee;
@@ -76,9 +79,12 @@ body,html,#app{
     border:1px dashed #ddd;
     box-sizing: border-box;
   }
-  .expand_wrap{
-    /* display: flex;
-    flex-wrap: wrap; */
+  .ad_img{
+    display: inline-block;
+    width: 200px;
+    height: 100px;
+    border:1px dashed #ddd;
+    box-sizing: border-box;
   }
   .expand_wrap p{
     display: flex;

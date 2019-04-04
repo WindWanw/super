@@ -118,5 +118,20 @@ export default{
     },
     delOrder(params){
         return fetchPost('/orders/OrdersDelete',params)
+    },
+
+    /**
+     * 专引师管理
+     * 
+     * 专引师列表
+     * 新增专引师
+     * 编辑专引师
+     * 删除专引师
+     */
+    getGuideList(params){
+        return fetchPost('/guide/guideList',params)
+    },
+    delGuide(params){
+        return fetchPost('/guide/delGuide',params)
     }
 }

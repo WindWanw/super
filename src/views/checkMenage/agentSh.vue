@@ -21,19 +21,13 @@
     <div class="content">
       <el-table :data="dataList.list" stripe border style="width:100%">
         <el-table-column type="expand">
-      <template slot-scope="props">
-        <el-form label-position="left" inline class="demo-table-expand" label-width="120px">
-          <el-form-item label="身份证号码">
-            <span>{{ props.row.idcard }}</span>
-          </el-form-item>
-          <el-form-item label="身份证正反面">
-            <div style="display:flex;flex-wrap:wrap">
-              <img class="idcardImg" :src="item" v-for="(item,index) in props.row.pic" :key="index">
+          <template slot-scope="props">
+            <div class="expand_wrap">
+                <p><span>身份证号码:</span>{{props.row.idcard}}</p>
+                <p><span>身份证正反面:</span><img class="idcard_img" :src="props.row.picOn"><img class="idcard_img" :src="props.row.picOff"></p>
             </div>
-          </el-form-item>
-        </el-form>
-      </template>
-    </el-table-column>
+          </template>
+        </el-table-column>
         <el-table-column prop="username" label="代理商名称"></el-table-column>
         <el-table-column prop="city" label="代理地区"></el-table-column>
         <el-table-column prop="name" label="联系人姓名"></el-table-column>
@@ -76,6 +70,7 @@
     <el-dialog
       title="审核"
       :visible.sync="dialogVisible"
+      @close="pass='';remark=''"
       width="30%">
        <el-radio-group v-model="pass">
           <el-radio :label="1">通过</el-radio>
@@ -174,19 +169,18 @@ export default {
     //审核通过驳回
    
     sure(){
-      console.log(this.pass)
       if(this.pass===''){
         this.$message.warning('请选择通过或者驳回');
-      }else if(this.pass===0 && !this.remark){
+      }else if(!this.pass && !this.remark){
         this.$message.warning('请填写驳回原因');
       }else{
         this.$api.userStop({
           uid:this.id,
-          result:this.pass==1?'':1,
+          result:this.pass,
           remark:this.remark
         })
         .then(res=>{
-            this.dialogVisible=res.code?false:true;
+            this.dialogVisible=res.code?true:false;
             this.$message[res.code?'error':'success'](res.data.message);
             this.getDataList();
         })

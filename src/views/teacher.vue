@@ -21,42 +21,42 @@
     <div class="content">
       <el-table :data="dataList.list" stripe border style="width:100%">
         <el-table-column type="expand">
-      <template slot-scope="props">
-        <el-form label-position="left" inline class="demo-table-expand" label-width="120px">
-          <el-form-item label="身份证号码">
-            <span>{{ props.row.idcard }}</span>
-          </el-form-item>
-          <el-form-item label="身份证正反面">
-            <div style="display:flex;flex-wrap:wrap">
-              <img class="idcardImg" :src="item" v-for="(item,index) in props.row.pic" :key="index">
+          <template slot-scope="props">
+            <div class="expand_wrap">
+                <p><span>手机号码:</span>{{props.row.tel}}</p>
+                <p><span>身份证号码:</span>{{props.row.idcard}}</p>
+                <p><span>身份证正反面:</span><img class="idcard_img" :src="props.row.picOn"><img class="idcard_img" :src="props.row.picOff"></p>
             </div>
-          </el-form-item>
-        </el-form>
-      </template>
-    </el-table-column>
-        <el-table-column prop="username" label="代理商名称"></el-table-column>
-        <el-table-column prop="city" label="代理地区"></el-table-column>
-        <el-table-column prop="name" label="联系人姓名"></el-table-column>
-        <el-table-column prop="address" label="联系人地址"></el-table-column>
-        <el-table-column prop="tel" label="手机号码"></el-table-column>
-        <el-table-column prop label="账号状态">
-          <template slot-scope="scope">
-            <el-button type="warning" size="mini">待审核</el-button>
           </template>
         </el-table-column>
-        <el-table-column prop="times" label="代理时间">
+        <el-table-column prop="username" label="用户名"></el-table-column>
+        <el-table-column prop="avata'r" label="头像"></el-table-column>
+        <el-table-column prop="sex" label="性别"></el-table-column>
+        <el-table-column prop="city" label="专引城市"></el-table-column>
+        <el-table-column prop="city" label="标签"></el-table-column>
+        <el-table-column prop="city" label="积分"></el-table-column>
+        <el-table-column prop="city" label="经验值"></el-table-column>
+        <el-table-column prop="city" label="近30天收入"></el-table-column>
+        <el-table-column prop="city" label="总收入"></el-table-column>
+        <el-table-column prop label="账号状态">
+          <template slot-scope="scope">
+            <template slot-scope="scope">
+            <el-button
+              :title="scope.row.status=='1'?'点击禁用':'点击解除禁用'"
+              @click="userStop(scope.row.id)"
+              :type="scope.row.status=='1'?'success':'info'"
+              size="mini"
+            >{{scope.row.status | userStatus}}</el-button>
+          </template>
+          </template>
+        </el-table-column>
+        <el-table-column prop="times" label="申请日期">
           <template slot-scope="scope">{{scope.row.times | formatTimeStamp}}</template>
         </el-table-column>
         <el-table-column prop label="操作">
           <template slot-scope="scope">
             <div class="cz_btn">
-              <el-button
-              @click="dialogVisible=true;id=scope.row.id;pass='';remark=''"
-                type="primary"
-                size="mini"
-                icon="el-icon-edit-outline"
-                title="点我对该条信息进行审核认证"
-              >点击审核</el-button>
+              <el-button type="warning">惩罚</el-button>
             </div>
           </template>
         </el-table-column>
@@ -72,21 +72,6 @@
         :total="dataList.total"
       ></el-pagination>
     </div>
-
-    <el-dialog
-      title="审核"
-      :visible.sync="dialogVisible"
-      width="30%">
-       <el-radio-group v-model="pass">
-          <el-radio :label="1">通过</el-radio>
-          <el-radio :label="0">驳回</el-radio>
-        </el-radio-group>
-        <el-input style="margin-top:20px" type="textarea" :rows="2" placeholder="请输入备注信息" v-model="remark"></el-input>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="sure">确 定</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 
@@ -138,12 +123,12 @@ export default {
     //获取数据列表
     getDataList() {
       this.$api
-        .getAgentList({
+        .getGuideList({
           page: this.page,
           limit: this.limit,
-          status:this.status,
-          times:this.times,
-          username:this.username
+          // status:this.status,
+          // times:this.times,
+          // username:this.username
         })
         .then(res => {
           this.dataList = res.data || [];
@@ -164,24 +149,6 @@ export default {
       this.page=1;
       this.getDataList();
     },
-    //审核通过驳回
-    sure(){
-      if(this.pass==''){
-        this.$message.warning('请选择通过或者驳回');
-      }else{
-        
-      }
-    },
-    // 展开
-    // toogleExpand(row){
-    //   let $table = this.$refs.table;
-    //   this.dataList.list.map((item) => {
-    //     if (row.id != item.id) {
-    //       $table.toggleRowExpansion(item, false)
-    //     }
-    //   })
-    //   $table.toggleRowExpansion(row);
-    // }
   },
   created() {
     this.getDataList();

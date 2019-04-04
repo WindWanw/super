@@ -19,59 +19,41 @@
     </div>
     </div>
     <div class="content">
-      <el-table ref="table" :data="dataList.list" stripe border>
-        <el-table-column width="1" type="expand">
+      <el-table :data="dataList.list" stripe border>
+        <el-table-column type="expand">
           <template slot-scope="props">
-            <el-form label-position="left" class="demo-table-expand">
-              <el-form-item label="姓名">
-                <p>{{ props.row.name }}</p>
-              </el-form-item>
-              <el-form-item label="身份证">
-                <p>{{ props.row.idCard }}</p>
-              </el-form-item>
-              <el-form-item label="民族">
-                <span>{{ props.row.native_place }}</span>
-              </el-form-item>
-              <el-form-item label="性别">
-                <span>{{ props.row.sex==0?'男':props.row.sex==1?'女':'未知' }}</span>
-              </el-form-item>
-              <el-form-item label="年龄">
-                <span>{{ props.row.age }}</span>
-              </el-form-item>
-              <el-form-item label="图片">
-                <span>{{ props.row.pictrue }}</span>
-              </el-form-item>
-              <el-form-item label="审核">
-                <el-button type="primary" size="mini">通过</el-button>
-                <el-button type="danger" size="mini">驳回</el-button>
-              </el-form-item>
-            </el-form>
-            
+            <div class="expand_wrap">
+                <p><span>身份证号码:</span>{{props.row.idcard}}</p>
+                <p><span>身份证正反面:</span><img class="idcard_img" :src="props.row.picOn"><img class="idcard_img" :src="props.row.picOff"></p>
+                <p><span>营业执照:</span><img class="license_img" :src="props.row.license"></p>
+            </div>
           </template>
         </el-table-column>
-        <el-table-column prop="username" label="用户名"></el-table-column>
-        <el-table-column prop label="头像">
-          <template slot-scope="scope">
-            <img class="avatar" :src="scope.row.avatar">
-          </template>
-        </el-table-column>
-        <el-table-column prop="tel" label="手机号"></el-table-column>
         <el-table-column prop="city" label="城市"></el-table-column>
+        <el-table-column prop="username" label="账号"></el-table-column>
+        <el-table-column prop="address" label="详细地址"></el-table-column>
+        <el-table-column prop="message" label="商户描述"></el-table-column>
+        <el-table-column prop="tel" label="手机号码"></el-table-column>
+        <el-table-column prop="times" label="入驻时间">
+          <template slot-scope="scope">{{scope.row.times | formatTimeStamp}}</template>
+        </el-table-column>
         <el-table-column prop label="账号状态">
           <template slot-scope="scope">
             <el-button type="warning" size="mini">待审核</el-button>
           </template>
         </el-table-column>
-        <el-table-column prop="times" label="注册日期">
-          <template slot-scope="scope">{{scope.row.times | formatTimeStamp(1)}}</template>
-        </el-table-column>
-        <el-table-column prop label="操作">
+
+        <el-table-column prop label="操作" width="200px">
           <template slot-scope="scope">
-            <el-button
-              @click="toogleExpand(scope.row)"
-              type="primary"
-              size="mini"
-            >查看详情</el-button>
+            <div class="cz_btn">
+              <el-button
+              @click="dialogVisible=true;id=scope.row.id;pass='';remark=''"
+                type="primary"
+                size="mini"
+                icon="el-icon-edit-outline"
+                title="点我对该条信息进行审核认证"
+              >点击审核</el-button>
+            </div>
           </template>
         </el-table-column>
       </el-table>
@@ -86,6 +68,21 @@
         :total="dataList.total"
       ></el-pagination>
     </div>
+    <el-dialog
+      title="审核"
+      :visible.sync="dialogVisible"
+      @close="pass='';remark=''"
+      width="30%">
+       <el-radio-group v-model="pass">
+          <el-radio :label="1">通过</el-radio>
+          <el-radio :label="0">驳回</el-radio>
+        </el-radio-group>
+        <el-input v-if="pass==0" style="margin-top:20px" type="textarea" :rows="2" placeholder="请输入备注信息" v-model="remark"></el-input>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="sure">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -123,10 +120,20 @@ export default {
       dataList: [],
       page: 1,
       limit: 10,
-      status: 0,
+      status: 2,
       times: "",
-      username: ""
+      username: "",
+      pass:'',
+      remark:'',
+      dialogVisible:false,
     };
+  },
+  watch:{
+    pass(newVal,oldVal){
+      if(newVal==1){
+        this.remark='';
+      }
+    }
   },
   components: {},
   methods: {
@@ -159,16 +166,36 @@ export default {
       this.page=1;
       this.getDataList();
     },
+    //审核
+    sure(){
+      console.log(this.pass)
+      if(this.pass===''){
+        this.$message.warning('请选择通过或者驳回');
+      }else if(!this.pass && !this.remark){
+        this.$message.warning('请填写驳回原因');
+      }else{
+        this.$api.userStop({
+          uid:this.id,
+          result:this.pass,
+          remark:this.remark
+        })
+        .then(res=>{
+            this.dialogVisible=res.code?true:false;
+            this.$message[res.code?'error':'success'](res.data.message);
+            this.getDataList();
+        })
+      }
+    },
     // 展开
-    toogleExpand(row){
-      let $table = this.$refs.table;
-      this.dataList.list.map((item) => {
-        if (row.id != item.id) {
-          $table.toggleRowExpansion(item, false)
-        }
-      })
-      $table.toggleRowExpansion(row);
-    }
+    // toogleExpand(row){
+    //   let $table = this.$refs.table;
+    //   this.dataList.list.map((item) => {
+    //     if (row.id != item.id) {
+    //       $table.toggleRowExpansion(item, false)
+    //     }
+    //   })
+    //   $table.toggleRowExpansion(row);
+    // }
   },
   created() {
     this.getDataList();

@@ -30,20 +30,14 @@
     </div>
     <div class="content" style="width:100%">
       <el-table :data="dataList.list" stripe border style="width:100%">
-        <el-table-column type="expand">
-      <template slot-scope="props">
-        <el-form label-position="left" inline class="demo-table-expand" label-width="120px">
-          <el-form-item label="身份证号码">
-            <span>{{ props.row.idcard }}</span>
-          </el-form-item>
-          <el-form-item label="身份证正反面">
-            <div style="display:flex;flex-wrap:wrap">
-              <img class="idcardImg" :src="item" v-for="(item,index) in props.row.pic" :key="index">
+       <el-table-column type="expand">
+          <template slot-scope="props">
+            <div class="expand_wrap">
+                <p><span>身份证号码:</span>{{props.row.idcard}}</p>
+                <p><span>身份证正反面:</span><img class="idcard_img" :src="props.row.picOn"><img class="idcard_img" :src="props.row.picOff"></p>
             </div>
-          </el-form-item>
-        </el-form>
-      </template>
-    </el-table-column>
+          </template>
+        </el-table-column>
         <el-table-column prop="city" label="代理地区"></el-table-column>
         <el-table-column prop="username" label="账号"></el-table-column>
         <el-table-column prop="name" label="联系人姓名"></el-table-column>
@@ -112,8 +106,23 @@
         <el-form-item label="身份证号码" prop="idcard">
           <el-input v-model="form.idcard"></el-input>
         </el-form-item>
-        <el-form-item label="身份证正反面" prop="pic">
-          <upload :imgList="form.pic" :width="300" :height="150"></upload>
+        <el-form-item label="身份证正面" prop="picOn">
+          <el-upload
+            :action="`${axios.defaults.baseURL}/common/upload/file/sfz_upload_dir`"
+            accept="image/jpeg, image/gif, image/png, image/bmp"
+            :before-upload="beforeUp1"
+            :show-file-list="false"
+            :on-success="upSuc1"
+          >
+            <el-button size="small" type="primary">点击上传</el-button>
+          </el-upload>
+            <img v-if="form.picOn" class="idcard_img" :src="form.picOn">
+        </el-form-item>
+        <el-form-item label="身份证反面" prop="picOff">
+          <el-upload :action="`${axios.defaults.baseURL}/common/upload/file/sfz_upload_dir`" accept="image/jpeg,image/gif,image/png,image/bmp" :before-upload="beforeUp2" :show-file-list="false" :on-success="upSuc2">
+            <el-button size="small" type="primary">点击上传</el-button>
+          </el-upload>
+          <img v-if="form.picOff" class="idcard_img" :src="form.picOff">
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -177,7 +186,8 @@ export default {
         name: "",
         address: "",
         idcard: "",
-        pic: []
+        picOn: '',
+        picOff: '',
       },
       rules: {
         username: [
@@ -201,8 +211,11 @@ export default {
         idcard: [
           { validator: this.$rules.checkId, required: true, trigger: "blur" }
         ],
-        pic: [
-          { required: true, message: "身份证正反面不能为空", trigger: "blur" }
+        picOn: [
+          { required: true, message: "身份证正面不能为空", trigger: "blur" }
+        ],
+        picOff: [
+          { required: true, message: "身份证反面不能为空", trigger: "blur" }
         ]
       }
     }
@@ -257,12 +270,34 @@ export default {
         that.form.address = item.address;
         that.form.name = item.name;
         that.form.idcard = item.idcard;
-        that.form.pic = that.$options.filters.copyArray(item.pic);
+        that.form.picOn = item.picOn;
+        that.form.picOff = item.picOff;
       }
 
       that.AddEditDialog = true;
     },
-    
+     //上次图片前
+    beforeUp1(file) {},
+    //上传成功后
+    upSuc1(res, file, fileList) {
+      console.log(res);
+      if (res.code) {
+        return;
+      } else {
+        this.form.picOn = res.data.host + res.data.name;
+      }
+    },
+    //上次图片前
+    beforeUp2(file) {},
+    //上传成功后
+    upSuc2(res, file, fileList) {
+      console.log(res);
+      if (res.code) {
+        return;
+      } else {
+        this.form.picOff = res.data.host + res.data.name;
+      }
+    },
     // 添加修改
     addEdit(type, item) {
       let that = this;
@@ -275,7 +310,8 @@ export default {
               username:that.form.username,
               password:that.form.password || '',
               material: {
-                pic: that.form.pic,
+                picOn: that.form.picOn,
+                picOff: that.form.picOff,
                 name: that.form.name,
                 idcard: that.form.idcard,
                 address: that.form.address,

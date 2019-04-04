@@ -1,31 +1,6 @@
 <template>
    <div class='userSetting'>
-
-      <el-upload
-        action="http://47.110.67.134/common/upload"
-        accept="image/jpeg,image/gif,image/png,image/bmp"
-        multiple
-        :before-upload="beforeAvatarUpload"
-        :show-file-list="false"
-        :on-success="handleAvatarSuccess">
-        <el-button size="small" type="primary">点击上传</el-button>
-      </el-upload>
-
-      <div class="preview_img">
-        <div class="box" v-if="pic.length">
-          <img class="img" :src="item" v-for="(item,index) in pic" :key="index" alt="">
-          <div class="zz" @click="del"><i class="el-icon-delete"></i></div>
-        </div>
-      </div>
-
-
-
-
-      
       <el-button type="primary" @click="tj">提交</el-button>
-
-
-
       <el-cascader
         :options="options"
         v-model="selectedOptions"
@@ -43,32 +18,12 @@ import { setTimeout } from 'timers';
        return {
          options:'',
          selectedOptions:[],
-
-         pic:[]
      }
    },
    components: {
 
    },
    methods:{
-
-      beforeAvatarUpload(file){
-        // console.log(file)
-      },
-
-      handleAvatarSuccess(res, file, fileList){
-        console.log(res)
-        if(res.code){
-          this.$message.info('已为你自动移除不符合条件的图片')
-        }else{
-          this.pic.push(res.data.name);
-        }
-      },
-
-      del(index){
-        this.img.splice(index,1)
-      },
-
      change(){
        console.log(this.selectedOptions)
      },

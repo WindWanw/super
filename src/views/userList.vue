@@ -146,7 +146,8 @@ export default {
         .then(() => {
           this.$api
             .userStop({
-              uid: id
+              uid: id,
+              result:'1',
             })
             .then(res => {
               this.$message[res.code ? "warning" : "success"](res.data);
