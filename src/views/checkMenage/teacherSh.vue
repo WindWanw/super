@@ -1,12 +1,8 @@
 <template>
-  <div class="teacher">
+  <div class="teacherSh">
     <div class="table_title">
     <div class="search_wrap">
-      <el-input clearable v-model="shopname" placeholder="请输入商店名称" size="small" style="width:200px"></el-input>
-      <el-select clearable v-model="status" placeholder="请选择用户类型" size="small">
-          <el-option label="正常" :value="1"></el-option>
-          <el-option label="禁用" :value="-1"></el-option>
-        </el-select>
+      <el-input clearable v-model="username" placeholder="请输入商店名称" size="small" style="width:200px"></el-input>
       <el-date-picker
         value-format="timestamp"
         size="small"
@@ -23,7 +19,7 @@
     </div>
     </div>
     <div class="content">
-      <el-table :data="dataList.list" stripe border style="width:100%">
+       <el-table :data="dataList.list" stripe border style="width:100%">
         <el-table-column type="expand">
           <template slot-scope="props">
             <div class="expand_wrap">
@@ -42,18 +38,19 @@
         </el-table-column>
         <el-table-column prop label="账号状态">
           <template slot-scope="scope">
-            <el-button
-              :title="scope.row.status=='1'?'点击禁用':'点击解除禁用'"
-              @click="userStop(scope.row.id)"
-              :type="scope.row.status=='1'?'success':'info'"
-              size="mini"
-            >{{scope.row.status | userStatus}}</el-button>
+            <el-button type="warning" size="mini">待审核</el-button>
           </template>
         </el-table-column>
-        <el-table-column prop label="操作">
+        <el-table-column prop label="操作" width="200px">
           <template slot-scope="scope">
             <div class="cz_btn">
-              <el-button type="danger" size="mini">惩罚</el-button>
+              <el-button
+              @click="dialogVisible=true;id=scope.row.id;pass='';remark=''"
+                type="primary"
+                size="mini"
+                icon="el-icon-edit-outline"
+                title="点我对该条信息进行审核认证"
+              >点击审核</el-button>
             </div>
           </template>
         </el-table-column>
@@ -69,6 +66,22 @@
         :total="dataList.total"
       ></el-pagination>
     </div>
+
+    <el-dialog
+      title="审核"
+      :visible.sync="dialogVisible"
+      @close="pass='';remark=''"
+      width="30%">
+       <el-radio-group v-model="pass">
+          <el-radio :label="1">通过</el-radio>
+          <el-radio :label="0">驳回</el-radio>
+        </el-radio-group>
+        <el-input v-if="pass==0" style="margin-top:20px" type="textarea" :rows="2" placeholder="请输入备注信息" v-model="remark"></el-input>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="sure">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -106,22 +119,33 @@ export default {
       dataList: [],
       page: 1,
       limit: 10,
+      status: 2,
       times: "",
-      shopname: "",
-      status:''
+      username: "",
+      pass:'',//通过/驳回
+      remark:'',//备注消息
+      dialogVisible:false,
+      id:'',//审核id
     };
   },
   components: {},
+  watch:{
+    pass(newVal,oldVal){
+      if(newVal==1){
+        this.remark='';
+      }
+    }
+  },
   methods: {
     //获取数据列表
     getDataList() {
       this.$api
-        .getGuideList({
+        .getAgentList({
           page: this.page,
           limit: this.limit,
+          status:this.status,
           times:this.times,
-          shopname:this.shopname,
-          status:this.status
+          username:this.username
         })
         .then(res => {
           this.dataList = res.data || [];
@@ -142,24 +166,37 @@ export default {
       this.page=1;
       this.getDataList();
     },
-    //禁用
-    userStop(id){
-      this.$confirm("确认进行该项操作吗?", "提示", { type: "warning" })
-        .then(() => {
-          this.$api
-            .userStop({
-              uid: id,
-              result:'1',
-            })
-            .then(res => {
-              this.$message[res.code ? "warning" : "success"](res.data);
-              this.getDataList();
-            });
+    //审核通过驳回
+   
+    sure(){
+      if(this.pass===''){
+        this.$message.warning('请选择通过或者驳回');
+      }else if(!this.pass && !this.remark){
+        this.$message.warning('请填写驳回原因');
+      }else{
+        this.$api.userStop({
+          uid:this.id,
+          result:this.pass,
+          remark:this.remark
         })
-        .catch(() => {
-          this.$message.info("已取消删除");
-        });
-    }
+        .then(res=>{
+            this.dialogVisible=res.code?true:false;
+            this.$message[res.code?'error':'success'](res.data.message);
+            this.getDataList();
+        })
+      }
+
+    },
+    // 展开
+    // toogleExpand(row){
+    //   let $table = this.$refs.table;
+    //   this.dataList.list.map((item) => {
+    //     if (row.id != item.id) {
+    //       $table.toggleRowExpansion(item, false)
+    //     }
+    //   })
+    //   $table.toggleRowExpansion(row);
+    // }
   },
   created() {
     this.getDataList();

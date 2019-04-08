@@ -4,7 +4,7 @@ import axios from 'axios';
 Vue.prototype.axios = axios;
 axios.defaults.timeout = 5000;//响应时间
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
-axios.defaults.baseURL = 'http://47.110.67.134:9005';//配置接口地址
+axios.defaults.baseURL = 'http://47.110.67.134:9001';//配置接口地址
 
 
 // http://192.168.101.17:666/

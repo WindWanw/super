@@ -10,6 +10,10 @@ export default{
     getCount(params){
         return fetchPost('/admin/adminCount',params)
     },
+    //获取通知消息
+    getMessageList(params){
+        return fetchPost('/admin/messageAudit',params)
+    },
 
     /**
      * 用户管理
@@ -133,5 +137,32 @@ export default{
     },
     delGuide(params){
         return fetchPost('/guide/delGuide',params)
-    }
+    },
+
+    /**
+     * 代金券
+     * 列表
+     * 添加
+     * 修改
+     * 查询
+     */
+    getCardList(params){
+        return fetchPost('/card/cardList',params)
+    },
+   
+
+
+    /**
+     * 处罚单
+     * 列表
+     * 删除
+     * 查询
+     */
+    getPunishList(params){
+        return fetchPost('/ticket/TicketList',params)
+    },
+    delPunish(params){
+        return fetchPost('/ticket/TicketDelete',params)
+    },
+
 }

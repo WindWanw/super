@@ -1,53 +1,56 @@
 <template>
-  <div class="userList">
+  <div class="card">
     <div class="table_title">
+      <!-- <el-button
+        type="primary"
+        size="small"
+        icon="el-icon-plus"
+        @click="openAddEditDialog('add')"
+      >添加代金券</el-button> -->
       <div class="search_wrap">
-        <el-input clearable v-model="username" placeholder="请输入名称" size="small" style="width:200px"></el-input>
-        <el-select clearable v-model="status" placeholder="请选择用户类型" size="small">
-          <el-option label="正常" :value="1"></el-option>
-          <el-option label="禁用" :value="-1"></el-option>
+        <!-- <el-input clearable v-model="username" placeholder="" size="small" style="width:200px"></el-input> -->
+        <el-select clearable v-model="type" placeholder="请选择代金券来源" size="small">
+          <el-option label="全平台" value="common"></el-option>
+          <el-option label="商铺" value="shop"></el-option>
+        </el-select>
+        <el-select clearable v-model="used_time" placeholder="代金券是否使用" size="small">
+          <el-option label="已使用" value="!1"></el-option>
+          <el-option label="未使用" value="1"></el-option>
         </el-select>
         <el-date-picker
+          value-format="timestamp"
           size="small"
-          v-model="date"
+          v-model="times"
           type="daterange"
           align="right"
           unlink-panels
-          value-format="timestamp"
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
           :picker-options="pickerOptions"
         ></el-date-picker>
-        <el-button @click="search" type="primary" icon="el-icon-search" size="small">搜索</el-button>
+        <el-button type="primary" icon="el-icon-search" size="small" @click="search">搜索</el-button>
       </div>
     </div>
     <div class="content">
-      <el-table :data="dataList.list" stripe border>
-        <el-table-column prop="username" label="用户名"></el-table-column>
-        <el-table-column prop label="头像">
+      <el-table :data="dataList.list" stripe border style="width:100%">
+        <el-table-column prop="title" label="规则名称"></el-table-column>
+        <el-table-column prop="price" label="金额"></el-table-column>
+        <el-table-column prop="guidename" label="买券人"></el-table-column>
+        <el-table-column prop="username" label="用户">
           <template slot-scope="scope">
-            <img class="avatar" :src="scope.row.avatar">
+            {{scope.row.username?scope.row.username:'未领取'}}
           </template>
         </el-table-column>
-        <el-table-column prop="sex" label="性别">
+        <el-table-column prop="" label="有效期限">
           <template slot-scope="scope">
-            {{scope.row.sex | sexStatus}}
+            {{scope.row.create_times | formatTimeStamp}} -- {{scope.row.time_out | formatTimeStamp}}
           </template>
         </el-table-column>
-        <el-table-column prop="tel" label="手机号"></el-table-column>
-        <el-table-column prop label="账号状态">
+        <el-table-column prop="types" label="来源">
           <template slot-scope="scope">
-            <el-button
-              :title="scope.row.status=='1'?'点击禁用':'点击解除禁用'"
-              @click="userStop(scope.row.id)"
-              :type="scope.row.status=='1'?'success':'info'"
-              size="mini"
-            >{{scope.row.status | userStatus}}</el-button>
+            <el-button :type="scope.row.types=='common'?'primary':'success'" size="mini">{{scope.row.types=='common'?'全平台':'商铺'}}</el-button>
           </template>
-        </el-table-column>
-        <el-table-column prop="times" label="注册日期">
-          <template slot-scope="scope">{{scope.row.times | formatTimeStamp(1)}}</template>
         </el-table-column>
       </el-table>
       <el-pagination
@@ -100,62 +103,44 @@ export default {
           }
         ]
       },
-      username: "", //名称
-      status: "", //用户状态
-      date: "", //日期
-      dataList: [], //数据源
-      page: 1, //页
-      limit: 10 //条
+      dataList: [],
+      page: 1,
+      limit: 10,
+      times: "",
+      type:"",
+      used_time:''
     };
   },
+  components: {},
   methods: {
-    // 切换limit
-    handleSizeChange(val) {
-      this.limit = val;
-      this.getDataList();
-    },
-    //  切换page
-    handleCurrentChange(val) {
-      this.page = val;
-      this.getDataList();
-    },
-    //获取用户列表
+    //获取数据列表
     getDataList() {
       this.$api
-        .getUserlist({
+        .getCardList({
           page: this.page,
           limit: this.limit,
-          status: this.status,
-          times: this.date,
-          username: this.username
+          types:this.type,
+          used_time:this.used_time
         })
         .then(res => {
           this.dataList = res.data || [];
         });
     },
-    //查询用户
+    //分页
+    handleSizeChange(val) {
+      this.page = val;
+      this.getDataList();
+    },
+    //分条
+    handleCurrentChange(val) {
+      this.limit = val;
+      this.getDataList();
+    },
+    // 查询
     search() {
       this.page = 1;
       this.getDataList();
     },
-    // 停用用户
-    userStop(id) {
-      this.$confirm("确认进行该项操作吗?", "提示", { type: "warning" })
-        .then(() => {
-          this.$api
-            .userStop({
-              uid: id,
-              result:'1',
-            })
-            .then(res => {
-              this.$message[res.code ? "warning" : "success"](res.data);
-              this.getDataList();
-            });
-        })
-        .catch(() => {
-          this.$message.info("已取消删除");
-        });
-    }
   },
   created() {
     this.getDataList();
@@ -168,11 +153,5 @@ export default {
   background-color: #fff;
   padding: 20px;
   box-sizing: border-box;
-  width: 100%;
-  overflow: auto;
-}
-.avatar {
-  width: 30px;
-  height: 30px;
 }
 </style>

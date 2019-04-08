@@ -22,13 +22,25 @@ body,html,#app{
 .theme-bg-blue{
   background-color: #409eff;
 }
+/* 导航菜单 */
+.el-menu-item{
+  border-left:2px solid transparent;
+}
+.el-menu-item.is-active{
+  border-left:2px solid #409eff;
+  /* border-right:2px solid #409eff; */
+}
+/* 选择主题按钮 */
+.el-color-picker__color{
+  border: none!important;
+}
 /* 标题样式 */
 .title{
    border-bottom: 1px solid #eee;
    line-height: 40px;
    padding: 0 20px;
    box-sizing: border-box;
-   color: #009cf7;
+   color: #409EFF;
 }
 /* 表格标题 */
 .table_title{

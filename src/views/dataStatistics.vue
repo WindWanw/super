@@ -47,8 +47,9 @@
       <div class="message_info">
          <div class="title">消息中心</div>
          <div class="info" v-for="(item,index) in messageList" :key="index">
-            <div class="info_text">{{index+1}}.{{item.text}}</div>
-            <div class="info_date">{{item.date}}</div>
+            <div class="info_text">{{index+1}}.{{item.title}}</div>
+            <div class="info_date">{{item.times | formatTimeStamp}}</div>
+            <el-badge class="mark" :value="item.count"/>
          </div>
       </div>
       
@@ -60,16 +61,7 @@
      data () {
        return {
           total:{},//总计
-          messageList:[
-             {text:'测试消息1',date:'2019-2-20'},
-             {text:'测试消息1',date:'2019-2-20'},
-             {text:'测试消息1',date:'2019-2-20'},
-             {text:'测试消息1',date:'2019-2-20'},
-             {text:'测试消息1',date:'2019-2-20'},
-             {text:'测试消息1',date:'2019-2-20'},
-             {text:'测试消息1',date:'2019-2-20'},
-             {text:'测试消息1',date:'2019-2-20'},
-          ]
+          messageList:[]
       }
    },
    components: {
@@ -82,10 +74,20 @@
          .then(res=>{
             this.total=res.data;
          })
+      },
+      //获取通知消息
+      getMessageList(){
+         this.$api.getMessageList({
+            data:[1,2,3]
+         })
+         .then(res=>{
+            this.messageList=res.data;
+         })
       }
    },
    created(){
       this.getTotal();
+      this.getMessageList();
    }
       
    }
@@ -162,6 +164,13 @@
    align-items: center;
    border-bottom: 1px solid #eee;
    box-sizing: border-box;
+   color: #666;
+   font-size: 14px;
+   position: relative;
 }
-
+.mark{
+   position: absolute;
+   right: 0;
+   top: -10px;
+}
 </style>

@@ -15,11 +15,14 @@ const seller = () => import(/* webpackChunkName: "seller" */ './views/sellerMena
 const checkMenage = () => import(/* webpackChunkName: "checkMenage" */ './views/checkMenage')
 const agentSh = () => import(/* webpackChunkName: "agentSh" */ './views/checkMenage/agentSh.vue')
 const sellerSh = () => import(/* webpackChunkName: "sellerSh" */ './views/checkMenage/sellerSh.vue')
+const punish = () => import(/* webpackChunkName: "punish" */ './views/checkMenage/punish.vue')
+const teacherSh = () => import(/* webpackChunkName: "teacherSh" */ './views/checkMenage/teacherSh.vue')
 
 const order = () => import(/* webpackChunkName: "order" */ './views/order.vue')
 const teacher = () => import(/* webpackChunkName: "teacher" */ './views/teacher.vue')
 const ad = () => import(/* webpackChunkName: "ad" */ './views/ad.vue')
 const systemArticle = () => import(/* webpackChunkName: "systenArticle" */ './views/systemArticle.vue')
+const card = () => import(/* webpackChunkName: "card" */ './views/card.vue')
 const userSetting = () => import(/* webpackChunkName: "userSetting" */ './views/userSetting.vue')
 Vue.use(Router)
 
@@ -69,6 +72,24 @@ export const asyRouter = [
         component: sellerSh,
         meta: {
           name: '商户审核',
+          iconfont: 'el-icon-loading',
+        }
+      },
+      {
+        path: '/checkMenage/teacherSh',
+        name: 'teacherSh',
+        component: teacherSh,
+        meta: {
+          name: '专引师审核',
+          iconfont: 'el-icon-loading',
+        }
+      },
+      {
+        path: '/checkMenage/punish',
+        name: 'punish',
+        component: punish,
+        meta: {
+          name: '处罚单',
           iconfont: 'el-icon-loading',
         }
       },
@@ -150,6 +171,15 @@ export const asyRouter = [
     component: systemArticle,
     meta: {
       name: '系统文章管理',
+      iconfont: 'el-icon-loading',
+    }
+  },
+  {
+    path: '/card',
+    name: 'card',
+    component: card,
+    meta: {
+      name: '代金券设置',
       iconfont: 'el-icon-loading',
     }
   },

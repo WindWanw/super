@@ -3,7 +3,7 @@ function formatTimeStamp(timeStamp,type){
     if(!timeStamp){
         return '';
     }
-    var time = new Date(timeStamp.length<13?timeStamp*1000:timeStamp);
+    var time = new Date((timeStamp+'').length<13?timeStamp*1000:timeStamp);
     var y = time.getFullYear();
     var m = time.getMonth()+1;
     var d = time.getDate();

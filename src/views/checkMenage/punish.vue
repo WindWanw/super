@@ -1,12 +1,7 @@
 <template>
-  <div class="teacher">
+  <div class="punish">
     <div class="table_title">
     <div class="search_wrap">
-      <el-input clearable v-model="shopname" placeholder="请输入商店名称" size="small" style="width:200px"></el-input>
-      <el-select clearable v-model="status" placeholder="请选择用户类型" size="small">
-          <el-option label="正常" :value="1"></el-option>
-          <el-option label="禁用" :value="-1"></el-option>
-        </el-select>
       <el-date-picker
         value-format="timestamp"
         size="small"
@@ -23,41 +18,44 @@
     </div>
     </div>
     <div class="content">
-      <el-table :data="dataList.list" stripe border style="width:100%">
-        <el-table-column type="expand">
-          <template slot-scope="props">
-            <div class="expand_wrap">
-                <p><span>手机号码:</span>{{props.row.tel}}</p>
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column prop="username" label="用户名"></el-table-column>
-        <el-table-column prop="city" label="专引城市"></el-table-column>
-        <el-table-column prop="tag" label="标签"></el-table-column>
-        <el-table-column prop="shopname" label="商店"></el-table-column>
-        <el-table-column prop="times" label="注册时间">
-          <template slot-scope="scope">
-            {{scope.row.times | formatTimeStamp}}
-          </template>
-        </el-table-column>
-        <el-table-column prop label="账号状态">
-          <template slot-scope="scope">
-            <el-button
-              :title="scope.row.status=='1'?'点击禁用':'点击解除禁用'"
-              @click="userStop(scope.row.id)"
-              :type="scope.row.status=='1'?'success':'info'"
-              size="mini"
-            >{{scope.row.status | userStatus}}</el-button>
-          </template>
-        </el-table-column>
-        <el-table-column prop label="操作">
-          <template slot-scope="scope">
-            <div class="cz_btn">
-              <el-button type="danger" size="mini">惩罚</el-button>
-            </div>
-          </template>
-        </el-table-column>
-      </el-table>
+       <el-tabs type="border-card" v-model="status" @tab-click=tabClick>
+        <el-tab-pane
+          v-for="(item,index) in tabList"
+          :key="index"
+          :label="item.label"
+          :name="item.name"
+        >
+          <el-table :data="dataList.list" stripe border style="width:100%">
+            <el-table-column prop="to_uid" label="被处罚人"></el-table-column>
+            <el-table-column prop="from_uid" label="处罚人"></el-table-column>
+            <el-table-column prop="types" label="处罚类型"></el-table-column>
+            <el-table-column prop="values" label="处罚内容"></el-table-column>
+            <el-table-column prop="times" label="处罚时间">
+              <template slot-scope="scope">
+                {{scope.row.times | formatTimeStamp}}
+              </template>
+            </el-table-column>
+            <el-table-column prop="status" label="处罚状态">
+              <template slot-scope="scope">
+                <el-button :type="scope.row.status=='1'?'success':'warning'" size="mini">{{scope.row.status=='1'?'已审核':'未审核'}}</el-button>
+              </template>
+            </el-table-column>
+            <el-table-column v-if="status=='1'" prop="checker" label="审核人"></el-table-column>
+            <el-table-column v-if="status=='1'" prop="check_times" label="审核时间">
+              <template slot-scope="scope">
+                {{scope.row.check_times | formatTimeStamp}}
+              </template>
+            </el-table-column>
+            <el-table-column prop label="操作">
+              <template slot-scope="scope">
+                <div class="cz_btn">
+                  <el-button size="mini" type="danger" @click="del(scope.row.id)">删除</el-button>
+                </div>
+              </template>
+            </el-table-column>
+          </el-table>
+      </el-tab-pane>
+      </el-tabs>
       <el-pagination
         background
         @size-change="handleSizeChange"
@@ -107,21 +105,22 @@ export default {
       page: 1,
       limit: 10,
       times: "",
-      shopname: "",
-      status:''
+      tabList: [
+        { label: "待审核", name: "0" },
+        { label: "已审核", name: "1" },
+      ],
+      status:'0',
     };
   },
-  components: {},
   methods: {
     //获取数据列表
     getDataList() {
       this.$api
-        .getGuideList({
+        .getPunishList({
           page: this.page,
           limit: this.limit,
-          times:this.times,
-          shopname:this.shopname,
-          status:this.status
+          status:this.status,
+          times:this.times
         })
         .then(res => {
           this.dataList = res.data || [];
@@ -137,28 +136,32 @@ export default {
       this.limit = val;
       this.getDataList();
     },
+    // tab切换
+    tabClick(val){
+      console.log(val)
+      this.status=val.name;
+      this.page=1;
+      this.getDataList();
+    },
     // 查询
     search(){
       this.page=1;
       this.getDataList();
     },
-    //禁用
-    userStop(id){
-      this.$confirm("确认进行该项操作吗?", "提示", { type: "warning" })
-        .then(() => {
-          this.$api
-            .userStop({
-              uid: id,
-              result:'1',
+    //删除(成功提示并关闭，错误提示)
+    del(id){
+        this.$confirm('是否确认删除该项','提示',{type:'warning'})
+        .then(()=>{
+            this.$api.delPunish({id})
+            .then(res=>{
+                this.addEditDialog=res.code?true:false;
+                this.$message[res.code?'danger':'success'](res.data.message);
+                this.getDataList();
             })
-            .then(res => {
-              this.$message[res.code ? "warning" : "success"](res.data);
-              this.getDataList();
-            });
         })
-        .catch(() => {
-          this.$message.info("已取消删除");
-        });
+        .catch(()=>{
+            this.$message.info('已取消删除');
+        })
     }
   },
   created() {
@@ -173,11 +176,4 @@ export default {
     padding: 20px;
     box-sizing: border-box;
   }
-  .idcardImg{
-  width: 300px;
-  height: 150px;
-  border: 1px dashed #ccc;
-  margin-right: 10px;
-  margin-top: 10px;
-}
 </style>

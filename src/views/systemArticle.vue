@@ -20,8 +20,8 @@
           <el-table-column prop="" label="操作">
               <template slot-scope="scope">
               <div class="cz_btn">
-                <el-button @click="openAddEditDialog('edit',scope.row)" type="warning" size="mini" icon="el-icon-edit" plain>修改</el-button>
-                <el-button @click="del(scope.row.id)" type="danger" size="mini" icon="el-icon-delete" plain>删除</el-button>
+                <el-button @click="openAddEditDialog('edit',scope.row)" type="warning" size="mini" icon="el-icon-edit">编辑</el-button>
+                <el-button @click="del(scope.row.id)" type="danger" size="mini" icon="el-icon-delete">删除</el-button>
               </div>
             </template>
           </el-table-column>

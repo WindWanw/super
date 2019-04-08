@@ -142,7 +142,6 @@ export default {
     },
     // tab切换
     tabClick(val){
-      console.log(val)
       this.status=val.name;
       this.page=1;
       this.getDataList();

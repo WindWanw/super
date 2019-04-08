@@ -1,5 +1,6 @@
 <template>
   <el-color-picker
+  title="选择主题色"
     size="small"
     v-model="theme"
     class="theme-picker"

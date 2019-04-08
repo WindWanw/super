@@ -61,7 +61,7 @@
               type="warning"
               size="mini"
               icon="el-icon-edit"
-            >修改</el-button>
+            >编辑</el-button>
             <el-button @click="del(scope.row.id)" type="danger" size="mini" icon="el-icon-delete">删除</el-button>
           </template>
         </el-table-column>
