@@ -1,7 +1,7 @@
 <template>
    <div class='login'>
        <div class="login_wrap">
-         <div class="login_title">正意数据管理平台</div>
+         <div class="login_title">正意总平台</div>
              <el-input v-model="ruleForm.username" placeholder="请输入账号" size="small"></el-input>
              <el-input placeholder="请输入密码" v-model="ruleForm.password" size="small" show-password></el-input>
          <div class="btn">

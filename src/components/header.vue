@@ -1,7 +1,7 @@
 <template>
    <div class='header theme-bg-blue'>
      <div class="left">
-        <div class="logo">vue后台管理系统</div>
+        <div class="logo">正意总平台</div>
         <i class="iconfont mulu" title="收起/展开" @click="$emit('changeCollapse')"></i>
      </div>
      
