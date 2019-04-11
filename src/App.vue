@@ -24,11 +24,11 @@ body,html,#app{
 }
 /* 导航菜单 */
 .el-menu-item{
-  border-left:2px solid transparent;
+  border-left:4px solid transparent;
 }
 .el-menu-item.is-active{
-  border-left:2px solid #409eff;
-  /* border-right:2px solid #409eff; */
+  border-left:4px solid #409eff;
+  font-size: 16px;
 }
 /* 选择主题按钮 */
 .el-color-picker__color{

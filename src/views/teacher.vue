@@ -2,7 +2,7 @@
   <div class="teacher">
     <div class="table_title">
     <div class="search_wrap">
-      <el-input clearable v-model="shopname" placeholder="请输入商店名称" size="small" style="width:200px"></el-input>
+
       <el-select clearable v-model="status" placeholder="请选择用户类型" size="small">
           <el-option label="正常" :value="1"></el-option>
           <el-option label="禁用" :value="-1"></el-option>
@@ -23,7 +23,7 @@
     </div>
     </div>
     <div class="content">
-      <el-table :data="dataList.list" stripe border style="width:100%">
+      <el-table :data="dataList.info" stripe border style="width:100%">
         <el-table-column type="expand">
           <template slot-scope="props">
             <div class="expand_wrap">
@@ -33,7 +33,11 @@
         </el-table-column>
         <el-table-column prop="username" label="用户名"></el-table-column>
         <el-table-column prop="city" label="专引城市"></el-table-column>
-        <el-table-column prop="tag" label="标签"></el-table-column>
+        <el-table-column prop="tag" label="标签" width="300px">
+          <template slot-scope="scope">
+            <el-tag style="margin-right:10px" v-for="item in scope.row.tag" :key="item">{{item}}</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column prop="shopname" label="商店"></el-table-column>
         <el-table-column prop="times" label="注册时间">
           <template slot-scope="scope">
@@ -42,9 +46,9 @@
         </el-table-column>
         <el-table-column prop label="账号状态">
           <template slot-scope="scope">
+            <!-- @click="userStop(scope.row.id)"
+            :title="scope.row.status=='1'?'点击禁用':'点击解除禁用'" -->
             <el-button
-              :title="scope.row.status=='1'?'点击禁用':'点击解除禁用'"
-              @click="userStop(scope.row.id)"
               :type="scope.row.status=='1'?'success':'info'"
               size="mini"
             >{{scope.row.status | userStatus}}</el-button>
@@ -53,7 +57,7 @@
         <el-table-column prop label="操作">
           <template slot-scope="scope">
             <div class="cz_btn">
-              <el-button type="danger" size="mini">惩罚</el-button>
+              <el-button @click="openPunishDialog(scope.row)" type="warning" size="mini" icon="el-icon-edit-outline">处罚</el-button>
             </div>
           </template>
         </el-table-column>
@@ -69,6 +73,30 @@
         :total="dataList.total"
       ></el-pagination>
     </div>
+    <!-- 惩罚dialog -->
+    <el-dialog
+      title="惩罚"
+      :visible.sync="punishDialog"
+      @close="1"
+      label-width="120px"
+      width="30%">
+      <el-form>
+        <el-form-item label="处罚类型">
+          <el-select v-model="punishType" clearable placeholder="请选择处罚类型">
+            <el-option v-for="item in punishList" :key="item.value" :label="item.title" :value="item.val"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="处罚内容" v-if="punishType">
+          <el-select v-model="punishContent" clearable placeholder="请选择处罚内容">
+            <el-option v-for="item in punishContentList" :key="item.value" :label="item.label" :value="item"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="punishDialog = false">取 消</el-button>
+        <el-button type="primary" @click="punishSure">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -108,8 +136,24 @@ export default {
       limit: 10,
       times: "",
       shopname: "",
-      status:''
+      status:'',
+      punishDialog:false,//处罚dialog
+      punishList:'',
+      punishContentList:'',
+      punishId:'',//处罚id
+      punishType:'',
+      punishContent:''
     };
+  },
+   watch:{
+    punishType(newVal,oldVal){
+      console.log(newVal);
+      this.punishList.forEach(item=>{
+        if(newVal==item.val){
+          this.punishContentList=item.type
+        }
+      })
+    },
   },
   components: {},
   methods: {
@@ -157,8 +201,35 @@ export default {
             });
         })
         .catch(() => {
-          this.$message.info("已取消删除");
+          this.$message.info("已取消操作");
         });
+    },
+    //获取处罚类型
+    getPunishType(){
+      this.$api.getPunishType()
+      .then(res=>{
+        this.punishList=res.data;
+      })
+    },
+    //打开处罚dialoig
+    openPunishDialog(item){
+      this.getPunishType();
+      this.punishId=item.id;
+      this.punishDialog=true;
+    },
+    
+    //确认处罚
+    punishSure(){
+      if(!this.punishType || !this.punishContent) return this.$message.warning('请处罚类型和处罚内容');
+      this.$api.addPunish({
+        to_uid:this.punishId,
+        types:this.punishType,
+        values:JSON.stringify(this.punishContent)
+      })
+      .then(res=>{
+        this.$message[res.code?'warning':'success'](res.data.message);
+        this.punishDialog=res.code?true:false;
+      })
     }
   },
   created() {

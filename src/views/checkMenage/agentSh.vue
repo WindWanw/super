@@ -2,7 +2,7 @@
   <div class="agentSh">
     <div class="table_title">
     <div class="search_wrap">
-      <el-input clearable v-model="username" placeholder="请输入名称" size="small" style="width:200px"></el-input>
+      <el-input clearable v-model="username" placeholder="请输入账号" size="small" style="width:200px"></el-input>
       <el-date-picker
         value-format="timestamp"
         size="small"
@@ -28,12 +28,12 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="username" label="代理商名称"></el-table-column>
-        <el-table-column prop="city" label="代理地区"></el-table-column>
+        <el-table-column prop="city" label="代理城市"></el-table-column>
+        <el-table-column prop="username" label="账号"></el-table-column>
         <el-table-column prop="name" label="联系人姓名"></el-table-column>
         <el-table-column prop="address" label="联系人地址"></el-table-column>
         <el-table-column prop="tel" label="手机号码"></el-table-column>
-        <el-table-column prop label="账号状态">
+        <el-table-column label="账号状态">
           <template slot-scope="scope">
             <el-button type="warning" size="mini">待审核</el-button>
           </template>

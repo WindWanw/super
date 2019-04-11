@@ -21,6 +21,9 @@ export default new Vuex.Store({
     // 添加标签
     ADD_TAB(state,data){
       if(state.menuList.some(item=>item.path===data.path)) return;
+      // if(state.menuList.length>9){
+      //   state.menuList.splice(0,1);
+      // }
       state.menuList.push({
         name:data.meta.name,
         path:data.path

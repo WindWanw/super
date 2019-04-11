@@ -77,11 +77,9 @@
       },
       //获取通知消息
       getMessageList(){
-         this.$api.getMessageList({
-            data:[1,2,3]
-         })
+         this.$api.getMessageList()
          .then(res=>{
-            this.messageList=res.data;
+            this.messageList=res.data || [];
          })
       }
    },
@@ -171,6 +169,6 @@
 .mark{
    position: absolute;
    right: 0;
-   top: -10px;
+   top: 2px;
 }
 </style>

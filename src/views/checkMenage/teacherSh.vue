@@ -2,7 +2,6 @@
   <div class="teacherSh">
     <div class="table_title">
     <div class="search_wrap">
-      <el-input clearable v-model="username" placeholder="请输入商店名称" size="small" style="width:200px"></el-input>
       <el-date-picker
         value-format="timestamp"
         size="small"
@@ -19,7 +18,7 @@
     </div>
     </div>
     <div class="content">
-       <el-table :data="dataList.list" stripe border style="width:100%">
+       <el-table :data="dataList.info" stripe border style="width:100%">
         <el-table-column type="expand">
           <template slot-scope="props">
             <div class="expand_wrap">
@@ -29,7 +28,11 @@
         </el-table-column>
         <el-table-column prop="username" label="用户名"></el-table-column>
         <el-table-column prop="city" label="专引城市"></el-table-column>
-        <el-table-column prop="tag" label="标签"></el-table-column>
+        <el-table-column prop="tag" label="标签" width="300px">
+          <template slot-scope="scope">
+            <el-tag style="margin-right:10px" v-for="item in scope.row.tag" :key="item">{{item}}</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column prop="shopname" label="商店"></el-table-column>
         <el-table-column prop="times" label="注册时间">
           <template slot-scope="scope">
@@ -66,7 +69,7 @@
         :total="dataList.total"
       ></el-pagination>
     </div>
-
+    <!-- 审核dialog -->
     <el-dialog
       title="审核"
       :visible.sync="dialogVisible"
@@ -82,6 +85,8 @@
         <el-button type="primary" @click="sure">确 定</el-button>
       </span>
     </el-dialog>
+
+    
   </div>
 </template>
 
@@ -126,6 +131,7 @@ export default {
       remark:'',//备注消息
       dialogVisible:false,
       id:'',//审核id
+      
     };
   },
   components: {},
@@ -140,12 +146,11 @@ export default {
     //获取数据列表
     getDataList() {
       this.$api
-        .getAgentList({
+        .getGuideList({
           page: this.page,
           limit: this.limit,
           status:this.status,
           times:this.times,
-          username:this.username
         })
         .then(res => {
           this.dataList = res.data || [];

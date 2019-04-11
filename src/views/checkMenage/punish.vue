@@ -29,7 +29,9 @@
             <el-table-column prop="to_uid" label="被处罚人"></el-table-column>
             <el-table-column prop="from_uid" label="处罚人"></el-table-column>
             <el-table-column prop="types" label="处罚类型"></el-table-column>
-            <el-table-column prop="values" label="处罚内容"></el-table-column>
+            <el-table-column prop="values.label" label="处罚内容">
+
+            </el-table-column>
             <el-table-column prop="times" label="处罚时间">
               <template slot-scope="scope">
                 {{scope.row.times | formatTimeStamp}}
@@ -37,7 +39,7 @@
             </el-table-column>
             <el-table-column prop="status" label="处罚状态">
               <template slot-scope="scope">
-                <el-button :type="scope.row.status=='1'?'success':'warning'" size="mini">{{scope.row.status=='1'?'已审核':'未审核'}}</el-button>
+                <el-button :type="scope.row.status=='1'?'success':'warning'" size="mini">{{scope.row.status=='1'?'已审核':'待审核'}}</el-button>
               </template>
             </el-table-column>
             <el-table-column v-if="status=='1'" prop="checker" label="审核人"></el-table-column>
@@ -46,10 +48,18 @@
                 {{scope.row.check_times | formatTimeStamp}}
               </template>
             </el-table-column>
-            <el-table-column prop label="操作">
+            <el-table-column prop label="操作" width="200px">
               <template slot-scope="scope">
                 <div class="cz_btn">
-                  <el-button size="mini" type="danger" @click="del(scope.row.id)">删除</el-button>
+                  <!-- <el-button size="mini" type="danger" @click="del(scope.row.id)">删除</el-button> -->
+                  <el-button
+                  v-if="status!=1"
+              @click="dialogVisible=true;id=scope.row.id;pass='';remark=''"
+                type="primary"
+                size="mini"
+                icon="el-icon-edit-outline"
+                title="点我对该条信息进行审核认证"
+              >点击审核</el-button>
                 </div>
               </template>
             </el-table-column>
@@ -67,6 +77,21 @@
         :total="dataList.total"
       ></el-pagination>
     </div>
+    <el-dialog
+      title="审核"
+      :visible.sync="dialogVisible"
+      @close="pass='';remark=''"
+      width="30%">
+       <el-radio-group v-model="pass">
+          <el-radio :label="1">通过</el-radio>
+          <el-radio :label="2">驳回</el-radio>
+        </el-radio-group>
+        <el-input v-if="pass=='2'" style="margin-top:20px" type="textarea" :rows="2" placeholder="请输入备注信息" v-model="remark"></el-input>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="sure">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -110,7 +135,18 @@ export default {
         { label: "已审核", name: "1" },
       ],
       status:'0',
+      pass:'',//通过/驳回
+      remark:'',//备注消息
+      dialogVisible:false,
+      id:'',//审核id
     };
+  },
+  watch:{
+    pass(newVal,oldVal){
+      if(newVal=='1'){
+        this.remark='';
+      }
+    }
   },
   methods: {
     //获取数据列表
@@ -138,7 +174,6 @@ export default {
     },
     // tab切换
     tabClick(val){
-      console.log(val)
       this.status=val.name;
       this.page=1;
       this.getDataList();
@@ -156,14 +191,38 @@ export default {
             .then(res=>{
                 this.addEditDialog=res.code?true:false;
                 this.$message[res.code?'danger':'success'](res.data.message);
+                this.page=this.$options.filters.pagination(this.page,this.limit,this.dataList.total);
                 this.getDataList();
             })
         })
         .catch(()=>{
             this.$message.info('已取消删除');
         })
-    }
+    },
+    //审核通过驳回
+   
+    sure(){
+      if(!this.pass){
+        this.$message.warning('请选择通过或者驳回');
+      }else if(this.pass=='2' && !this.remark){
+        this.$message.warning('请填写驳回原因');
+      }else{
+        this.$api.editPunish({
+          id:this.id,
+          status:this.pass,
+          fail:this.remark
+        })
+        .then(res=>{
+            this.dialogVisible=res.code?true:false;
+            this.$message[res.code?'warning':'success'](res.data.message);
+            this.page=this.$options.filters.pagination(this.page,this.limit,this.dataList.total);
+            this.getDataList();
+        })
+      }
+
+    },
   },
+  
   created() {
     this.getDataList();
   }

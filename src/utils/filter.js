@@ -92,11 +92,44 @@ function copyArray(arr,result){
     return result;
   }
 
+
+
+  /**
+     * 解决分页最后一条数据删除，页码超出的情况
+     * @param {number} page 页码
+     * @param {number} limit 每页条数
+     * @param {number} tot 总条数
+     */
+    function pagination(page,limit,tot){
+        console.log(page)
+        if(tot%limit===1 && page!=1){
+            let p=parseInt(tot/limit)+1;
+            if(page>=p){
+                return page-1;
+            }else{
+                return page;
+            }
+            
+        }else{
+            return page;
+        }
+    }
+
+    /**
+     * 根据code返回地址数组
+     */
+    // function formatCode(code){
+    //     console.log(code)
+    //     let arr=[];
+    //     if(code.slice(0,))
+    // }
+
 export default{
     formatTimeStamp,
     userStatus,
     sexStatus,
     copyArray,
     orderStatus,
-    payStatus
+    payStatus,
+    pagination
 }

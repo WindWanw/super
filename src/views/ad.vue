@@ -25,8 +25,8 @@
           <el-table-column prop="" label="操作" width="180px">
               <template slot-scope="scope">
               <div class="cz_btn">
-                <el-button @click="openAddEditDialog('edit',scope.row)" type="warning" size="mini" icon="el-icon-edit" plain>修改</el-button>
-                <el-button @click="del(scope.row.id)" type="danger" size="mini" icon="el-icon-delete" plain>删除</el-button>
+                <el-button @click="openAddEditDialog('edit',scope.row)" type="primary" size="mini" icon="el-icon-edit">编辑</el-button>
+                <el-button @click="del(scope.row.id)" type="danger" size="mini" icon="el-icon-delete">删除</el-button>
               </div>
             </template>
           </el-table-column>
@@ -49,8 +49,9 @@
             <el-form-item label="广告页" prop="page">
               <el-input v-model="form.page"></el-input>
             </el-form-item>
-            <el-form-item label="城市" prop="city">
-              <el-input v-model="form.city"></el-input>
+            <el-form-item label="城市">
+              <el-cascader :options="cityData" v-model="selectCity" change-on-select :placeholder="form.id?'如需修改请选择':''"></el-cascader>
+              <span v-if="form.id" style="margin-left:20px">当前城市:{{city}}</span>
             </el-form-item>
             <el-form-item label="广告链接">
               <el-input v-model="form.url"></el-input>
@@ -93,6 +94,7 @@
 </template>
 
 <script>
+import citys from '../utils/city.js';
 import upload from '../components/upload';
    export default {
      data () {
@@ -101,9 +103,11 @@ import upload from '../components/upload';
           page:1,//页
           limit:10,//条
           AddEditDialog:false,
+          cityData:citys,//城市数据
+          selectCity:[],//选择城市
+          city:'',
           form:{
               page:'',
-              city:'',
               title:'',
               url:'',
               pic:'',
@@ -114,9 +118,7 @@ import upload from '../components/upload';
             page:[
               { required: true, message: '账号不能为空', trigger: 'blur' }
             ],
-            city:[
-              { required: true, message: '城市不能为空', trigger: 'blur' }
-            ],
+            
             title:[
               { required: true, message: '广告标题不能为空', trigger: 'blur' }
             ],
@@ -159,20 +161,28 @@ import upload from '../components/upload';
          for(let i in this.form){
              this.form[i]="";
          }
+         this.selectCity=[];
        }else{
          this.form.page=item.page;
-         this.form.city=item.city;
+         this.city=item.city;
+         this.selectCity = [];
          this.form.title=item.ads.title;
          this.form.url=item.ads.url;
          this.form.pic=item.ads.pic;
          this.form.id=item.id;
-         let date=[item.begin*1000,item.timeout*1000];
+         let date=item.begin?[item.begin*1000,item.timeout*1000]:'';
          this.form.times=date;
        }
        this.AddEditDialog=true;
      },
      //上次图片前
-    beforeUp1(file) {},
+    beforeUp1(file) {
+      if (file.size > 1024*2 * 1024) {
+        // 超出2m  取消上传
+        this.$message.warning('图片不能超过2MB')
+        return false
+      }
+    },
     //上传成功后
     upSuc1(res, file, fileList) {
       console.log(res);
@@ -185,12 +195,15 @@ import upload from '../components/upload';
      //确认添加或修改
      addEdit(){
        let that=this;
+       if(!this.form.id){
+        if(!that.selectCity || !that.selectCity.length)return this.$message.warning('请选择城市');
+       }
        that.$refs.ruleForm.validate(valid=>{
          if(valid){
           let ads={'title':that.form.title,'pic':that.form.pic,'url':that.form.url};
            that.$api[that.form.id?'editAd':'addAd']({
              page:that.form.page,
-             city:that.form.city,
+             city:that.selectCity,
              times:that.form.times,
              ads,
              id:that.form.id
@@ -215,6 +228,7 @@ import upload from '../components/upload';
          this.$api.delAd({id})
          .then(res=>{
            this.$message[res.code?'error':'success'](res.data.message);
+           this.page=this.$options.filters.pagination(this.page,this.limit,this.dataList.total);
            this.getDataList();
          })
        })

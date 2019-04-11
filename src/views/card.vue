@@ -14,7 +14,7 @@
           <el-option label="商铺" value="shop"></el-option>
         </el-select>
         <el-select clearable v-model="used_time" placeholder="代金券是否使用" size="small">
-          <el-option label="已使用" value="!1"></el-option>
+          <el-option label="已使用" value="2"></el-option>
           <el-option label="未使用" value="1"></el-option>
         </el-select>
         <el-date-picker
@@ -120,7 +120,8 @@ export default {
           page: this.page,
           limit: this.limit,
           types:this.type,
-          used_time:this.used_time
+          used_time:this.used_time,
+          'create_times[<>]':this.times
         })
         .then(res => {
           this.dataList = res.data || [];

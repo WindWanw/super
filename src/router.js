@@ -23,7 +23,6 @@ const teacher = () => import(/* webpackChunkName: "teacher" */ './views/teacher.
 const ad = () => import(/* webpackChunkName: "ad" */ './views/ad.vue')
 const systemArticle = () => import(/* webpackChunkName: "systenArticle" */ './views/systemArticle.vue')
 const card = () => import(/* webpackChunkName: "card" */ './views/card.vue')
-const userSetting = () => import(/* webpackChunkName: "userSetting" */ './views/userSetting.vue')
 Vue.use(Router)
 
 
@@ -180,15 +179,6 @@ export const asyRouter = [
     component: card,
     meta: {
       name: '代金券设置',
-      iconfont: 'el-icon-loading',
-    }
-  },
-  {
-    path: '/userSetting',
-    name: 'userSetting',
-    component: userSetting,
-    meta: {
-      name: '用户设置',
       iconfont: 'el-icon-loading',
     }
   },

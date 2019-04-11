@@ -16,7 +16,7 @@ export default{
     },
 
     /**
-     * 用户管理
+     * @用户管理
      * 获取用户列表
      * 查询列表
      * 停用，启用
@@ -30,7 +30,7 @@ export default{
 
 
     /**
-     * 代理商管理
+     * @代理商管理
      * 获取列表
      * 添加修改代理商
      * 停用，启用
@@ -50,7 +50,7 @@ export default{
 
 
     /**
-     * 广告位管理 
+     * @广告位管理 
      * 获取广告列表
      * 添加广告位
      * 修改广告位
@@ -69,7 +69,8 @@ export default{
         return fetchPost('/ads/AdsDelete',params)
     },
 
-    /**系统文章管理
+    /**
+     * @系统文章管理
      * 获取系统文章列表
      * 添加系统文章
      * 修改系统文章
@@ -91,7 +92,7 @@ export default{
 
 
     /**
-     * 商户管理
+     * @商户管理
      * 商户列表
      * 添加商户
      * 修改商户
@@ -113,7 +114,7 @@ export default{
 
 
     /**
-     * 订单管理
+     * @订单管理
      * 订单列表
      * 删除订单
      */
@@ -125,26 +126,17 @@ export default{
     },
 
     /**
-     * 专引师管理
-     * 
+     * @专引师管理
      * 专引师列表
-     * 新增专引师
-     * 编辑专引师
-     * 删除专引师
      */
     getGuideList(params){
-        return fetchPost('/guide/guideList',params)
+        return fetchPost('/guide/showGuideList',params)
     },
-    delGuide(params){
-        return fetchPost('/guide/delGuide',params)
-    },
+    
 
     /**
-     * 代金券
-     * 列表
-     * 添加
-     * 修改
-     * 查询
+     * @代金券管理
+     * 获取列表
      */
     getCardList(params){
         return fetchPost('/card/cardList',params)
@@ -153,16 +145,29 @@ export default{
 
 
     /**
-     * 处罚单
-     * 列表
+     * @处罚单管理
+     * 处罚类型列表
+     * 获取列表
      * 删除
-     * 查询
+     * 处罚
+     * 审核
      */
+    getPunishType(params){
+        return fetchPost('/ticket/Ticket_Type',params)
+    },
     getPunishList(params){
         return fetchPost('/ticket/TicketList',params)
     },
     delPunish(params){
         return fetchPost('/ticket/TicketDelete',params)
     },
+    addPunish(params){
+        return fetchPost('/ticket/TicketAdd',params)
+    },
+    editPunish(params){
+        return fetchPost('/ticket/TicketEdit',params)
+    },
+
+
 
 }

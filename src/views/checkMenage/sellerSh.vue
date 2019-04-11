@@ -2,7 +2,7 @@
   <div class="sellerSh">
     <div class="table_title">
     <div class="search_wrap">
-      <el-input clearable v-model="username" placeholder="请输入名称" size="small" style="width:200px"></el-input>
+      <el-input clearable v-model="username" placeholder="请输入账号" size="small" style="width:200px"></el-input>
       <el-date-picker
         value-format="timestamp"
         size="small"

@@ -55,10 +55,9 @@
     },
     methods: {
       seteditor() {
-        // http://192.168.2.125:8080/admin/storage/create
         this.editor = new E(this.$refs.toolbar, this.$refs.editor)
         this.editor.customConfig.uploadImgShowBase64 = true // base 64 存储图片
-        this.editor.customConfig.uploadImgServer = 'http://47.110.67.134:9000/common/upload'// 配置服务器端地址
+        this.editor.customConfig.uploadImgServer = this.axios.defaults.baseURL+'/common/upload'// 配置服务器端地址
         this.editor.customConfig.uploadImgHeaders = { }// 自定义 header
         this.editor.customConfig.uploadFileName = 'file' // 后端接受上传文件的参数名
         this.editor.customConfig.uploadImgMaxSize = 2 * 1024 * 1024 // 将图片大小限制为 2M

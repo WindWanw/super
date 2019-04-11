@@ -20,7 +20,7 @@
           <el-table-column prop="" label="操作">
               <template slot-scope="scope">
               <div class="cz_btn">
-                <el-button @click="openAddEditDialog('edit',scope.row)" type="warning" size="mini" icon="el-icon-edit">编辑</el-button>
+                <el-button @click="openAddEditDialog('edit',scope.row)" type="primary" size="mini" icon="el-icon-edit">编辑</el-button>
                 <el-button @click="del(scope.row.id)" type="danger" size="mini" icon="el-icon-delete">删除</el-button>
               </div>
             </template>
@@ -40,7 +40,7 @@
 
 
        <!-- 添加dialog -->
-         <el-dialog :title="form.id?'修改':'添加'" :visible.sync="AddEditDialog" width="800px" top="20px">
+         <el-dialog :title="form.id?'修改':'添加'" :visible.sync="AddEditDialog" width="850px" top="20px">
           <el-form status-icon label-width="70px">
             <el-form-item label="文章类型">
               <el-select v-model="form.code" placeholder="请选择">
@@ -139,19 +139,18 @@ EditorBar
          limit:this.limit,
        })
        .then(res=>{
-         console.log(res)
          this.dataList=res.data;
        })
      },
      //删除文章
      del(id){
          let that=this;
-         that.$confirm('此操作将永久删除该文件, 是否继续?','提示')
+         that.$confirm('确认删除该项吗?','提示')
          .then(()=>{
              that.$api.delArticle({id})
              .then(res=>{
-                 console.log(res)
-                 that.$message.success('删除成功');
+                 this.$message[res.code?'error':'success'](res.data.message);
+                 this.page=this.$options.filters.pagination(this.page,this.limit,this.dataList.total);
                  that.getDataList();
              })
          })
@@ -178,10 +177,10 @@ EditorBar
         let id=this.form.id;
         this.$api[id?'editArticle':'addArticle'](this.form)
         .then(res=>{
-          console.log(res);
           if(id){this.page=1};
+          this.$message[res.code?'error':'success'](res.data.message);
+          this.AddEditDialog=res.code?true:false;
           this.getDataList();
-          this.AddEditDialog=false;
         })
       },
    },

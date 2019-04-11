@@ -1,27 +1,21 @@
 <template>
   <div class="userList">
+    <!-- 头部（搜索条件） -->
     <div class="table_title">
       <div class="search_wrap">
-        <el-input clearable v-model="username" placeholder="请输入名称" size="small" style="width:200px"></el-input>
+        <el-input clearable v-model="username" placeholder="请输入用户名" size="small" style="width:200px"></el-input>
         <el-select clearable v-model="status" placeholder="请选择用户类型" size="small">
           <el-option label="正常" :value="1"></el-option>
           <el-option label="禁用" :value="-1"></el-option>
         </el-select>
-        <el-date-picker
-          size="small"
-          v-model="date"
-          type="daterange"
-          align="right"
-          unlink-panels
-          value-format="timestamp"
-          range-separator="至"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
+        <el-date-picker size="small" v-model="date" type="daterange" align="right" unlink-panels value-format="timestamp" range-separator="至" start-placeholder="开始日期" 
+           end-placeholder="结束日期"
           :picker-options="pickerOptions"
         ></el-date-picker>
         <el-button @click="search" type="primary" icon="el-icon-search" size="small">搜索</el-button>
       </div>
     </div>
+    <!-- 内容（表单，分页） -->
     <div class="content">
       <el-table :data="dataList.list" stripe border>
         <el-table-column prop="username" label="用户名"></el-table-column>
@@ -35,7 +29,10 @@
             {{scope.row.sex | sexStatus}}
           </template>
         </el-table-column>
+        <el-table-column prop="city" label="城市"></el-table-column>
         <el-table-column prop="tel" label="手机号"></el-table-column>
+        <el-table-column prop="coin" label="积分"></el-table-column>
+        <el-table-column prop="exp" label="经验"></el-table-column>
         <el-table-column prop label="账号状态">
           <template slot-scope="scope">
             <el-button
@@ -100,7 +97,7 @@ export default {
           }
         ]
       },
-      username: "", //名称
+      username: "", //用户名
       status: "", //用户状态
       date: "", //日期
       dataList: [], //数据源
@@ -153,7 +150,7 @@ export default {
             });
         })
         .catch(() => {
-          this.$message.info("已取消删除");
+          this.$message.info("已取消操作");
         });
     }
   },

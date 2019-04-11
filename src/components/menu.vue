@@ -49,9 +49,11 @@
   padding: 15px 20px;
   box-sizing: border-box;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
 }
 .href{
   margin-right: 10px;
+  margin-bottom: 5px;
 }
 </style>

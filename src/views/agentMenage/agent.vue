@@ -8,7 +8,7 @@
         @click="openAddEditDialog('add')"
       >添加代理商</el-button>
       <div class="search_wrap">
-        <el-input clearable v-model="username" placeholder="请输入名称" size="small" style="width:200px"></el-input>
+        <el-input clearable v-model="username" placeholder="请输入账号" size="small" style="width:200px"></el-input>
         <el-select clearable v-model="status" placeholder="请选择用户类型" size="small">
           <el-option label="正常" :value="1"></el-option>
           <el-option label="禁用" :value="-1"></el-option>
@@ -38,7 +38,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="city" label="代理地区"></el-table-column>
+        <el-table-column prop="city" label="代理城市"></el-table-column>
         <el-table-column prop="username" label="账号"></el-table-column>
         <el-table-column prop="name" label="联系人姓名"></el-table-column>
         <el-table-column prop="address" label="联系人地址"></el-table-column>
@@ -56,7 +56,7 @@
             <div class="cz_btn">
               <el-button
                 @click="openAddEditDialog('edit',scope.row)"
-                type="warning"
+                type="primary"
                 size="mini"
                 icon="el-icon-edit"
               >编辑</el-button>
@@ -85,8 +85,9 @@
       @close="$refs['ruleForm'].resetFields()"
     >
       <el-form status-icon :model="form" :rules="rules" ref="ruleForm" label-width="120px">
-        <el-form-item label="代理地区" prop="city">
-          <el-input v-model="form.city"></el-input>
+        <el-form-item label="城市">
+          <el-cascader :options="cityData" v-model="selectCity" change-on-select :placeholder="form.id?'如需修改请选择':'请选择代理城市'"></el-cascader>
+          <span v-if="form.id" style="margin-left:20px">当前城市:{{city}}</span>
         </el-form-item>
         <el-form-item label="账号" v-if="!form.id" :prop="form.id?'':'username'">
           <el-input v-model="form.username"></el-input>
@@ -134,6 +135,7 @@
 </template>
 
 <script>
+import citys from '../../utils/city.js';
 export default {
   data() {
     return {
@@ -177,6 +179,9 @@ export default {
       limit: 10, //条
       dataList: [], //数据源
       AddEditDialog: false,
+      cityData:citys,//城市数据
+      selectCity:[],//选择城市
+      city:'',
       form: {
         username: "",
         password:'',
@@ -196,9 +201,7 @@ export default {
         password: [
           { required: true, message: "密码不能为空", trigger: "blur" }
         ],
-        city: [
-          { required: true, message: "代理地区不能为空", trigger: "blur" }
-        ],
+        
         tel: [
           { validator: this.$rules.checkPhone, required: true, trigger: "blur" }
         ],
@@ -254,18 +257,16 @@ export default {
     openAddEditDialog(type, item) {
       let that = this;
       if (type == "add") {
-        for (let i in that.form) {
-          if (i == "pic") {
-            that.form[i] = [];
-          } else {
-            that.form[i] = "";
-          }
+        for (let i in this.form) {
+            this.form[i] = "";
         }
+        this.selectCity=[];
       } else {
         that.form.id = item.id;
         that.form.username=item.username;
         that.form.password=item.password;
-        that.form.city = item.city;
+        this.city=item.city;
+        this.selectCity = [];
         that.form.tel = item.tel;
         that.form.address = item.address;
         that.form.name = item.name;
@@ -277,7 +278,13 @@ export default {
       that.AddEditDialog = true;
     },
      //上次图片前
-    beforeUp1(file) {},
+    beforeUp1(file) {
+       if (file.size > 1024*2 * 1024) {
+        // 超出2m  取消上传
+        this.$message.warning('图片不能超过2MB')
+        return false
+      }
+    },
     //上传成功后
     upSuc1(res, file, fileList) {
       console.log(res);
@@ -305,7 +312,7 @@ export default {
         if (valid) {
           that.$api[that.form.id?'editAgent':'addAgent']({
               id: that.form.id,
-              city: that.form.city,
+              citycode: that.selectCity,
               tel: that.form.tel,
               username:that.form.username,
               password:that.form.password || '',
@@ -318,16 +325,12 @@ export default {
               }
             })
             .then(res => {
-              if (!res.code) {
-                that.$message.success(res.data.message);
-                if (!that.form.id) {
-                  this.page = 1;
-                }
-                that.getDataList();
-                this.AddEditDialog = false;
-              } else {
-                that.$message.error(res.data.message);
+              that.$message[res.code?'warning':'success'](res.data.message);
+              that.AddEditDialog=res.code?true:false;
+              if(!that.form.id){
+                that.page=1;
               }
+              that.getDataList();
             });
         } else {
           return false;

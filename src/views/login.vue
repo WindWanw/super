@@ -43,10 +43,24 @@
      },
      reset(){
        this.ruleForm={};
-     }
+     },
+     //键盘事件获取焦点
+    keyUp() {
+      var _self = this;
+      document.onkeydown = function(e) {
+        var key = window.event.keyCode;
+        if (key == 13) {
+          _self.login();
+        }
+      };
+    },
    },
+   destroyed(){
+     document.onkeydown=null;
+  },
    created(){
      localStorage.clear();
+     this.keyUp();
    }
   }
 </script>

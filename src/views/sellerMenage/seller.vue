@@ -8,7 +8,11 @@
         @click="openAddEditDialog('add')"
       >添加商户</el-button>
       <div class="search_wrap">
-        <el-input clearable v-model="username" placeholder="请输入名称" size="small" style="width:200px"></el-input>
+        <el-input clearable v-model="username" placeholder="请输入账号" size="small" style="width:200px"></el-input>
+        <el-select clearable v-model="status" placeholder="请选择用户类型" size="small">
+          <el-option label="正常" :value="1"></el-option>
+          <el-option label="禁用" :value="-1"></el-option>
+        </el-select>
         <el-date-picker
           size="small"
           v-model="date"
@@ -37,31 +41,32 @@
         </el-table-column>
         <el-table-column prop="city" label="城市"></el-table-column>
         <el-table-column prop="username" label="账号"></el-table-column>
+        <el-table-column prop="name" label="姓名"></el-table-column>
         <el-table-column prop="address" label="详细地址"></el-table-column>
-        <el-table-column prop="message" label="商户描述"></el-table-column>
+        <el-table-column prop="message" label="商户描述">
+          <template slot-scope="scope">
+            {{scope.row.message || '无'}}
+          </template>
+        </el-table-column>
         <el-table-column prop="tel" label="手机号码"></el-table-column>
         <el-table-column prop="times" label="入驻时间">
           <template slot-scope="scope">{{scope.row.times | formatTimeStamp}}</template>
         </el-table-column>
         <el-table-column prop label="账号状态">
           <template slot-scope="scope">
+             <!-- :title="scope.row.status=='1'?'点击禁用':'点击解除禁用'"
+              @click="userStop(scope.row.id)" -->
             <el-button
               size="mini"
-              :title="scope.row.status=='1'?'点击禁用':'点击解除禁用'"
-              @click="userStop(scope.row.id)"
               :type="scope.row.status=='1'?'success':'info'"
             >{{scope.row.status | userStatus}}</el-button>
           </template>
         </el-table-column>
 
-        <el-table-column prop label="操作" width="200px">
+        <el-table-column prop label="操作" width="300px">
           <template slot-scope="scope">
-            <el-button
-              @click="openAddEditDialog('edit',scope.row)"
-              type="warning"
-              size="mini"
-              icon="el-icon-edit"
-            >编辑</el-button>
+            <el-button @click="openPunishDialog(scope.row)" type="warning" size="mini" icon="el-icon-edit-outline">处罚</el-button>
+            <el-button @click="openAddEditDialog('edit',scope.row)" type="primary" size="mini" icon="el-icon-edit">编辑</el-button>
             <el-button @click="del(scope.row.id)" type="danger" size="mini" icon="el-icon-delete">删除</el-button>
           </template>
         </el-table-column>
@@ -87,8 +92,9 @@
       @close="$refs['ruleForm'].resetFields()"
     >
       <el-form status-icon :model="form" :rules="rules" ref="ruleForm" label-width="120px">
-        <el-form-item label="城市" prop="city">
-          <el-input v-model="form.city"></el-input>
+        <el-form-item label="城市">
+          <el-cascader :options="cityData" v-model="selectCity" change-on-select :placeholder="form.id?'如需修改请选择':''"></el-cascader>
+          <span v-if="form.id" style="margin-left:20px">当前城市:{{city}}</span>
         </el-form-item>
         <el-form-item v-if="!form.id" label="账号" :prop="form.id?'':'username'">
           <el-input type="username" v-model="form.username"></el-input>
@@ -141,10 +147,35 @@
         <el-button type="primary" @click="addEdit">确 定</el-button>
       </div>
     </el-dialog>
+
+    <!-- 惩罚dialog -->
+    <el-dialog
+      title="惩罚"
+      :visible.sync="punishDialog"
+      label-width="120px"
+      width="30%">
+      <el-form :model="form">
+        <el-form-item label="处罚类型">
+          <el-select v-model="punishType" clearable placeholder="请选择处罚类型">
+            <el-option v-for="item in punishList" :key="item.value" :label="item.title" :value="item.val"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="处罚内容" v-if="punishType">
+          <el-select v-model="punishContent" clearable placeholder="请选择处罚内容">
+            <el-option v-for="item in punishContentList" :key="item.value" :label="item.label" :value="item"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="punishDialog = false">取 消</el-button>
+        <el-button type="primary" @click="punishSure">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import citys from '../../utils/city.js';
 export default {
   data() {
     return {
@@ -158,7 +189,6 @@ export default {
         tel: [
           { validator: this.$rules.checkPhone, required: true, trigger: "blur" }
         ],
-        city: [{ required: true, message: "城市不能为空", trigger: "blur" }],
         name: [{ required: true, message: "姓名不能为空", trigger: "blur" }],
         address: [
           { required: true, message: "详细地址不能为空", trigger: "blur" }
@@ -215,11 +245,13 @@ export default {
       page: 1, //页
       limit: 10, //条
       AddEditDialog: false,
+      cityData:citys,//城市数据
+      selectCity:[],//选择城市
+      city:'',
       form: {
-        username: "",
+        username: '',
         password: "",
         tel: "",
-        city: "",
         name: "",
         message: "",
         address: "",
@@ -228,8 +260,25 @@ export default {
         picOn: "",
         picOff: "",
         license: ""
-      }
+      },
+      punishDialog:false,//处罚dialog
+      punishList:'',
+      punishContentList:'',
+      punishId:'',//处罚id
+      punishType:'',
+      punishContent:''
+
     };
+  },
+  watch:{
+    punishType(newVal,oldVal){
+      console.log(newVal);
+      this.punishList.forEach(item=>{
+        if(newVal==item.val){
+          this.punishContentList=item.type
+        }
+      })
+    },
   },
   components: {},
   methods: {
@@ -254,7 +303,6 @@ export default {
           username: this.username
         })
         .then(res => {
-          console.log(res);
           this.dataList = res.data;
         });
     },
@@ -285,14 +333,16 @@ export default {
     openAddEditDialog(type, item) {
       if (type == "add") {
         for (let i in this.form) {
-          this.form[i] = "";
+            this.form[i] = "";
         }
+        this.selectCity=[];
       } else {
         this.form.username = item.username;
         this.form.password = item.password || '';
-        this.form.tel = item.tel;
-        this.form.city = item.city;
+        this.city=item.city;
+        this.selectCity = [];
         this.form.name = item.name;
+        this.form.tel = item.tel;
         this.form.address = item.address;
         this.form.idcard = item.idcard;
         this.form.id = item.id;
@@ -303,7 +353,13 @@ export default {
       this.AddEditDialog = true;
     },
     //上次图片前
-    beforeUp1(file) {},
+    beforeUp1(file) {
+      if (file.size > 1024*2 * 1024) {
+        // 超出2m  取消上传
+        this.$message.warning('图片不能超过2MB')
+        return false
+      }
+    },
     //上传成功后
     upSuc1(res, file, fileList) {
       console.log(res);
@@ -338,13 +394,16 @@ export default {
     //确认添加/修改
     addEdit() {
       let that=this;
+      if(!this.form.id){
+        if(!that.selectCity || !that.selectCity.length)return this.$message.warning('请选择城市');
+      }
       that.$refs.ruleForm.validate(valid => {
         if (valid) {
           that.$api[that.form.id ? "editSeller" : "addSeller"]({
             username: that.form.username,
             password: that.form.password,
             tel: that.form.tel,
-            city: that.form.city,
+            citycode: that.selectCity,
             id: that.form.id || '',
             material:{
               name: that.form.name,
@@ -377,13 +436,43 @@ export default {
           })
           .then(res=>{
             this.$message[res.code?'error':'success'](res.data.message);
+            this.page=this.$options.filters.pagination(this.page,this.limit,this.dataList.total);
             this.getDataList();
           })
         })
         .catch(() => {
           this.$message.info("已取消删除");
         });
-    }
+    },
+    
+    //获取处罚类型
+    getPunishType(){
+      this.$api.getPunishType()
+      .then(res=>{
+        this.punishList=res.data;
+      })
+    },
+    //打开处罚dialoig
+    openPunishDialog(item){
+      this.getPunishType();
+      this.punishId=item.id;
+      this.punishDialog=true;
+    },
+    
+    //确认处罚
+    punishSure(){
+      if(!this.punishType || !this.punishContent) return this.$message.warning('请处罚类型和处罚内容');
+      this.$api.addPunish({
+        to_uid:this.punishId,
+        types:this.punishType,
+        values:JSON.stringify(this.punishContent)
+      })
+      .then(res=>{
+        this.$message[res.code?'warning':'success'](res.data.message);
+        this.punishDialog=res.code?true:false;
+      })
+    },
+    
   },
   created() {
     this.getDataList();
