@@ -46,6 +46,7 @@ body,html,#app{
 .table_title{
   display: flex;
   justify-content: space-between;
+  align-items: center;
   background-color: #fff;
   padding: 20px;
   box-sizing: border-box;

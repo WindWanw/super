@@ -18,7 +18,8 @@
        return {
          ruleForm:{
            username:'',
-           password:''
+           password:'',
+           url:'',
          },
      }
    },
@@ -34,7 +35,7 @@
          if(!res.code){
            localStorage.setItem('token',res.data.token);
            localStorage.setItem('userinfo',JSON.stringify(res.data.userinfo));
-           this.$router.replace('/home');
+           this.$router.replace(this.url);
            return this.$message.success(res.data.message);
          }else{
            return this.$message.error(res.data.message);
@@ -59,7 +60,10 @@
      document.onkeydown=null;
   },
    created(){
-     localStorage.clear();
+     this.url=this.$route.query.redirect || '/home';
+     if(localStorage.getItem('token')){
+       this.$router.replace(this.url);
+     }
      this.keyUp();
    }
   }

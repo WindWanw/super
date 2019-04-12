@@ -4,7 +4,7 @@
          <el-button type="primary" size="small" icon="el-icon-plus" @click="openAddEditDialog('add')">添加文章</el-button>
        </div>
        <div class="content">
-         <el-table :data="dataList.list" stripe border>
+         <el-table :data="dataList.list" stripe border v-loading="loading">
           <el-table-column prop="code" label="文章类型"></el-table-column>
           <el-table-column prop="title" label="文章标题"></el-table-column>
           <el-table-column prop="body" label="文章内容">
@@ -43,7 +43,7 @@
          <el-dialog :title="form.id?'修改':'添加'" :visible.sync="AddEditDialog" width="850px" top="20px">
           <el-form status-icon label-width="70px">
             <el-form-item label="文章类型">
-              <el-select v-model="form.code" placeholder="请选择">
+              <el-select v-model="form.code" placeholder="请选择文章类型">
                 <el-option
                   v-for="item in options"
                   :key="item.value"
@@ -53,7 +53,7 @@
               </el-select>
             </el-form-item>
             <el-form-item label="文章标题">
-              <el-input v-model="form.title"></el-input>
+              <el-input v-model="form.title" placeholder="请输入文章标题"></el-input>
             </el-form-item>
             <el-form-item label="文章内容">
               <editor-bar v-model="form.body" :isClear="isClear" @change="change"></editor-bar>
@@ -83,6 +83,7 @@ import EditorBar from '../components/editor'
    export default {
      data () {
        return {
+         loading:false,
            test:'',
            isClear:false,
           dataList:[],//数据源
@@ -134,12 +135,14 @@ EditorBar
      },
      //获取数据列表
      getDataList(){
+       this.loading=true;
        this.$api.getArticleList({
          page:this.page,
          limit:this.limit,
        })
        .then(res=>{
-         this.dataList=res.data;
+         this.dataList=res.data || [];
+         this.loading=false;
        })
      },
      //删除文章

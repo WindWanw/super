@@ -9,7 +9,7 @@
       >添加商户</el-button>
       <div class="search_wrap">
         <el-input clearable v-model="username" placeholder="请输入账号" size="small" style="width:200px"></el-input>
-        <el-select clearable v-model="status" placeholder="请选择用户类型" size="small">
+        <el-select clearable v-model="status" placeholder="请选择用户类型" size="small" style="margin:0 10px">
           <el-option label="正常" :value="1"></el-option>
           <el-option label="禁用" :value="-1"></el-option>
         </el-select>
@@ -25,11 +25,11 @@
           end-placeholder="结束日期"
           :picker-options="pickerOptions"
         ></el-date-picker>
-        <el-button @click="search" type="primary" icon="el-icon-search" size="small">搜索</el-button>
+        <el-button @click="search" type="primary" icon="el-icon-search" size="small" style="margin-left:10px">搜索</el-button>
       </div>
     </div>
     <div class="content">
-      <el-table :data="dataList.list" stripe border>
+      <el-table :data="dataList.list" stripe border v-loading="loading">
         <el-table-column type="expand">
           <template slot-scope="props">
             <div class="expand_wrap">
@@ -93,29 +93,29 @@
     >
       <el-form status-icon :model="form" :rules="rules" ref="ruleForm" label-width="120px">
         <el-form-item label="城市">
-          <el-cascader :options="cityData" v-model="selectCity" change-on-select :placeholder="form.id?'如需修改请选择':''"></el-cascader>
+          <el-cascader :options="cityData" v-model="selectCity" change-on-select :placeholder="form.id?'如需修改请选择':'请选择城市'"></el-cascader>
           <span v-if="form.id" style="margin-left:20px">当前城市:{{city}}</span>
         </el-form-item>
         <el-form-item v-if="!form.id" label="账号" :prop="form.id?'':'username'">
-          <el-input type="username" v-model="form.username"></el-input>
+          <el-input type="username" v-model="form.username" placeholder="请输入账号"></el-input>
         </el-form-item>
         <el-form-item label="密码" :prop="form.id?'':'password'">
-          <el-input type="password" v-model="form.password"></el-input>
+          <el-input type="password" v-model="form.password" :placeholder="form.id?'不填默认不修改':'请输入密码'"></el-input>
         </el-form-item>
         <el-form-item label="手机号码" prop="tel">
-          <el-input v-model="form.tel"></el-input>
+          <el-input v-model="form.tel" placeholder="请输入手机号码"></el-input>
         </el-form-item>
         <el-form-item label="姓名" prop="name">
-          <el-input v-model="form.name"></el-input>
+          <el-input v-model="form.name" placeholder="请输入姓名"></el-input>
         </el-form-item>
         <el-form-item label="商户描述">
-          <el-input v-model="form.message"></el-input>
+          <el-input v-model="form.message" placeholder="请输入商户描述"></el-input>
         </el-form-item>
         <el-form-item label="详细地址" prop="address">
-          <el-input v-model="form.address"></el-input>
+          <el-input v-model="form.address" placeholder="请输入详细地址"></el-input>
         </el-form-item>
         <el-form-item label="身份证号码" prop="idcard">
-          <el-input v-model="form.idcard"></el-input>
+          <el-input v-model="form.idcard" placeholder="请输入身份证号码"></el-input>
         </el-form-item>
         <el-form-item label="身份证正面" prop="picOn">
           <el-upload
@@ -179,6 +179,7 @@ import citys from '../../utils/city.js';
 export default {
   data() {
     return {
+      loading:false,
       rules: {
         username: [
           { required: true, message: "账号不能为空", trigger: "blur" }
@@ -294,6 +295,7 @@ export default {
     },
     //获取列表
     getDataList() {
+      this.loading=true;
       this.$api
         .getSellerList({
           page: this.page,
@@ -303,7 +305,8 @@ export default {
           username: this.username
         })
         .then(res => {
-          this.dataList = res.data;
+          this.dataList = res.data || [];
+          this.loading=false;
         });
     },
     //查询用户

@@ -31,7 +31,8 @@ import ThemePicker from "@/components/themePicker";
    methods:{
      loginout(){
        this.$router.replace('/login');
-       localStorage.clear();
+       localStorage.clear('token');
+       localStorage.clear('userinfo');
      }
    }
   }

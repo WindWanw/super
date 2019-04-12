@@ -13,7 +13,7 @@
           <el-option label="全平台" value="common"></el-option>
           <el-option label="商铺" value="shop"></el-option>
         </el-select>
-        <el-select clearable v-model="used_time" placeholder="代金券是否使用" size="small">
+        <el-select clearable v-model="used_time" placeholder="代金券是否使用" size="small" style="margin:0 10px">
           <el-option label="已使用" value="2"></el-option>
           <el-option label="未使用" value="1"></el-option>
         </el-select>
@@ -29,11 +29,11 @@
           end-placeholder="结束日期"
           :picker-options="pickerOptions"
         ></el-date-picker>
-        <el-button type="primary" icon="el-icon-search" size="small" @click="search">搜索</el-button>
+        <el-button type="primary" icon="el-icon-search" size="small" @click="search" style="margin-left:10px">搜索</el-button>
       </div>
     </div>
     <div class="content">
-      <el-table :data="dataList.list" stripe border style="width:100%">
+      <el-table :data="dataList.list" stripe border style="width:100%" v-loading="loading">
         <el-table-column prop="title" label="规则名称"></el-table-column>
         <el-table-column prop="price" label="金额"></el-table-column>
         <el-table-column prop="guidename" label="买券人"></el-table-column>
@@ -71,6 +71,7 @@
 export default {
   data() {
     return {
+      loading:false,
       pickerOptions: {
         //快捷键
         shortcuts: [
@@ -115,6 +116,7 @@ export default {
   methods: {
     //获取数据列表
     getDataList() {
+      this.loading=true;
       this.$api
         .getCardList({
           page: this.page,
@@ -125,6 +127,7 @@ export default {
         })
         .then(res => {
           this.dataList = res.data || [];
+          this.loading=false;
         });
     },
     //分页

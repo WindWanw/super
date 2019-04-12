@@ -4,6 +4,7 @@
       <div class="search_wrap">
         <el-input clearable v-model="name" placeholder="请输入订单" size="small" style="width:200px"></el-input>
         <el-date-picker
+        style="margin:0 10px"
           value-format="timestamp"
           size="small"
           v-model="date"
@@ -26,7 +27,7 @@
           :label="item.label"
           :name="item.name"
         >
-          <el-table :data="dataList.list" stripe border>
+          <el-table :data="dataList.list" stripe border v-loading="loading">
             <el-table-column prop="order_sn" label="订单编号"></el-table-column>
             <el-table-column prop="uid" label="用户名"></el-table-column>
             <el-table-column prop="tel" label="联系方式"></el-table-column>
@@ -67,6 +68,7 @@
 export default {
   data() {
     return {
+      loading:false,
       pickerOptions: {
         //快捷键
         shortcuts: [
@@ -128,6 +130,7 @@ export default {
     },
     //获取数据
     getDataList() {
+      this.loading=true;
       this.$api
         .getOrderList({
           page: this.page,
@@ -138,6 +141,7 @@ export default {
         })
         .then(res => {
           this.dataList = res.data || [];
+          this.loading=false;
         });
     },
     // tab切换

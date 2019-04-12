@@ -14,7 +14,7 @@
         end-placeholder="结束日期"
         :picker-options="pickerOptions"
       ></el-date-picker>
-      <el-button type="primary" icon="el-icon-search" size="small" @click="search">搜索</el-button>
+      <el-button type="primary" icon="el-icon-search" size="small" @click="search" style="margin-left:10px">搜索</el-button>
     </div>
     </div>
     <div class="content">
@@ -25,7 +25,7 @@
           :label="item.label"
           :name="item.name"
         >
-          <el-table :data="dataList.list" stripe border style="width:100%">
+          <el-table :data="dataList.list" stripe border style="width:100%" v-loading="loading">
             <el-table-column prop="to_uid" label="被处罚人"></el-table-column>
             <el-table-column prop="from_uid" label="处罚人"></el-table-column>
             <el-table-column prop="types" label="处罚类型"></el-table-column>
@@ -99,6 +99,7 @@
 export default {
   data() {
     return {
+      loading:false,
       pickerOptions: {//快捷键
             shortcuts: [{
               text: '最近一周',
@@ -151,6 +152,7 @@ export default {
   methods: {
     //获取数据列表
     getDataList() {
+      this.loading=true;
       this.$api
         .getPunishList({
           page: this.page,
@@ -160,6 +162,7 @@ export default {
         })
         .then(res => {
           this.dataList = res.data || [];
+          this.loading=false;
         });
     },
     //分页

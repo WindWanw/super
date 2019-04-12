@@ -4,6 +4,7 @@
     <div class="search_wrap">
       <el-input clearable v-model="username" placeholder="请输入账号" size="small" style="width:200px"></el-input>
       <el-date-picker
+      style="margin:0 10px"
         value-format="timestamp"
         size="small"
         v-model="times"
@@ -19,7 +20,7 @@
     </div>
     </div>
     <div class="content">
-      <el-table :data="dataList.list" stripe border style="width:100%">
+      <el-table :data="dataList.list" stripe border style="width:100%" v-loading="loading">
         <el-table-column type="expand">
           <template slot-scope="props">
             <div class="expand_wrap">
@@ -89,6 +90,7 @@
 export default {
   data() {
     return {
+      loading:false,
       pickerOptions: {//快捷键
             shortcuts: [{
               text: '最近一周',
@@ -139,6 +141,7 @@ export default {
   methods: {
     //获取数据列表
     getDataList() {
+      this.loading=true;
       this.$api
         .getAgentList({
           page: this.page,
@@ -149,6 +152,7 @@ export default {
         })
         .then(res => {
           this.dataList = res.data || [];
+          this.loading=false;
         });
     },
     //分页

@@ -9,7 +9,7 @@
       >添加代理商</el-button>
       <div class="search_wrap">
         <el-input clearable v-model="username" placeholder="请输入账号" size="small" style="width:200px"></el-input>
-        <el-select clearable v-model="status" placeholder="请选择用户类型" size="small">
+        <el-select clearable v-model="status" placeholder="请选择用户类型" size="small" style="margin: 0 10px">
           <el-option label="正常" :value="1"></el-option>
           <el-option label="禁用" :value="-1"></el-option>
         </el-select>
@@ -25,11 +25,11 @@
           end-placeholder="结束日期"
           :picker-options="pickerOptions"
         ></el-date-picker>
-        <el-button type="primary" icon="el-icon-search" size="small" @click="search">搜索</el-button>
+        <el-button type="primary" icon="el-icon-search" size="small" @click="search" style="margin-left:10px">搜索</el-button>
       </div>
     </div>
     <div class="content" style="width:100%">
-      <el-table :data="dataList.list" stripe border style="width:100%">
+      <el-table :data="dataList.list" stripe border style="width:100%" v-loading="loading">
        <el-table-column type="expand">
           <template slot-scope="props">
             <div class="expand_wrap">
@@ -90,22 +90,22 @@
           <span v-if="form.id" style="margin-left:20px">当前城市:{{city}}</span>
         </el-form-item>
         <el-form-item label="账号" v-if="!form.id" :prop="form.id?'':'username'">
-          <el-input v-model="form.username"></el-input>
+          <el-input v-model="form.username" placeholder="请输入账号"></el-input>
         </el-form-item>
         <el-form-item label="密码" :prop="form.id?'':'password'">
-          <el-input type="password" v-model="form.password"></el-input>
+          <el-input type="password" v-model="form.password" :placeholder="form.id?'不填默认不修改':'请输入密码'"></el-input>
         </el-form-item>
         <el-form-item label="联系人姓名" prop="name">
-          <el-input v-model="form.name"></el-input>
+          <el-input v-model="form.name" placeholder="请输入联系人姓名"></el-input>
         </el-form-item>
         <el-form-item label="联系人地址" prop="address">
-          <el-input v-model="form.address"></el-input>
+          <el-input v-model="form.address" placeholder="请输入联系人地址"></el-input>
         </el-form-item>
         <el-form-item label="手机号码" prop="tel">
-          <el-input v-model="form.tel"></el-input>
+          <el-input v-model="form.tel" placeholder="请输入手机号码"></el-input>
         </el-form-item>
         <el-form-item label="身份证号码" prop="idcard">
-          <el-input v-model="form.idcard"></el-input>
+          <el-input v-model="form.idcard" placeholder="请输入身份证号码"></el-input>
         </el-form-item>
         <el-form-item label="身份证正面" prop="picOn">
           <el-upload
@@ -139,6 +139,7 @@ import citys from '../../utils/city.js';
 export default {
   data() {
     return {
+      loading:false,
       pickerOptions: {
         //快捷键
         shortcuts: [
@@ -236,6 +237,7 @@ export default {
     },
     //获取代理商列表
     getDataList() {
+      this.loading=true;
       this.$api
         .getAgentList({
           page: this.page,
@@ -246,6 +248,7 @@ export default {
         })
         .then(res => {
           this.dataList = res.data || [];
+          this.loading=false;
         });
     },
     //查询

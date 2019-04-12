@@ -4,7 +4,7 @@
     <div class="table_title">
       <div class="search_wrap">
         <el-input clearable v-model="username" placeholder="请输入用户名" size="small" style="width:200px"></el-input>
-        <el-select clearable v-model="status" placeholder="请选择用户类型" size="small">
+        <el-select clearable v-model="status" placeholder="请选择用户类型" size="small" style="margin:0 10px">
           <el-option label="正常" :value="1"></el-option>
           <el-option label="禁用" :value="-1"></el-option>
         </el-select>
@@ -12,12 +12,12 @@
            end-placeholder="结束日期"
           :picker-options="pickerOptions"
         ></el-date-picker>
-        <el-button @click="search" type="primary" icon="el-icon-search" size="small">搜索</el-button>
+        <el-button @click="search" type="primary" icon="el-icon-search" size="small" style="margin-left:10px">搜索</el-button>
       </div>
     </div>
     <!-- 内容（表单，分页） -->
     <div class="content">
-      <el-table :data="dataList.list" stripe border>
+      <el-table :data="dataList.list" stripe border v-loading="loading">
         <el-table-column prop="username" label="用户名"></el-table-column>
         <el-table-column prop label="头像">
           <template slot-scope="scope">
@@ -65,6 +65,7 @@
 export default {
   data() {
     return {
+      loading:false,
       pickerOptions: {
         //快捷键
         shortcuts: [
@@ -118,6 +119,7 @@ export default {
     },
     //获取用户列表
     getDataList() {
+      this.loading=true;
       this.$api
         .getUserlist({
           page: this.page,
@@ -128,6 +130,7 @@ export default {
         })
         .then(res => {
           this.dataList = res.data || [];
+          this.loading=false;
         });
     },
     //查询用户

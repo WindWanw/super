@@ -2,27 +2,22 @@
 import Vue from 'vue'
 import axios from 'axios';
 Vue.prototype.axios = axios;
-axios.defaults.timeout = 5000;//响应时间
+axios.defaults.timeout = 10000;//响应时间
+import {Message} from 'element-ui';
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 axios.defaults.baseURL = 'http://47.110.67.134';//配置接口地址
-
-
-// http://192.168.101.17:666/
 
 
 // 请求拦截器（在发送请求之前做些什么）
 axios.interceptors.request.use(function (config) {
     let token = localStorage.getItem('token');
-    // console.log(token)
     if (token) {
         config.headers.Authorization = token;
     }
-    // config.url = store.getters.baseUrl + config.url
-    // console.log(config)
-    // config.data=JSON.stringify(config.data);
     return config;
 }, function (error) {
     // 对请求错误做些什么
+    Message.error('请求错误，请重试');
     return Promise.reject(error);
 });
 
@@ -35,9 +30,10 @@ axios.interceptors.response.use(function (response) {
     // 对响应数据做点什么
     return response.data;
 }, function (error) {
-    console.log(error)
     if(error.message.includes('timeout')){
-        this.$message.error('网络超时，请刷新页面重试');
+        Message.error('网络超时，请刷新页面重试');
+    }else{
+        Message.error('服务器响应错误，请重试');
     }
     // 对响应错误做点什么
     return Promise.reject(error);

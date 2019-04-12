@@ -4,7 +4,7 @@
          <el-button type="primary" size="small" icon="el-icon-plus" @click="openAddEditDialog('add')">添加广告</el-button>
        </div>
        <div class="content">
-         <el-table :data="dataList.list" stripe border>
+         <el-table :data="dataList.list" stripe border v-loading="loading">
           <el-table-column prop="city" label="城市"></el-table-column>
           <el-table-column prop="ads" label="广告内容" width="250px">
             <template slot-scope="scope">
@@ -47,17 +47,17 @@
          <el-dialog top="20px" :title="form.id?'修改':'添加'" :visible.sync="AddEditDialog" width="650px" @close="$refs['ruleForm'].resetFields()">
           <el-form status-icon :model="form" :rules="rules" ref="ruleForm" label-width="100px">
             <el-form-item label="广告页" prop="page">
-              <el-input v-model="form.page"></el-input>
+              <el-input v-model="form.page" placeholder="请输入广告页"></el-input>
             </el-form-item>
             <el-form-item label="城市">
-              <el-cascader :options="cityData" v-model="selectCity" change-on-select :placeholder="form.id?'如需修改请选择':''"></el-cascader>
+              <el-cascader :options="cityData" v-model="selectCity" change-on-select :placeholder="form.id?'如需修改请选择':'请选择城市'"></el-cascader>
               <span v-if="form.id" style="margin-left:20px">当前城市:{{city}}</span>
             </el-form-item>
             <el-form-item label="广告链接">
-              <el-input v-model="form.url"></el-input>
+              <el-input v-model="form.url" placeholder="请输入广告链接"></el-input>
             </el-form-item>
             <el-form-item label="广告标题" :prop="form.pic?'':'title'">
-              <el-input v-model="form.title"></el-input>
+              <el-input v-model="form.title" placeholder="请输入广告标题"></el-input>
             </el-form-item>
             <el-form-item label="广告图片" :prop="form.title?'':'pic'">
                 <el-upload
@@ -99,6 +99,7 @@ import upload from '../components/upload';
    export default {
      data () {
        return {
+         loading:false,
           dataList:[],//数据源
           page:1,//页
           limit:10,//条
@@ -147,12 +148,14 @@ import upload from '../components/upload';
      },
      //获取数据列表
      getDataList(){
+       this.loading=true;
        this.$api.getAdList({
          page:this.page,
          limit:this.limit,
        })
        .then(res=>{
          this.dataList=res.data || [];
+         this.loading=false;
        })
      },
      //打开添加修改dialog

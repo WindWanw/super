@@ -35,6 +35,7 @@ export const asyRouter = [
     meta: {
       name: '数据统计',
       iconfont: 'el-icon-loading',
+      needLogin:true,//需要登录
     }
   },
   {
@@ -44,6 +45,7 @@ export const asyRouter = [
     meta: {
       name: '用户管理',
       iconfont: 'el-icon-loading',
+      needLogin:true,//需要登录
     }
   },
   {
@@ -53,6 +55,7 @@ export const asyRouter = [
     meta: {
       name: '审核管理',
       iconfont: 'el-icon-loading',
+      needLogin:true,//需要登录
     },
     redirect: '/checkMenage/agent',
     children: [
@@ -63,6 +66,7 @@ export const asyRouter = [
         meta: {
           name: '代理商审核',
           iconfont: 'el-icon-loading',
+          needLogin:true,//需要登录
         }
       },
       {
@@ -72,6 +76,7 @@ export const asyRouter = [
         meta: {
           name: '商户审核',
           iconfont: 'el-icon-loading',
+          needLogin:true,//需要登录
         }
       },
       {
@@ -81,6 +86,7 @@ export const asyRouter = [
         meta: {
           name: '专引师审核',
           iconfont: 'el-icon-loading',
+          needLogin:true,//需要登录
         }
       },
       {
@@ -90,6 +96,7 @@ export const asyRouter = [
         meta: {
           name: '处罚单',
           iconfont: 'el-icon-loading',
+          needLogin:true,//需要登录
         }
       },
     ]
@@ -102,6 +109,7 @@ export const asyRouter = [
     meta: {
       name: '代理商管理',
       iconfont: 'el-icon-loading',
+      needLogin:true,//需要登录
     },
     redirect: '/agentMenage/agent',
     children: [
@@ -112,6 +120,7 @@ export const asyRouter = [
         meta: {
           name: '代理商列表',
           iconfont: 'el-icon-loading',
+          needLogin:true,//需要登录
         }
       }
     ]
@@ -123,6 +132,7 @@ export const asyRouter = [
     meta: {
       name: '商户管理',
       iconfont: 'el-icon-loading',
+      needLogin:true,//需要登录
     },
     redirect: '/sellerMenage/seller',
     children: [
@@ -133,6 +143,7 @@ export const asyRouter = [
         meta: {
           name: '商户列表',
           iconfont: 'el-icon-loading',
+          needLogin:true,//需要登录
         }
       },
     ]
@@ -144,6 +155,7 @@ export const asyRouter = [
     meta: {
       name: '订单管理',
       iconfont: 'el-icon-loading',
+      needLogin:true,//需要登录
     }
   },
   {
@@ -153,6 +165,7 @@ export const asyRouter = [
     meta: {
       name: '广告位管理',
       iconfont: 'el-icon-loading',
+      needLogin:true,//需要登录
     }
   },
   {
@@ -162,6 +175,7 @@ export const asyRouter = [
     meta: {
       name: '专引师管理',
       iconfont: 'el-icon-loading',
+      needLogin:true,//需要登录
     }
   },
   {
@@ -171,6 +185,7 @@ export const asyRouter = [
     meta: {
       name: '系统文章管理',
       iconfont: 'el-icon-loading',
+      needLogin:true,//需要登录
     }
   },
   {
@@ -180,11 +195,12 @@ export const asyRouter = [
     meta: {
       name: '代金券设置',
       iconfont: 'el-icon-loading',
+      needLogin:true,//需要登录
     }
   },
 ]
 
-export default new Router({
+const router =new Router({
   routes: [
     {
       path: '/',
@@ -210,3 +226,22 @@ export default new Router({
     }
   ]
 })
+// 全局路由守卫
+router.beforeEach((to, from, next) => {
+  let isLogin = localStorage.getItem('token')  // 判断是否登录，本地存储有用户数据则视为已经登录
+  if (to.meta.needLogin) {  // 判断该路由是否需要登录权限
+    if (isLogin) { // 判断是否已经登录
+      next()
+    }else {//未登录，传递当前路径过去
+      next({
+        path: '/login',
+        query: {redirect: to.fullPath}  // 将跳转的路由path作为参数，登录成功后跳转到该路由
+      })
+    }
+  }
+  else {
+    next()
+  }
+})
+
+export default router

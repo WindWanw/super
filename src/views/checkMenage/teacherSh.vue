@@ -14,11 +14,11 @@
         end-placeholder="结束日期"
         :picker-options="pickerOptions"
       ></el-date-picker>
-      <el-button type="primary" icon="el-icon-search" size="small" @click="search">搜索</el-button>
+      <el-button type="primary" icon="el-icon-search" size="small" @click="search" style="margin-left:10px">搜索</el-button>
     </div>
     </div>
     <div class="content">
-       <el-table :data="dataList.info" stripe border style="width:100%">
+       <el-table :data="dataList.info" stripe border style="width:100%" v-loading="loading">
         <el-table-column type="expand">
           <template slot-scope="props">
             <div class="expand_wrap">
@@ -94,6 +94,7 @@
 export default {
   data() {
     return {
+      loading:false,
       pickerOptions: {//快捷键
             shortcuts: [{
               text: '最近一周',
@@ -145,6 +146,7 @@ export default {
   methods: {
     //获取数据列表
     getDataList() {
+      this.loading=true;
       this.$api
         .getGuideList({
           page: this.page,
@@ -154,6 +156,7 @@ export default {
         })
         .then(res => {
           this.dataList = res.data || [];
+          this.loading=false;
         });
     },
     //分页
