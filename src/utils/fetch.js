@@ -3,9 +3,9 @@ import Vue from 'vue'
 import axios from 'axios';
 Vue.prototype.axios = axios;
 axios.defaults.timeout = 10000;//响应时间
-import {Message} from 'element-ui';
+import { Message } from 'element-ui';
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
-axios.defaults.baseURL = 'http://47.110.67.134';//配置接口地址
+axios.defaults.baseURL = 'http://dev.admin.api.zhengyi100.cn';//配置接口地址
 
 
 // 请求拦截器（在发送请求之前做些什么）
@@ -30,9 +30,9 @@ axios.interceptors.response.use(function (response) {
     // 对响应数据做点什么
     return response.data;
 }, function (error) {
-    if(error.message.includes('timeout')){
+    if (error.message.includes('timeout')) {
         Message.error('网络超时，请刷新页面重试');
-    }else{
+    } else {
         Message.error('服务器响应错误，请重试');
     }
     // 对响应错误做点什么
