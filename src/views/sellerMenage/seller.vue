@@ -93,7 +93,7 @@
     >
       <el-form status-icon :model="form" :rules="rules" ref="ruleForm" label-width="120px">
         <el-form-item label="城市">
-          <el-cascader :options="cityData" v-model="selectCity" change-on-select :placeholder="form.id?'如需修改请选择':'请选择城市'"></el-cascader>
+          <el-cascader :options="cityData" @change="currentCity" v-model="selectCity" change-on-select :placeholder="form.id?'如需修改请选择':'请选择城市'"></el-cascader>
           <span v-if="form.id" style="margin-left:20px">当前城市:{{city}}</span>
         </el-form-item>
         <el-form-item v-if="!form.id" label="账号" :prop="form.id?'':'username'">
@@ -176,6 +176,7 @@
 
 <script>
 import citys from '../../utils/city.js';
+import { constants } from 'crypto';
 export default {
   data() {
     return {
@@ -252,7 +253,6 @@ export default {
       form: {
         username: '',
         password: "",
-        tel: "",
         name: "",
         message: "",
         address: "",
@@ -308,6 +308,9 @@ export default {
           this.dataList = res.data || [];
           this.loading=false;
         });
+    },
+    currentCity(e){
+      console.log(e)
     },
     //查询用户
     search() {

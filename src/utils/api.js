@@ -100,16 +100,16 @@ export default{
      * 商户审核列表(status=0)
      */
     getSellerList(params){
-        return fetchPost('/supplier/supplierList',params)
+        return fetchPost('/supplier/supplierAdminList',params)
     },
     addSeller(params){
-        return fetchPost('/supplier/supplierAdd',params)
+        return fetchPost('/supplier/supplierAdminAdd',params)
     },
     editSeller(params){
-        return fetchPost('/supplier/suplierUpdate',params)
+        return fetchPost('/supplier/supplierAdminUpdate',params)
     },
     delSeller(params){
-        return fetchPost('/supplier/suplierDel',params)
+        return fetchPost('/supplier/supplierAdminDel',params)
     },
 
 
