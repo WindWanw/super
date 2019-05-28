@@ -109,7 +109,7 @@
         </el-form-item>
         <el-form-item label="身份证正面" prop="picOn">
           <el-upload
-            :action="`${axios.defaults.baseURL}common/upload/file/sfz_upload_dir/front`"
+            :action="`${axios.defaults.baseURL}/common/upload/file/sfz_upload_dir/front`"
             accept="image/jpeg, image/gif, image/png, image/bmp"
             :before-upload="beforeUp1"
             :show-file-list="false"
@@ -120,7 +120,7 @@
             <img v-if="form.picOn" class="idcard_img" :src="form.picOn">
         </el-form-item>
         <el-form-item label="身份证反面" prop="picOff">
-          <el-upload :action="`${axios.defaults.baseURL}common/upload/file/sfz_upload_dir/front`" accept="image/jpeg,image/gif,image/png,image/bmp" :before-upload="beforeUp2" :show-file-list="false" :on-success="upSuc2">
+          <el-upload :action="`${axios.defaults.baseURL}/common/upload/file/sfz_upload_dir/front`" accept="image/jpeg,image/gif,image/png,image/bmp" :before-upload="beforeUp2" :show-file-list="false" :on-success="upSuc2">
             <el-button size="small" type="primary">点击上传</el-button>
           </el-upload>
           <img v-if="form.picOff" class="idcard_img" :src="form.picOff">
