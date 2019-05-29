@@ -43,10 +43,13 @@
         <el-table-column prop="username" label="账号"></el-table-column>
         <el-table-column prop="name" label="姓名"></el-table-column>
         <el-table-column prop="address" label="详细地址"></el-table-column>
-        <el-table-column prop="message" label="商户描述">
-          <template slot-scope="scope">
-            {{scope.row.message || '无'}}
-          </template>
+        <el-table-column prop="shop_info" label="商户描述">
+          <!-- <template slot-scope="scope">
+            {{scope.row.shop_info || '无'}}
+          </template> -->
+           <template slot-scope="scope">
+              <el-button size="mini" type="success" @click="form.shop_info=scope.row.shop_info;previewDialog=true">预览</el-button>
+            </template>
         </el-table-column>
         <el-table-column prop="tel" label="手机号码"></el-table-column>
         <el-table-column prop="times" label="入驻时间">
@@ -108,11 +111,42 @@
         <el-form-item label="姓名" prop="name">
           <el-input v-model="form.name" placeholder="请输入姓名"></el-input>
         </el-form-item>
+         <el-form-item label="店铺名" prop="shopname">
+          <el-input v-model="form.shopname" placeholder="请输入店铺名"></el-input>
+        </el-form-item>
+        <el-form-item label="商户类型" prop="shop_type">
+          <el-select v-model="form.shop_type" placeholder="请选择">
+            <el-option
+              v-for="item in types"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+         <el-form-item label="谈判比例类型">
+          <template>
+            <el-radio v-model="form.commission" label="1" @change="explanation">平台托管</el-radio>
+            <el-radio v-model="form.commission" label="2" @change="explanation">自定义</el-radio>
+          </template>
+          <span class="iconfont BAI-heirenwenhao" @click="explanation()" style="cursor:pointer"></span>
+        </el-form-item>
+        <el-form-item label="分成比例" prop="discount" v-if="form.commission=='1'">
+          <el-input v-model="form.discount" placeholder="请输入专引师的分成比例">
+            <template slot="append">%</template>
+          </el-input>
+        </el-form-item>
         <el-form-item label="商户描述">
-          <el-input v-model="form.message" placeholder="请输入商户描述"></el-input>
+          <el-input v-model="form.shop_info" placeholder="请输入商户描述"></el-input>
         </el-form-item>
         <el-form-item label="详细地址" prop="address">
           <el-input v-model="form.address" placeholder="请输入详细地址"></el-input>
+        </el-form-item>
+           <el-form-item label="店铺头像" prop="shop_avatar">
+          <el-upload :action="`${axios.defaults.baseURL}/common/upload/file/upload_dir`" accept="image/jpeg,image/gif,image/png,image/bmp" :before-upload="beforeUp5" :show-file-list="false" :on-success="upSuc5">
+            <el-button size="small" type="primary">点击上传</el-button>
+          </el-upload>
+          <img v-if="form.shop_avatar" class="license_img" :src="form.shop_avatar">
         </el-form-item>
         <el-form-item label="身份证号码" prop="idcard">
           <el-input v-model="form.idcard" placeholder="请输入身份证号码"></el-input>
@@ -140,6 +174,12 @@
             <el-button size="small" type="primary">点击上传</el-button>
           </el-upload>
           <img v-if="form.license" class="license_img" :src="form.license">
+        </el-form-item>
+         <el-form-item label="其他证明材料" prop="other">
+          <el-upload :action="`${axios.defaults.baseURL}/common/upload/file/upload_dir`" accept="image/jpeg,image/gif,image/png,image/bmp" :before-upload="beforeUp4" :show-file-list="false" :on-success="upSuc4">
+            <el-button size="small" type="primary">点击上传</el-button>
+          </el-upload>
+          <img v-if="form.other" class="license_img" :src="form.other">
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -171,6 +211,13 @@
         <el-button type="primary" @click="punishSure">确 定</el-button>
       </span>
     </el-dialog>
+       <!-- 预览dialog -->
+        <el-dialog title="店铺详情" :visible.sync="previewDialog" width="800px" top="20px">
+          <div v-html="form.shop_info"></div>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="previewDialog = false">关闭</el-button>
+          </div>
+        </el-dialog>
   </div>
 </template>
 
@@ -203,6 +250,9 @@ export default {
         ],
         picOff: [
           { required: true, message: "身份证反面不能为空", trigger: "blur" }
+        ],
+        shopname: [
+          { required: true, message: "店铺名不能为空", trigger: "blur" }
         ],
         license: [
           { required: true, message: "营业执照不能为空", trigger: "blur" }
@@ -247,6 +297,7 @@ export default {
       page: 1, //页
       limit: 10, //条
       AddEditDialog: false,
+      previewDialog:false,//预览文章内容
       cityData:citys,//城市数据
       selectCity:[],//选择城市
       city:'',
@@ -254,9 +305,22 @@ export default {
         username: '',
         password: "",
         name: "",
-        message: "",
+        shop_info: "",//商铺描述
+        shop_type:"", //商铺类型
+        commission:"",//分成比例  1为托管  2为自定义
+        discount:"",//折扣分成
         address: "",
         tel: "",
+        idcard: "",
+        picOn: "",
+        picOff: "",
+        license: "",
+        other:"",
+        shop_avatar:"",
+        shopname:""
+      },
+      autoChecke: {//用户自动审核的相关信息
+        name: "",
         idcard: "",
         picOn: "",
         picOff: "",
@@ -267,8 +331,8 @@ export default {
       punishContentList:'',
       punishId:'',//处罚id
       punishType:'',
-      punishContent:''
-
+      punishContent:'',
+      types: [{ label: "线上非实体店", value: 1 }, { label: "线下实体店", value: 2 }]//商铺类型
     };
   },
   watch:{
@@ -283,6 +347,15 @@ export default {
   },
   components: {},
   methods: {
+      explanation() {
+      this.$message({
+        showClose: true,
+        dangerouslyUseHTMLString: true,
+        message:
+          "<strong>托管平台：托管正意平台，商户与专引师固定分成比例；<p>&nbsp;<p>自定义：商户与专引师沟通，自定义分成比例</strong>",
+        duration: 5000
+      });
+    },
     // 切换limit
     handleSizeChange(val) {
       this.limit = val;
@@ -355,6 +428,13 @@ export default {
         this.form.picOn = item.picOn;
         this.form.picOff = item.picOff;
         this.form.license = item.license;
+        this.form.shop_info=item.shop_info;
+        this.form.shop_type=item.shop_type;
+        this.form.commission=item.commission;
+        this.form.discount=item.discount;
+        this.form.shopname=item.shopname;
+        this.form.shop_avatar=item.shop_avatar;
+        this.form.other=item.other;
       }
       this.AddEditDialog = true;
     },
@@ -397,12 +477,38 @@ export default {
         this.form.license = res.data.host + res.data.name;
       }
     },
+      //上次图片前
+    beforeUp4(file) {},
+    //上传成功后
+    upSuc4(res, file, fileList) {
+      console.log(res);
+      if (res.code) {
+        return;
+      } else {
+        this.form.other = res.data.host + res.data.name;
+      }
+    },
+     beforeUp5(file) {},
+    //上传成功后
+    upSuc5(res, file, fileList) {
+      console.log(res);
+      if (res.code) {
+        return;
+      } else {
+        this.form.shop_avatar = res.data.host + res.data.name;
+      }
+    },
     //确认添加/修改
     addEdit() {
       let that=this;
       if(!this.form.id){
         if(!that.selectCity || !that.selectCity.length)return this.$message.warning('请选择城市');
       }
+      this.autoChecke.name = this.form.name;
+      this.autoChecke.idcard = this.form.idcard;
+      this.autoChecke.picOn = this.form.picOn;
+      this.autoChecke.picOff = this.form.picOff;
+      this.autoChecke.license = this.form.license;
       that.$refs.ruleForm.validate(valid => {
         if (valid) {
           that.$api[that.form.id ? "editSeller" : "addSeller"]({
@@ -411,13 +517,22 @@ export default {
             tel: that.form.tel,
             citycode: that.selectCity,
             id: that.form.id || '',
+            shop_type:that.form.shop_type,
+            discount:that.form.discount,
+            commission:that.form.commission,
+            shopname:that.form.shopname,
+            shop_info:that.form.shop_info,
+            address:that.form.address,
+            shop_avatar:that.form.shop_avatar||"",
+            autoChecke:that.autoChecke,
             material:{
               name: that.form.name,
               address: that.form.address,
               idcard: that.form.idcard,
               picOn: that.form.picOn,
               picOff: that.form.picOff,
-              license: that.form.license
+              license: that.form.license,
+              other: that.form.other
             },
             
           }).then(res => {
