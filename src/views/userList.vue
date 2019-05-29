@@ -2,8 +2,16 @@
   <div class="userList">
     <!-- 头部（搜索条件） -->
     <div class="table_title">
+        <div>
+        <el-button size="small" @click="returnHome()">返回列表首页</el-button>
+      </div>
       <div class="search_wrap">
         <el-input clearable v-model="username" placeholder="请输入用户名" size="small" style="width:200px"></el-input>
+        <el-input clearable v-model="city" placeholder="请输入城市名称" size="small" style="width:200px;margin:0 10px"></el-input>
+        <el-select clearable v-model="sex" placeholder="请选择用户性别" size="small" style="margin:0 10px">
+          <el-option label="男" :value="1"></el-option>
+          <el-option label="女" :value="0"></el-option>
+        </el-select>
         <el-select clearable v-model="status" placeholder="请选择用户类型" size="small" style="margin:0 10px">
           <el-option label="正常" :value="1"></el-option>
           <el-option label="禁用" :value="-1"></el-option>
@@ -101,6 +109,8 @@ export default {
       username: "", //用户名
       status: "", //用户状态
       date: "", //日期
+      sex:"",
+      city:"",
       dataList: [], //数据源
       page: 1, //页
       limit: 10 //条
@@ -126,6 +136,8 @@ export default {
           limit: this.limit,
           status: this.status,
           times: this.date,
+          gender:this.sex,
+          city:this.city,
           username: this.username
         })
         .then(res => {
@@ -155,8 +167,19 @@ export default {
         .catch(() => {
           this.$message.info("已取消操作");
         });
-    }
+    },
+    returnHome() {
+      this.page = 1;
+      this.limit = 10;
+      this.status = "";
+      this.times = "";
+      this.username = "";
+      this.city = "";
+      this.gender = ""; 
+      this.getDataList();
+    },
   },
+  
   created() {
     this.getDataList();
   }

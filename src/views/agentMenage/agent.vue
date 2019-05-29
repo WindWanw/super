@@ -41,7 +41,7 @@
         <el-table-column prop="city" label="代理城市"></el-table-column>
         <el-table-column prop="username" label="账号"></el-table-column>
         <el-table-column prop="name" label="联系人姓名"></el-table-column>
-        <el-table-column prop="address" label="联系人地址"></el-table-column>
+        <!-- <el-table-column prop="address" label="联系人地址"></el-table-column> -->
         <el-table-column prop="tel" label="手机号码"></el-table-column>
         <el-table-column prop label="账号状态">
           <template slot-scope="scope">
@@ -55,7 +55,7 @@
           <template slot-scope="scope">
             <div class="cz_btn">
               <el-button
-                @click="openAddEditDialog('edit',scope.row)"
+                @click="openAddEditDialog('edit',scope.row)" 
                 type="primary"
                 size="mini"
                 icon="el-icon-edit"
@@ -98,9 +98,7 @@
         <el-form-item label="联系人姓名" prop="name">
           <el-input v-model="form.name" placeholder="请输入联系人姓名"></el-input>
         </el-form-item>
-        <el-form-item label="联系人地址" prop="address">
-          <el-input v-model="form.address" placeholder="请输入联系人地址"></el-input>
-        </el-form-item>
+
         <el-form-item label="手机号码" prop="tel">
           <el-input v-model="form.tel" placeholder="请输入手机号码"></el-input>
         </el-form-item>

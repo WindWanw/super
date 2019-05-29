@@ -34,7 +34,7 @@ function userStatus(type){
 
 //性别
 function sexStatus(type){
-    return type==0?'男':type==1?'女':'未知';
+    return type==0?'女':type==1?'男':'未知';
 }
 //订单类型
 function orderStatus(type){
