@@ -76,17 +76,20 @@ export default{
      * 修改系统文章
      * 删除系统文章
      */
-    getArticleList(params){
-        return fetchPost('/sys_articles/SysArticlesList',params)
+    getArticleList(params) {
+        return fetchPost('/sys_articles/SysArticlesList', params)
     },
-    addArticle(params){
-        return fetchPost('/sys_articles/SysArticlesAdd',params)
+    addArticle(params) {
+        return fetchPost('/sys_articles/SysArticlesAdd', params)
     },
-    editArticle(params){
-        return fetchPost('/sys_articles/SysArticlesEdit',params)
+    editArticle(params) {
+        return fetchPost('/sys_articles/SysArticlesEdit', params)
     },
-    delArticle(params){
-        return fetchPost('/sys_articles/SysArticlesDelete',params)
+    delArticle(params) {
+        return fetchPost('/sys_articles/SysArticlesDelete', params)
+    },
+    getDataTypeList(params) {
+        return fetchPost('/sys_articles/SysArticleType', params)
     },
 
 
