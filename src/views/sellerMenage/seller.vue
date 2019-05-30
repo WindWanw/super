@@ -43,6 +43,7 @@
         <el-table-column prop="username" label="账号"></el-table-column>
         <el-table-column prop="name" label="姓名"></el-table-column>
         <el-table-column prop="address" label="详细地址"></el-table-column>
+        <!-- <el-table-column prop="open_times" label="营业时间"></el-table-column> -->
         <el-table-column prop="shop_info" label="商户描述">
           <!-- <template slot-scope="scope">
             {{scope.row.shop_info || '无'}}
@@ -141,6 +142,9 @@
         </el-form-item>
         <el-form-item label="详细地址" prop="address">
           <el-input v-model="form.address" placeholder="请输入详细地址"></el-input>
+        </el-form-item>
+        <el-form-item label="营业时间" prop="open_times">
+          <el-input v-model="form.open_times" placeholder="请输入营业时间"></el-input>
         </el-form-item>
            <el-form-item label="店铺头像" prop="shop_avatar">
           <el-upload :action="`${axios.defaults.baseURL}/common/upload/file/upload_dir`" accept="image/jpeg,image/gif,image/png,image/bmp" :before-upload="beforeUp5" :show-file-list="false" :on-success="upSuc5">
@@ -254,6 +258,9 @@ export default {
         shopname: [
           { required: true, message: "店铺名不能为空", trigger: "blur" }
         ],
+        open_times:[
+           { required: true, message: "营业时间不能为空", trigger: "blur" }
+        ],
         license: [
           { required: true, message: "营业执照不能为空", trigger: "blur" }
         ]
@@ -318,7 +325,8 @@ export default {
         license: "",
         other:"",
         shop_avatar:"",
-        shopname:""
+        shopname:"",
+        open_times:""
       },
       autoChecke: {//用户自动审核的相关信息
         name: "",
@@ -436,6 +444,7 @@ export default {
         this.form.shopname=item.shopname;
         this.form.shop_avatar=item.shop_avatar;
         this.form.other=item.other;
+        this.form.open_times=item.open_times|| '';
       }
       this.AddEditDialog = true;
     },
@@ -526,6 +535,8 @@ export default {
             address:that.form.address,
             shop_avatar:that.form.shop_avatar||"",
             autoChecke:that.autoChecke,
+            name: that.form.name,
+            open_times:that.form.open_times||"",
             material:{
               name: that.form.name,
               address: that.form.address,
