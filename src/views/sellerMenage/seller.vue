@@ -8,7 +8,7 @@
         @click="openAddEditDialog('add')"
       >添加商户</el-button>
       <div class="search_wrap">
-        <el-input clearable v-model="username" placeholder="请输入账号" size="small" style="width:200px"></el-input>
+        <el-input clearable v-model="name" placeholder="按姓名搜索" size="small" style="width:200px"></el-input>
         <el-select clearable v-model="status" placeholder="请选择用户类型" size="small" style="margin:0 10px">
           <el-option label="正常" :value="1"></el-option>
           <el-option label="禁用" :value="-1"></el-option>
@@ -291,6 +291,7 @@ export default {
         ]
       },
       username: "", //名称
+      name:"",
       status: "", //用户状态
       date: "", //日期
       dataList: [], //数据源
@@ -375,7 +376,7 @@ export default {
           limit: this.limit,
           status: this.status,
           times: this.date,
-          username: this.username
+          name: this.name
         })
         .then(res => {
           this.dataList = res.data || [];
