@@ -5,6 +5,7 @@ const noFound = () => import(/* webpackChunkName: "404" */ './views/404.vue')
 const home = () => import(/* webpackChunkName: "home" */ './views/home.vue')
 const dataStatistics = () => import(/* webpackChunkName: "dataStatistics" */ './views/dataStatistics.vue')
 const userList = () => import(/* webpackChunkName: "userList" */ './views/userList.vue')
+const finance = () => import(/* webpackChunkName: "userList" */ './views/finance.vue')
 
 const agentMenage = () => import(/* webpackChunkName: "agentMenage" */ './views/agentMenage')
 const agent = () => import(/* webpackChunkName: "agent" */ './views/agentMenage/agent.vue')
@@ -44,6 +45,16 @@ export const asyRouter = [
     component: userList,
     meta: {
       name: '用户管理',
+      iconfont: 'el-icon-loading',
+      needLogin:true,//需要登录
+    }
+  },
+  {
+    path: '/finance',
+    name: 'finance',
+    component: finance,
+    meta: {
+      name: '财务中心',
       iconfont: 'el-icon-loading',
       needLogin:true,//需要登录
     }

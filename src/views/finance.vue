@@ -1,0 +1,189 @@
+<template>
+  <div class="finance">
+    <div class="table_title">
+      <div class="search_wrap">
+        <el-select style="margin:0 10px" v-model="status" size="small" filterable placeholder="类型">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          ></el-option>
+        </el-select>
+        <el-input
+          clearable
+          v-model="name"
+          placeholder="请输入持卡人姓名"
+          size="small"
+          style="width:200px;margin:0 10px"
+        ></el-input>
+        <el-button type="primary" size="small" @click="search" icon="el-icon-search">搜索</el-button>
+      </div>
+    </div>
+
+    <div class="content">
+      <el-table :data="dataList.list" style="width: 100%">
+        <el-table-column type="expand">
+          <template slot-scope="props">
+            <el-form label-position="left" inline class="demo-table-expand">
+              <el-form-item label="ID">
+                <span>{{ props.row.id }}</span>
+              </el-form-item>
+              <el-form-item label="UID">
+                <span>{{ props.row.uid }}</span>
+              </el-form-item>
+              <el-form-item label="提现金额">
+                <span>{{ props.row.amount }}</span>
+              </el-form-item>
+              <el-form-item label="持卡人">
+                <span>{{ props.row.name }}</span>
+              </el-form-item>
+              <el-form-item label="银行">
+                <span>{{ props.row.bank }}</span>
+              </el-form-item>
+              <el-form-item label="银行卡号">
+                <span>{{ props.row.bank_account }}</span>
+              </el-form-item>
+              <el-form-item label="申请时间">
+                <span>{{ props.row.create_times }}</span>
+              </el-form-item>
+              <el-form-item label="反馈信息">
+                <span>{{ props.row.info }}</span>
+              </el-form-item>
+              <el-form-item label="审核人">
+                <span>{{ props.row.checker }}</span>
+              </el-form-item>
+              <el-form-item label="付款人">
+                <span>{{ props.row.payer }}</span>
+              </el-form-item>
+              <el-form-item label="个人所得税">
+                <span>{{ props.row.tax }}</span>
+              </el-form-item>
+              <el-form-item label="实际打款">
+                <span>{{ props.row.pay_amount }}</span>
+              </el-form-item>
+              <el-form-item label="审核时间">
+                <span>{{ props.row.check_times }}</span>
+              </el-form-item>
+              <el-form-item label="付款时间">
+                <span>{{ props.row.pay_times }}</span>
+              </el-form-item>
+            </el-form>
+          </template>
+        </el-table-column>
+        <el-table-column label="ID" prop="id"></el-table-column>
+        <el-table-column label="持卡人姓名" prop="name"></el-table-column>
+        <el-table-column label="提现金额" prop="amount"></el-table-column>
+        <el-table-column label="银行" prop="bank"></el-table-column>
+        <el-table-column label="申请时间" prop="create_times"></el-table-column>
+        <el-table-column label="状态" prop="status">
+          <template slot-scope="scope">
+            <!-- @click="userStop(scope.row.id)"
+            :title="scope.row.status=='1'?'点击禁用':'点击解除禁用'"-->
+            <el-button
+              :type="scope.row.status | withdrawStatus"
+              size="mini"
+            >{{scope.row.status | withdrawText}}</el-button> 
+          </template>
+          <!-- <el-button type="success">成功按钮</el-button>
+  <el-button type="info">信息按钮</el-button>
+  <el-button type="warning">警告按钮</el-button>
+          <el-button type="danger">危险按钮</el-button>-->
+        </el-table-column>
+      </el-table>
+      <el-pagination
+        background
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="page"
+        :page-sizes="[10, 20, 50, 100]"
+        :page-size="limit"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="dataList.total"
+      ></el-pagination>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      options: [
+        {
+          value: 0,
+          label: "待审核"
+        },
+        {
+          value: 1,
+          label: "已审核"
+        },
+        {
+          value: 2,
+          label: "已打款"
+        },
+        {
+          value: 3,
+          label: "未通过审核"
+        },
+        {
+          value: 4,
+          label: "打款失败"
+        }
+      ],
+      loading: false,
+
+      dataList: [],
+      page: 1,
+      limit: 10,
+      status: 0,
+      name: ""
+    };
+  },
+  watch: {},
+  components: {},
+  methods: {
+    //获取数据列表
+    getDataList() {
+      this.loading = true;
+      this.$api
+        .getWithdrawList({
+          page: this.page,
+          LIMIT: this.limit,
+          status: this.status,
+          name:this.name
+        })
+        .then(res => {
+          this.dataList = res.data || [];
+          this.loading = false;
+        });
+    },
+    //分页
+    handleSizeChange(val) {
+      this.page = val;
+      this.getDataList();
+    },
+    //分条
+    handleCurrentChange(val) {
+      this.limit = val;
+      this.getDataList();
+    },
+    //搜索
+    search(){
+        this.page = 1;
+        this.getDataList();
+    }
+  },
+  created() {
+    this.getDataList();
+  }
+};
+</script>
+
+<style scoped>
+.content {
+  background-color: #fff;
+  padding: 20px;
+  box-sizing: border-box;
+}
+</style>

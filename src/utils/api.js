@@ -168,6 +168,13 @@ export default{
         return fetchPost('/ticket/TicketEdit',params)
     },
 
-
+    /**
+     * @专引师管理
+     * 财务中心列表
+     */
+    getWithdrawList(params){
+        return fetchPost('/finance/withdrawList',params)
+    },
+    
 
 }

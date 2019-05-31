@@ -123,7 +123,46 @@ function copyArray(arr,result){
     //     let arr=[];
     //     if(code.slice(0,))
     // }
+    //用户账号状态
+function withdrawStatus(status){
+    switch(status){
+        case '0':
+        return 'warning';
+        break;
+        case '1 ':
+        return 'primary';
+        break;
+        case '2':
+        return 'success';
+        break;
+        case '3':
+        return 'danger'
+        break;
+        case '4':
+        return 'danger'
+        break;
+    }
+}
 
+function withdrawText(status){
+    switch(status){
+        case '0':
+        return '待审核';
+        break;
+        case '1 ':
+        return '已审核';
+        break;
+        case '2':
+        return '已打款';
+        break;
+        case '3':
+        return '审核未通过'
+        break;
+        case '4':
+        return '打款失败'
+        break;
+    }
+}
 export default{
     formatTimeStamp,
     userStatus,
@@ -131,5 +170,8 @@ export default{
     copyArray,
     orderStatus,
     payStatus,
-    pagination
+    pagination,
+    withdrawStatus,
+    withdrawText
 }
+

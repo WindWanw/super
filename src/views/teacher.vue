@@ -36,7 +36,7 @@
         <el-table-column prop="city" label="专引城市"></el-table-column>
         <el-table-column prop="tag" label="标签" width="300px">
           <template slot-scope="scope">
-            <el-tag style="margin-right:10px" v-for="item in scope.row.tag" :key="item">{{item}}</el-tag>
+            <el-tag style="margin-right:10px" v-for="(item,index) in scope.row.tag" v-if="index<4" :key="item">{{item}}</el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="shopname" label="商店"></el-table-column>
@@ -50,6 +50,8 @@
             <!-- @click="userStop(scope.row.id)"
             :title="scope.row.status=='1'?'点击禁用':'点击解除禁用'" -->
             <el-button
+              :title="scope.row.status=='1'?'点击禁用':'点击解除禁用'"
+              @click="userStop(scope.row.id)"
               :type="scope.row.status=='1'?'success':'info'"
               size="mini"
             >{{scope.row.status | userStatus}}</el-button>
