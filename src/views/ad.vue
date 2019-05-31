@@ -117,7 +117,7 @@ import upload from '../components/upload';
           },
           rules:{
             page:[
-              { required: true, message: '账号不能为空', trigger: 'blur' }
+              { required: true, message: '广告页不能为空', trigger: 'blur' }
             ],
             
             title:[

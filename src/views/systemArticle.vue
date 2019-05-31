@@ -2,10 +2,22 @@
    <div class='systemArticle'>
        <div class="table_title">
          <el-button type="primary" size="small" icon="el-icon-plus" @click="openAddEditDialog('add')">添加文章</el-button>
+         <div class="searchText">
+         <el-select clearable v-model="type" placeholder="请选择文章类型搜索默认全部" size="small" >
+                <el-option
+                  v-for="item in options"
+                  :key="item.val"
+                  :label="item.label"
+                  :value="item.val">
+                </el-option>
+        </el-select>
+          <el-button type="primary" icon="el-icon-search" size="small" @click="search">搜索</el-button>
+      </div>
        </div>
        <div class="content">
          <el-table :data="dataList.list" stripe border v-loading="loading">
-          <el-table-column prop="code" label="文章类型"></el-table-column>
+          <el-table-column prop="type" label="文章类型"></el-table-column>
+           <el-table-column prop="sort" label="排序"></el-table-column>
           <el-table-column prop="title" label="文章标题"></el-table-column>
           <el-table-column prop="body" label="文章内容">
             <template slot-scope="scope">
@@ -46,11 +58,14 @@
               <el-select v-model="form.code" placeholder="请选择文章类型">
                 <el-option
                   v-for="item in options"
-                  :key="item.value"
+                  :key="item.val"
                   :label="item.label"
-                  :value="item.value">
+                  :value="item.val">
                 </el-option>
               </el-select>
+            </el-form-item>
+             <el-form-item label="文章排序">
+              <el-input v-model="form.sort" placeholder="请输入排序"></el-input>
             </el-form-item>
             <el-form-item label="文章标题">
               <el-input v-model="form.title" placeholder="请输入文章标题"></el-input>
@@ -90,38 +105,22 @@ import EditorBar from '../components/editor'
           page:1,//页
           limit:10,//条
           AddEditDialog:false,
-          options: [{
-            value: '100',
-            label: '黄金糕'
-          }, {
-            value: '200',
-            label: '双皮奶'
-          }, {
-            value: '300',
-            label: '蚵仔煎'
-          }, {
-            value: '400',
-            label: '龙须面'
-          }, {
-            value: '500',
-            label: '北京烤鸭'
-          }],
+          options: [],
+          type:"",
           form:{
               code:'',
               title:'',
               body:'',
-              id:''
+              id:'',
+              sort:'',
           },
           previewDialog:false,//预览文章内容
      }
    },
-   components: {
-EditorBar 
-   },
+   components: {EditorBar},
    methods:{
        change(val){
-           console.log(val);
-           this.test = val
+          //  this.test = val
        },
      // 切换limit
      handleSizeChange(val){
@@ -139,6 +138,7 @@ EditorBar
        this.$api.getArticleList({
          page:this.page,
          limit:this.limit,
+         type:this.type,
        })
        .then(res=>{
          this.dataList=res.data || [];
@@ -171,6 +171,7 @@ EditorBar
             this.form.title=item.title;
             this.form.code=item.code;
             this.form.body=item.body;
+             this.form.sort=item.sort;
             this.form.id=item.id;
           }
           this.AddEditDialog=true;
@@ -186,10 +187,24 @@ EditorBar
           this.getDataList();
         })
       },
+      //获取系统文章类型
+      getDataTypeList(){
+        let that=this
+        this.$api.getDataTypeList()
+       .then(res=>{
+         that.options=res.data.list || [];
+       })
+      },
+      // 查询
+    search(){
+      this.page=1;
+      this.getDataList();
+    },
    },
    
    created(){
      this.getDataList();
+     this.getDataTypeList();
    }
   }
 </script>
@@ -205,5 +220,13 @@ EditorBar
   .avatar{
     width: 30px;
     height: 30px;
+  }
+  .searchText{
+    text-align: left;
+    /* margin-left: 50px; */
+  }
+  .table_title{
+    /* justify-content: flex-start; */
+    
   }
 </style>

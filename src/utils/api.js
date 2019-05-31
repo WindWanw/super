@@ -76,17 +76,20 @@ export default{
      * 修改系统文章
      * 删除系统文章
      */
-    getArticleList(params){
-        return fetchPost('/sys_articles/SysArticlesList',params)
+    getArticleList(params) {
+        return fetchPost('/sys_articles/SysArticlesList', params)
     },
-    addArticle(params){
-        return fetchPost('/sys_articles/SysArticlesAdd',params)
+    addArticle(params) {
+        return fetchPost('/sys_articles/SysArticlesAdd', params)
     },
-    editArticle(params){
-        return fetchPost('/sys_articles/SysArticlesEdit',params)
+    editArticle(params) {
+        return fetchPost('/sys_articles/SysArticlesEdit', params)
     },
-    delArticle(params){
-        return fetchPost('/sys_articles/SysArticlesDelete',params)
+    delArticle(params) {
+        return fetchPost('/sys_articles/SysArticlesDelete', params)
+    },
+    getDataTypeList(params) {
+        return fetchPost('/sys_articles/SysArticleType', params)
     },
 
 
@@ -100,16 +103,16 @@ export default{
      * 商户审核列表(status=0)
      */
     getSellerList(params){
-        return fetchPost('/supplier/supplierList',params)
+        return fetchPost('/supplier/supplierAdminList',params)
     },
     addSeller(params){
-        return fetchPost('/supplier/supplierAdd',params)
+        return fetchPost('/supplier/supplierAdminAdd',params)
     },
     editSeller(params){
-        return fetchPost('/supplier/suplierUpdate',params)
+        return fetchPost('/supplier/supplierAdminUpdate',params)
     },
     delSeller(params){
-        return fetchPost('/supplier/suplierDel',params)
+        return fetchPost('/supplier/supplierAdminDel',params)
     },
 
 

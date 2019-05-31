@@ -34,9 +34,9 @@
             <el-table-column prop="pay_amount" label="金额"></el-table-column>
             <el-table-column prop="outlet" label="折扣减免金额"></el-table-column>
             <el-table-column prop="card_id" label="卡券编号"></el-table-column>
-            <el-table-column prop="guide_id" label="所属专引师"></el-table-column>
-            <el-table-column prop="pay_times" label="下单时间" width="100px">
-              <template slot-scope="scope">{{scope.row.pay_times | formatTimeStamp}}</template>
+            <el-table-column prop="guide_name" label="所属专引师"></el-table-column>
+            <el-table-column prop="times" label="下单时间" width="100px">
+              <template slot-scope="scope">{{scope.row.times | formatTimeStamp}}</template>
             </el-table-column>
             <el-table-column prop="status" label="订单状态" width="100px">
               <template slot-scope="scope">
