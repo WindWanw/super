@@ -163,6 +163,8 @@ function withdrawText(status){
         break;
     }
 }
+
+
 export default{
     formatTimeStamp,
     userStatus,
@@ -172,6 +174,6 @@ export default{
     payStatus,
     pagination,
     withdrawStatus,
-    withdrawText
+    withdrawText,
 }
 

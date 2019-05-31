@@ -178,6 +178,8 @@ export default{
     getWithdrawList(params){
         return fetchPost('/finance/withdrawList',params)
     },
-    
+    passWithdraw(params){
+        return fetchPost('/finance/passWithdraw',params)
+    }
 
 }

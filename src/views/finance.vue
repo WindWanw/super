@@ -78,17 +78,24 @@
         <el-table-column label="申请时间" prop="create_times"></el-table-column>
         <el-table-column label="状态" prop="status">
           <template slot-scope="scope">
-            <!-- @click="userStop(scope.row.id)"
-            :title="scope.row.status=='1'?'点击禁用':'点击解除禁用'"-->
             <el-button
               :type="scope.row.status | withdrawStatus"
               size="mini"
-            >{{scope.row.status | withdrawText}}</el-button> 
+            >{{scope.row.status | withdrawText}}</el-button>
           </template>
-          <!-- <el-button type="success">成功按钮</el-button>
-  <el-button type="info">信息按钮</el-button>
-  <el-button type="warning">警告按钮</el-button>
-          <el-button type="danger">危险按钮</el-button>-->
+        </el-table-column>
+        <el-table-column label="操作" prop="status">
+          <template slot-scope="scope">
+            <el-button
+              type="primary"
+              @click="centerDialogVisible=true;id=scope.row.id"
+              v-if="status == 0"
+              size="mini"
+            >审核通过</el-button>
+            <el-button type="danger" v-if="status == 0" size="mini">驳回申请</el-button>
+            <el-button type="success" v-if="status == 1" size="mini">确认打款</el-button>
+            <el-button type="danger" v-if="status == 1" size="mini">打款失败</el-button>
+          </template>
         </el-table-column>
       </el-table>
       <el-pagination
@@ -102,6 +109,13 @@
         :total="dataList.total"
       ></el-pagination>
     </div>
+    <el-dialog :visible.sync="centerDialogVisible" width="30%" center>
+      <el-input v-model="tax" placeholder="个人所得税"></el-input>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="centerDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="passWithdraw">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -132,12 +146,13 @@ export default {
         }
       ],
       loading: false,
-
       dataList: [],
       page: 1,
       limit: 10,
       status: 0,
-      name: ""
+      name: "",
+      tax: "",
+      centerDialogVisible: false
     };
   },
   watch: {},
@@ -151,7 +166,7 @@ export default {
           page: this.page,
           LIMIT: this.limit,
           status: this.status,
-          name:this.name
+          name: this.name
         })
         .then(res => {
           this.dataList = res.data || [];
@@ -169,9 +184,22 @@ export default {
       this.getDataList();
     },
     //搜索
-    search(){
-        this.page = 1;
-        this.getDataList();
+    search() {
+      this.page = 1;
+      this.getDataList();
+    },
+    //通过审核
+    passWithdraw() {
+      this.centerDialogVisible = false
+      this.$api
+        .passWithdraw({
+          id: this.id,
+          tax: this.tax
+        })
+        .then(res => {
+          this.$message[res.code ? "warning" : "success"](res.data);
+          this.getDataList();
+        });
     }
   },
   created() {
