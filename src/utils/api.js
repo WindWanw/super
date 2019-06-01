@@ -180,6 +180,14 @@ export default{
     },
     passWithdraw(params){
         return fetchPost('/finance/passWithdraw',params)
-    }
-
+    },
+    blowWithdraw(params){
+        return fetchPost('/finance/blowWithdraw',params)
+    },
+    payWithdraw(params){
+        return fetchPost('/finance/payWithdraw',params)
+    },
+    unquaWithdraw(params){
+        return fetchPost('/finance/unquaWithdraw',params)
+    },
 }

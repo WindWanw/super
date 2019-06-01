@@ -129,7 +129,7 @@ function withdrawStatus(status){
         case '0':
         return 'warning';
         break;
-        case '1 ':
+        case '1':
         return 'primary';
         break;
         case '2':

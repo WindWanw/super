@@ -89,12 +89,22 @@
             <el-button
               type="primary"
               @click="centerDialogVisible=true;id=scope.row.id"
-              v-if="status == 0"
+              v-if="scope.row.status == 0"
               size="mini"
             >审核通过</el-button>
-            <el-button type="danger" v-if="status == 0" size="mini">驳回申请</el-button>
-            <el-button type="success" v-if="status == 1" size="mini">确认打款</el-button>
-            <el-button type="danger" v-if="status == 1" size="mini">打款失败</el-button>
+            <el-button
+              type="danger"
+              v-if="scope.row.status == 0"  
+              @click="centerDialogVisible2=true;id=scope.row.id"
+              size="mini"
+            >驳回申请</el-button>
+            <el-button
+              type="success"
+              v-if="scope.row.status == 1"
+              @click="centerDialogVisible3=true;id=scope.row.id"
+              size="mini"
+            >确认打款</el-button>
+            <el-button type="danger" v-if="scope.row.status == 1" size="mini">打款失败</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -114,6 +124,20 @@
       <span slot="footer" class="dialog-footer">
         <el-button @click="centerDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="passWithdraw">确 定</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog :visible.sync="centerDialogVisible2" width="30%" center>
+      <el-input type="textarea" v-model="info" placeholder="反馈信息"></el-input>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="centerDialogVisible2 = false">取 消</el-button>
+        <el-button type="primary" @click="blowWithdraw">确 定</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog :visible.sync="centerDialogVisible3" width="30%" center>
+      <el-input v-model="pay_amount" placeholder="打款金额"></el-input>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="centerDialogVisible3 = false">取 消</el-button>
+        <el-button type="primary" @click="payWithdraw">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -152,7 +176,11 @@ export default {
       status: 0,
       name: "",
       tax: "",
-      centerDialogVisible: false
+      info: "",
+      pay_amount:"",
+      centerDialogVisible: false,
+      centerDialogVisible2: false,
+      centerDialogVisible3: false
     };
   },
   watch: {},
@@ -190,11 +218,47 @@ export default {
     },
     //通过审核
     passWithdraw() {
-      this.centerDialogVisible = false
+      this.centerDialogVisible = false;
       this.$api
         .passWithdraw({
           id: this.id,
           tax: this.tax
+        })
+        .then(res => {
+          this.$message[res.code ? "warning" : "success"](res.data);
+          this.getDataList();
+        });
+    },
+    blowWithdraw() {
+      this.centerDialogVisible2 = false;
+      this.$api
+        .blowWithdraw({
+          id: this.id,
+          info: this.info
+        })
+        .then(res => {
+          this.$message[res.code ? "warning" : "success"](res.data);
+          this.getDataList();
+        });
+    },
+    payWithdraw() {
+      this.centerDialogVisible3 = false;
+      this.$api
+        .payWithdraw({
+          id: this.id,
+          pay_amount: this.pay_amount
+        })
+        .then(res => {
+          this.$message[res.code ? "warning" : "success"](res.data);
+          this.getDataList();
+        });
+    },
+    unquaWithdraw() {
+      this.centerDialogVisible = false;
+      this.$api
+        .unquaWithdraw({
+          id: this.id,
+          info: this.info
         })
         .then(res => {
           this.$message[res.code ? "warning" : "success"](res.data);
