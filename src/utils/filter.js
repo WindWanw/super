@@ -40,10 +40,10 @@ function sexStatus(type){
 function orderStatus(type){
     switch(type){
         case '1':
-        return '代付款';
+        return '待付款';
         break;
         case '2':
-        return '代发货';
+        return '待发货';
         break;
         case '3':
         return '已发货';

@@ -2,6 +2,9 @@
   <div class="order">
     <div class="table_title">
       <div class="search_wrap">
+          <el-select v-model="is_online" class="selectOrder" clearable placeholder="请选择订单类型">
+            <el-option v-for="item in order_typeList" :key="item.value" :label="item.label" :value="item.val"></el-option>
+          </el-select>
         <el-input clearable v-model="name" placeholder="请输入订单" size="small" style="width:200px"></el-input>
         <el-date-picker
         style="margin:0 10px"
@@ -65,6 +68,7 @@
 </template>
 
 <script>
+import { constants } from 'crypto';
 export default {
   data() {
     return {
@@ -114,18 +118,24 @@ export default {
       status: "0",
       dataList: [],
       page: 1,
-      limit: 10
+      limit: 10,
+      is_online:"", // 订单类型
+      order_typeList: [
+          {label: '线上订单',val: 1},
+          {label: '线下订单' ,val: 2},
+          {label: '技术服务费',val: 3}
+        ]
     };
   },
   methods: {
     //分页
     handleSizeChange(val){
-      this.page=val;
+      this.limit=val;
       this.getDataList();
     },
     //分条
     handleCurrentChange(val){
-      this.limit=val;
+      this.page=val;
       this.getDataList();
     },
     //获取数据
@@ -137,7 +147,8 @@ export default {
           limit: this.limit,
           status: this.status,
           times:this.date,
-          order_sn:this.name
+          order_sn:this.name,
+          is_online:this.is_online
         })
         .then(res => {
           this.dataList = res.data || [];
@@ -154,6 +165,10 @@ export default {
     search() {
       this.page = 1;
       this.getDataList();
+    },
+    //订单类型查询
+    searchTypeList(val){
+      console.log(val)
     }
   },
   created() {
@@ -167,5 +182,11 @@ export default {
   background-color: #fff;
   padding: 20px;
   box-sizing: border-box;
+}
+.el-tag{
+  margin-right: 10px;
+}
+.selectOrder{
+   margin-right: 20px;
 }
 </style>
