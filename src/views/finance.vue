@@ -140,6 +140,13 @@
         <el-button type="primary" @click="payWithdraw">确 定</el-button>
       </span>
     </el-dialog>
+    <el-dialog :visible.sync="centerDialogVisible4" width="30%" center>
+      <el-input type="textarea" v-model="info" placeholder="反馈信息"></el-input>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="centerDialogVisible4 = false">取 消</el-button>
+        <el-button type="primary" @click="blowWithdraw">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -180,7 +187,8 @@ export default {
       pay_amount:"",
       centerDialogVisible: false,
       centerDialogVisible2: false,
-      centerDialogVisible3: false
+      centerDialogVisible3: false,
+      centerDialogVisible4: false
     };
   },
   watch: {},

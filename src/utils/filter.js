@@ -149,7 +149,7 @@ function withdrawText(status){
         case '0':
         return '待审核';
         break;
-        case '1 ':
+        case '1':
         return '已审核';
         break;
         case '2':
