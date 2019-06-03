@@ -125,7 +125,7 @@ export default {
       dataList: [],
       page: 1,
       limit: 10,
-      status: 2,
+      status: 0,
       times: "",
       username: "",
       pass:'',//通过/驳回

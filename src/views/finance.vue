@@ -94,7 +94,7 @@
             >审核通过</el-button>
             <el-button
               type="danger"
-              v-if="scope.row.status == 0"  
+              v-if="scope.row.status == 0"
               @click="centerDialogVisible2=true;id=scope.row.id"
               size="mini"
             >驳回申请</el-button>
@@ -104,7 +104,12 @@
               @click="centerDialogVisible3=true;id=scope.row.id"
               size="mini"
             >确认打款</el-button>
-            <el-button type="danger" v-if="scope.row.status == 1" size="mini">打款失败</el-button>
+            <el-button
+              type="danger"
+              v-if="scope.row.status == 1"
+              @click="centerDialogVisible4=true;id=scope.row.id"
+              size="mini"
+            >打款失败</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -144,7 +149,7 @@
       <el-input type="textarea" v-model="info" placeholder="反馈信息"></el-input>
       <span slot="footer" class="dialog-footer">
         <el-button @click="centerDialogVisible4 = false">取 消</el-button>
-        <el-button type="primary" @click="blowWithdraw">确 定</el-button>
+        <el-button type="primary" @click="unquaWithdraw">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -184,7 +189,7 @@ export default {
       name: "",
       tax: "",
       info: "",
-      pay_amount:"",
+      pay_amount: "",
       centerDialogVisible: false,
       centerDialogVisible2: false,
       centerDialogVisible3: false,
@@ -262,7 +267,7 @@ export default {
         });
     },
     unquaWithdraw() {
-      this.centerDialogVisible = false;
+      this.centerDialogVisible4 = false;
       this.$api
         .unquaWithdraw({
           id: this.id,
