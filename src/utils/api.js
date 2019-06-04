@@ -135,6 +135,10 @@ export default{
     getGuideList(params){
         return fetchPost('/guide/showGuideList',params)
     },
+    guideStop(params){
+        return fetchPost('/guide/guideStop',params)
+    },
+    
     
 
     /**

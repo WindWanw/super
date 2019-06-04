@@ -23,6 +23,8 @@
           <template slot-scope="props">
             <div class="expand_wrap">
                 <p><span>手机号码:</span>{{props.row.tel}}</p>
+                <p><span>身份证号码:</span>{{props.row.idcard}}</p>
+                <p><span>身份证正反面:</span><img class="idcard_img" :src="props.row.picOn"><img class="idcard_img" :src="props.row.picOff"></p>
             </div>
           </template>
         </el-table-column>
@@ -41,7 +43,7 @@
         </el-table-column>
         <el-table-column prop label="账号状态">
           <template slot-scope="scope">
-            <el-button type="warning" size="mini">待审核</el-button>
+            <el-button type="warning" size="mini">{{scope.row.status | userStatus}}</el-button>
           </template>
         </el-table-column>
         <el-table-column prop label="操作" width="200px">
@@ -182,10 +184,8 @@ export default {
       }else if(!this.pass && !this.remark){
         this.$message.warning('请填写驳回原因');
       }else{
-        this.$api.userStop({
+        this.$api.guideStop({
           uid:this.id,
-          result:this.pass,
-          remark:this.remark
         })
         .then(res=>{
             this.dialogVisible=res.code?true:false;

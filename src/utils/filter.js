@@ -29,6 +29,8 @@ function userStatus(type){
         return '正常'
     }else if(type==-1){
         return '禁用'
+    }else if(type==2){
+        return '待付款'
     }
 }
 

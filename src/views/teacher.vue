@@ -29,6 +29,8 @@
           <template slot-scope="props">
             <div class="expand_wrap">
                 <p><span>手机号码:</span>{{props.row.tel}}</p>
+                 <p><span>身份证号码:</span>{{props.row.idcard}}</p>
+                <p><span>身份证正反面:</span><img class="idcard_img" :src="props.row.picOn"><img class="idcard_img" :src="props.row.picOff"></p>
             </div>
           </template>
         </el-table-column>
@@ -102,7 +104,6 @@
     </el-dialog>
   </div>
 </template>
-
 <script>
 export default {
   data() {
@@ -140,7 +141,7 @@ export default {
       limit: 10,
       times: "",
       shopname: "",
-      status:'',
+      status:1,
       punishDialog:false,//处罚dialog
       punishList:'',
       punishContentList:'',
@@ -197,9 +198,8 @@ export default {
       this.$confirm("确认进行该项操作吗?", "提示", { type: "warning" })
         .then(() => {
           this.$api
-            .userStop({
+            .guideStop({
               uid: id,
-              result:'1',
             })
             .then(res => {
               this.$message[res.code ? "warning" : "success"](res.data);
