@@ -110,11 +110,12 @@
             //insertImg()为插入图片的函数
              //循环插入图片
             console.log(result)
-            
-            for (let i = 0; i < result.data.length; i++) {
-              var url = result.data[i].url
-              insertImg(url)
-            }
+            insertImg(result.data.host+result.data.name)
+            // for (let i = 0; i < result.data.length; i++) {
+            //   var url = result.data[i].host+result.data[i].name
+            //   console.log("url",url)
+            //   insertImg(url)
+            // }
           }
         }
         this.editor.customConfig.onchange = (html) => {
