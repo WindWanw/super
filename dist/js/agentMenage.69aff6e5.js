@@ -1,2 +1,0 @@
-(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["agentMenage"],{d2a7:function(e,n,t){"use strict";t.r(n);var a=function(){var e=this,n=e.$createElement,t=e._self._c||n;return t("div",{},[t("router-view")],1)},r=[],c={data:function(){return{}},components:{}},o=c,u=t("2877"),i=Object(u["a"])(o,a,r,!1,null,"18cd42bb",null);n["default"]=i.exports}}]);
-//# sourceMappingURL=agentMenage.69aff6e5.js.map

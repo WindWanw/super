@@ -5,7 +5,7 @@ Vue.prototype.axios = axios;
 axios.defaults.timeout = 10000;//响应时间
 import { Message } from 'element-ui';
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
-axios.defaults.baseURL = 'http://dev.admin.api.zhengyi100.cn';//配置接口地址
+axios.defaults.baseURL = 'http://admin.api.zhengyi100.cn';//配置接口地址
 
 
 // 请求拦截器（在发送请求之前做些什么）
