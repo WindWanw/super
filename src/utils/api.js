@@ -1,18 +1,18 @@
-import {fetchGet,fetchPost} from './fetch';
+import { fetchGet, fetchPost } from './fetch';
 
 // {headers:{ 'Content-Type': 'multipart/form-data' }}
-export default{
+export default {
     //登录
-    login(params){
-        return fetchPost('/admin/login',params)
+    login(params) {
+        return fetchPost('/admin/login', params)
     },
     //获取数据统计
-    getCount(params){
-        return fetchPost('/admin/adminCount',params)
+    getCount(params) {
+        return fetchPost('/admin/adminCount', params)
     },
     //获取通知消息
-    getMessageList(params){
-        return fetchPost('/admin/messageAudit',params)
+    getMessageList(params) {
+        return fetchPost('/admin/messageAudit', params)
     },
 
     /**
@@ -21,11 +21,11 @@ export default{
      * 查询列表
      * 停用，启用
      */
-    getUserlist(params){
-        return fetchPost('/Client/userList',params)
+    getUserlist(params) {
+        return fetchPost('/Client/userList', params)
     },
-    userStop(params){
-        return fetchPost('/admin/userStop',params)
+    userStop(params) {
+        return fetchPost('/admin/userStop', params)
     },
 
 
@@ -36,16 +36,16 @@ export default{
      * 停用，启用
      * 代理商审核列表（status:2）
      */
-    getAgentList(params){
-        return fetchPost('/Agent/agentList',params)
+    getAgentList(params) {
+        return fetchPost('/Agent/agentList', params)
     },
-    addAgent(params){
-        return fetchPost('/Agent/registAgent',params)
+    addAgent(params) {
+        return fetchPost('/Agent/registAgent', params)
     },
-    editAgent(params){
-        return fetchPost('/Agent/agentUpdate',params)
+    editAgent(params) {
+        return fetchPost('/Agent/agentUpdate', params)
     },
-    
+
 
 
 
@@ -56,17 +56,17 @@ export default{
      * 修改广告位
      * 删除广告位
      * */
-    getAdList(params){
-        return fetchPost('/ads/AdsList',params)
+    getAdList(params) {
+        return fetchPost('/ads/AdsList', params)
     },
-    addAd(params){
-        return fetchPost('/ads/AdsAdd',params,{headers:{ 'Content-Type': 'multipart/form-data' }})
+    addAd(params) {
+        return fetchPost('/ads/AdsAdd', params, { headers: { 'Content-Type': 'multipart/form-data' } })
     },
-    editAd(params){
-        return fetchPost('/ads/AdsEdit',params)
+    editAd(params) {
+        return fetchPost('/ads/AdsEdit', params)
     },
-    delAd(params){
-        return fetchPost('/ads/AdsDelete',params)
+    delAd(params) {
+        return fetchPost('/ads/AdsDelete', params)
     },
 
     /**
@@ -102,17 +102,17 @@ export default{
      * 删除商户
      * 商户审核列表(status=0)
      */
-    getSellerList(params){
-        return fetchPost('/supplier/supplierAdminList',params)
+    getSellerList(params) {
+        return fetchPost('/supplier/supplierAdminList', params)
     },
-    addSeller(params){
-        return fetchPost('/supplier/supplierAdminAdd',params)
+    addSeller(params) {
+        return fetchPost('/supplier/supplierAdminAdd', params)
     },
-    editSeller(params){
-        return fetchPost('/supplier/supplierAdminUpdate',params)
+    editSeller(params) {
+        return fetchPost('/supplier/supplierAdminUpdate', params)
     },
-    delSeller(params){
-        return fetchPost('/supplier/supplierAdminDel',params)
+    delSeller(params) {
+        return fetchPost('/supplier/supplierAdminDel', params)
     },
 
 
@@ -121,34 +121,34 @@ export default{
      * 订单列表
      * 删除订单
      */
-    getOrderList(params){
-        return fetchPost('/orders/OrdersList',params)
+    getOrderList(params) {
+        return fetchPost('/orders/OrdersList', params)
     },
-    delOrder(params){
-        return fetchPost('/orders/OrdersDelete',params)
+    delOrder(params) {
+        return fetchPost('/orders/OrdersDelete', params)
     },
 
     /**
      * @专引师管理
      * 专引师列表
      */
-    getGuideList(params){
-        return fetchPost('/guide/showGuideList',params)
+    getGuideList(params) {
+        return fetchPost('/guide/showGuideList', params)
     },
-    guideStop(params){
-        return fetchPost('/guide/guideStop',params)
+    guideStop(params) {
+        return fetchPost('/guide/guideStop', params)
     },
-    
-    
+
+
 
     /**
      * @代金券管理
      * 获取列表
      */
-    getCardList(params){
-        return fetchPost('/card/cardList',params)
+    getCardList(params) {
+        return fetchPost('/card/cardList', params)
     },
-   
+
 
 
     /**
@@ -159,39 +159,59 @@ export default{
      * 处罚
      * 审核
      */
-    getPunishType(params){
-        return fetchPost('/ticket/Ticket_Type',params)
+    getPunishType(params) {
+        return fetchPost('/ticket/Ticket_Type', params)
     },
-    getPunishList(params){
-        return fetchPost('/ticket/TicketList',params)
+    getPunishList(params) {
+        return fetchPost('/ticket/TicketList', params)
     },
-    delPunish(params){
-        return fetchPost('/ticket/TicketDelete',params)
+    delPunish(params) {
+        return fetchPost('/ticket/TicketDelete', params)
     },
-    addPunish(params){
-        return fetchPost('/ticket/TicketAdd',params)
+    addPunish(params) {
+        return fetchPost('/ticket/TicketAdd', params)
     },
-    editPunish(params){
-        return fetchPost('/ticket/TicketEdit',params)
+    editPunish(params) {
+        return fetchPost('/ticket/TicketEdit', params)
     },
 
     /**
      * @专引师管理
      * 财务中心列表
      */
-    getWithdrawList(params){
-        return fetchPost('/finance/withdrawList',params)
+    getWithdrawList(params) {
+        return fetchPost('/finance/withdrawList', params)
     },
-    passWithdraw(params){
-        return fetchPost('/finance/passWithdraw',params)
+    passWithdraw(params) {
+        return fetchPost('/finance/passWithdraw', params)
     },
-    blowWithdraw(params){
-        return fetchPost('/finance/blowWithdraw',params)
+    blowWithdraw(params) {
+        return fetchPost('/finance/blowWithdraw', params)
     },
-    payWithdraw(params){
-        return fetchPost('/finance/payWithdraw',params)
+    payWithdraw(params) {
+        return fetchPost('/finance/payWithdraw', params)
     },
-    unquaWithdraw(params){
-        return fetchPost('/finance/unquaWithdraw',params)
+    unquaWithdraw(params) {
+        return fetchPost('/finance/unquaWithdraw', params)
+    },
+
+    /**
+     * @权限管理
+     * 权限类型列表
+     * 权限角色添加
+     * 角色列表
+     * 删除角色
+     */
+    getAuthGenre(params) {
+        return fetchPost('/admin/authGenre', params)
+    },
+    authAdd(params) {
+        return fetchPost('/admin/authAdd', params)
+    },
+    getAuthList(params) {
+        return fetchPost('/admin/authList', params)
+    },
+    delAdmin(params) {
+        return fetchPost('/admin/delAdmin', params)
     },
 }
