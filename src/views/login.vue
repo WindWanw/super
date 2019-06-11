@@ -20,6 +20,7 @@
            username:'',
            password:'',
            url:'',
+           character:4
          },
      }
    },
