@@ -122,7 +122,7 @@ export default {
       dataList: [],
       page: 1,
       limit: 10,
-      status: 2,
+      check: 1,//是否是审核商户数据
       times: "",
       username: "",
       pass:'',
@@ -146,7 +146,7 @@ export default {
         .getSellerList({
           page: this.page,
           limit: this.limit,
-          status:this.status,
+          check:this.check,
           times:this.times,
           username:this.username
         })
