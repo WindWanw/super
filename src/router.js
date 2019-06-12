@@ -56,7 +56,7 @@ export const asyRouter = [{
         component: dataStatistics,
         meta: {
             name: '数据统计',
-            iconfont: 'el-icon-loading',
+            iconfont: 'iconfont shujutongji',
             needLogin: true, //需要登录
         }
     },
@@ -66,7 +66,7 @@ export const asyRouter = [{
         component: userList,
         meta: {
             name: '用户管理',
-            iconfont: 'el-icon-loading',
+            iconfont: 'iconfont yonghu1',
             needLogin: true, //需要登录
         }
     },
@@ -76,7 +76,7 @@ export const asyRouter = [{
         component: finance,
         meta: {
             name: '财务中心',
-            iconfont: 'el-icon-loading',
+            iconfont: 'iconfont icon-test',
             needLogin: true, //需要登录
         }
     },
@@ -86,7 +86,7 @@ export const asyRouter = [{
         component: checkMenage,
         meta: {
             name: '审核管理',
-            iconfont: 'el-icon-loading',
+            iconfont: 'iconfont examine',
             needLogin: true, //需要登录
         },
         redirect: '/checkMenage/agent',
@@ -96,7 +96,7 @@ export const asyRouter = [{
                 component: agentSh,
                 meta: {
                     name: '代理商审核',
-                    iconfont: 'el-icon-loading',
+                    iconfont: 'iconfont shenhe',
                     needLogin: true, //需要登录
                 }
             },
@@ -106,7 +106,7 @@ export const asyRouter = [{
                 component: sellerSh,
                 meta: {
                     name: '商户审核',
-                    iconfont: 'el-icon-loading',
+                    iconfont: 'iconfont shenhe',
                     needLogin: true, //需要登录
                 }
             },
@@ -116,7 +116,7 @@ export const asyRouter = [{
                 component: teacherSh,
                 meta: {
                     name: '专引师审核',
-                    iconfont: 'el-icon-loading',
+                    iconfont: 'iconfont shenhe',
                     needLogin: true, //需要登录
                 }
             },
@@ -126,7 +126,7 @@ export const asyRouter = [{
                 component: punish,
                 meta: {
                     name: '处罚单',
-                    iconfont: 'el-icon-loading',
+                    iconfont: 'iconfont shenhe',
                     needLogin: true, //需要登录
                 }
             },
@@ -139,7 +139,7 @@ export const asyRouter = [{
         component: agentMenage,
         meta: {
             name: '代理商管理',
-            iconfont: 'el-icon-loading',
+            iconfont: 'iconfont dailishang',
             needLogin: true, //需要登录
         },
         redirect: '/agentMenage/agent',
@@ -149,7 +149,7 @@ export const asyRouter = [{
             component: agent,
             meta: {
                 name: '代理商列表',
-                iconfont: 'el-icon-loading',
+                iconfont: 'iconfont yonghu3',
                 needLogin: true, //需要登录
             }
         }]
@@ -160,7 +160,7 @@ export const asyRouter = [{
         component: sellerMenage,
         meta: {
             name: '商户管理',
-            iconfont: 'el-icon-loading',
+            iconfont: 'iconfont dianpu1',
             needLogin: true, //需要登录
         },
         redirect: '/sellerMenage/seller',
@@ -170,7 +170,7 @@ export const asyRouter = [{
             component: seller,
             meta: {
                 name: '商户列表',
-                iconfont: 'el-icon-loading',
+                iconfont: 'iconfont yonghu3',
                 needLogin: true, //需要登录
             }
         }, ]
@@ -181,7 +181,7 @@ export const asyRouter = [{
         component: order,
         meta: {
             name: '订单管理',
-            iconfont: 'el-icon-loading',
+            iconfont: 'iconfont zongdingdanshu',
             needLogin: true, //需要登录
         }
     },
@@ -191,7 +191,7 @@ export const asyRouter = [{
         component: ad,
         meta: {
             name: '广告位管理',
-            iconfont: 'el-icon-loading',
+            iconfont: 'iconfont guanggao',
             needLogin: true, //需要登录
         }
     },
@@ -201,7 +201,7 @@ export const asyRouter = [{
         component: teacher,
         meta: {
             name: '专引师管理',
-            iconfont: 'el-icon-loading',
+            iconfont: 'iconfont yonghu5',
             needLogin: true, //需要登录
         }
     },
@@ -211,7 +211,7 @@ export const asyRouter = [{
         component: systemArticle,
         meta: {
             name: '系统文章管理',
-            iconfont: 'el-icon-loading',
+            iconfont: 'iconfont navicon-wzgl',
             needLogin: true, //需要登录
         }
     },
@@ -221,7 +221,7 @@ export const asyRouter = [{
         component: card,
         meta: {
             name: '代金券设置',
-            iconfont: 'el-icon-loading',
+            iconfont: 'iconfont voucher',
             needLogin: true, //需要登录
         }
     },
@@ -231,7 +231,7 @@ export const asyRouter = [{
         component: authorization,
         meta: {
             name: '权限管理',
-            iconfont: 'el-icon-loading',
+            iconfont: 'iconfont ic_opt_feature',
             needLogin: true, //需要登录
         }
     },

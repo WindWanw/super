@@ -65,7 +65,7 @@
       </div>
     </el-dialog>
 
-    <el-dialog title="修改密码" width="750px" :visible.sync="retrieveDialog" append-to-body>
+    <el-dialog title="修改密码" width="750px" :visible.sync="retrieveDialog" append-to-body @close="$refs['ruleForm'].resetFields()">
       <el-form label-width="120px" :model="retrieve" :rules="rules" ref="retrieve">
         <el-form-item label="注册手机号" prop="tel">
           <el-input v-model="retrieve.tel" placeholder="请填写您注册时手机号"></el-input>
@@ -200,8 +200,12 @@ export default {
       });
     },
 
+//修改密码
     openEditPassword(item) {
       this.retrieveDialog = true;
+      for (let i in this.retrieve) {
+        this.retrieve[i] = "";
+      }
       this.retrieve.id = item;
     },
 
@@ -209,7 +213,7 @@ export default {
     editPassword() {
       this.$refs.retrieve.validate(valid => {
         if (valid) {
-          this.$api.retrievePassword(this.retrieve).then(res => {
+          this.$api.editAdminPassword(this.retrieve).then(res => {
             this.$message[res.code ? "warning" : "success"](res.data.message);
             if (res.code) return;
             this.retrieve = "";

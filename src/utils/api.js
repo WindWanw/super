@@ -201,6 +201,8 @@ export default {
      * 权限角色添加
      * 角色列表
      * 删除角色
+     * 修改密码
+     * 发送短信
      */
     getAuthGenre(params) {
         return fetchPost('/admin/authGenre', params)
@@ -213,5 +215,11 @@ export default {
     },
     delAdmin(params) {
         return fetchPost('/admin/delAdmin', params)
+    },
+    editAdminPassword(params) {
+        return fetchPost('/admin/editAdminPassword', params)
+    },
+    sendSms(params) {
+        return fetchPost('/common/sendsms', params)
     },
 }
