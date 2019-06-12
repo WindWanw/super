@@ -46,6 +46,8 @@ const card = () =>
     import ( /* webpackChunkName: "card" */ './views/card.vue')
 const authorization = () =>
     import ( /* webpackChunkName: "authorization" */ './views/authorization.vue')
+const userSetting = () =>
+    import ( /* webpackChunkName: "userSetting" */ './views/userSetting.vue')
 Vue.use(Router)
 
 
@@ -232,6 +234,16 @@ export const asyRouter = [{
         meta: {
             name: '权限管理',
             iconfont: 'iconfont ic_opt_feature',
+            needLogin: true, //需要登录
+        }
+    },
+    {
+        path: '/userSetting',
+        name: 'userSetting',
+        component: userSetting,
+        meta: {
+            name: '用户设置',
+            iconfont: 'iconfont icon-test1',
             needLogin: true, //需要登录
         }
     },

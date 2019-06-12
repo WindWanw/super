@@ -222,4 +222,14 @@ export default {
     sendSms(params) {
         return fetchPost('/common/sendsms', params)
     },
+
+    /**
+     * @用户设置
+     * 用户信息
+     * 修改密码
+     * 发送短信
+     */
+    getAdminInfo(params) {
+        return fetchPost('/admin/getAdminInfo', params)
+    },
 }

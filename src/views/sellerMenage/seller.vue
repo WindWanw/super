@@ -1,12 +1,12 @@
 <template>
   <div class="sellerList">
     <div class="table_title">
-      <el-button
+      <!-- <el-button
         type="primary"
         size="small"
         icon="el-icon-plus"
         @click="openAddEditDialog('add')"
-      >添加商户</el-button>
+      >添加商户</el-button> -->
       <div class="search_wrap">
         <el-input clearable v-model="name" placeholder="按姓名搜索" size="small" style="width:200px"></el-input>
         <el-select clearable v-model="status" placeholder="请选择用户类型" size="small" style="margin:0 10px">
@@ -388,6 +388,9 @@ export default {
         })
         .then(res => {
           this.dataList = res.data || [];
+          if(res.code){
+            this.$message[res.code ? "warning" : "success"](res.data);
+         }
           this.loading=false;
         });
     },

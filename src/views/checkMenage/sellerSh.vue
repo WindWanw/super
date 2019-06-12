@@ -33,7 +33,7 @@
         <el-table-column prop="city" label="城市"></el-table-column>
         <el-table-column prop="username" label="账号"></el-table-column>
         <el-table-column prop="address" label="详细地址"></el-table-column>
-        <el-table-column prop="message" label="商户描述"></el-table-column>
+        <el-table-column prop="info" label="商户描述"></el-table-column>
         <el-table-column prop="tel" label="手机号码"></el-table-column>
         <el-table-column prop="times" label="入驻时间">
           <template slot-scope="scope">{{scope.row.times | formatTimeStamp}}</template>
@@ -77,7 +77,7 @@
        <el-radio-group v-model="pass">
           <el-radio :label="1">通过</el-radio>
           <el-radio :label="0">驳回</el-radio>
-        </el-radio-group>
+        </el-radio-group> 
         <el-input v-if="pass==0" style="margin-top:20px" type="textarea" :rows="2" placeholder="请输入备注信息" v-model="remark"></el-input>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
@@ -152,6 +152,9 @@ export default {
         })
         .then(res => {
           this.dataList = res.data || [];
+          if(res.code){
+            this.$message[res.code ? "warning" : "success"](res.data);
+         }
           this.loading=false;
         });
     },

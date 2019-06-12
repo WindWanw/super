@@ -158,6 +158,9 @@ export default {
         })
         .then(res => {
           this.dataList = res.data || [];
+          if(res.code){
+            this.$message[res.code ? "warning" : "success"](res.data);
+         }
           this.loading=false;
         });
     },
