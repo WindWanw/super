@@ -212,7 +212,7 @@ export default {
         this.$message.warning('请选择通过或者驳回');
       }else if(this.pass=='2' && !this.remark){
         this.$message.warning('请填写驳回原因');
-      }else{
+      }else{ 
         this.$api.editPunish({
           id:this.id,
           status:this.pass,
