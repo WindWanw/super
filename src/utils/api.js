@@ -27,6 +27,10 @@ export default {
     userStop(params) {
         return fetchPost('/admin/userStop', params)
     },
+    //审核商户
+    checkSupplier(params) {
+        return fetchPost('/admin/checkSupplier', params)
+    },
 
 
     /**

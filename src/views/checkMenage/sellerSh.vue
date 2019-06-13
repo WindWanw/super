@@ -39,16 +39,16 @@
           <template slot-scope="scope">{{scope.row.times | formatTimeStamp}}</template>
         </el-table-column>
         <el-table-column prop label="账号状态">
-          <template slot-scope="scope">
+      
             <el-button type="warning" size="mini">待审核</el-button>
-          </template>
+
         </el-table-column>
 
         <el-table-column prop label="操作" width="200px">
           <template slot-scope="scope">
             <div class="cz_btn">
               <el-button
-              @click="dialogVisible=true;id=scope.row.id;pass='';remark=''"
+              @click="openCheckDialog(scope.row)"
                 type="primary"
                 size="mini"
                 icon="el-icon-edit-outline"
@@ -72,13 +72,13 @@
     <el-dialog
       title="审核"
       :visible.sync="dialogVisible"
-      @close="pass='';remark=''"
+      @close="check.result='';check.remark=''"
       width="30%">
-       <el-radio-group v-model="pass">
+       <el-radio-group v-model="check.result">
           <el-radio :label="1">通过</el-radio>
           <el-radio :label="0">驳回</el-radio>
         </el-radio-group> 
-        <el-input v-if="pass==0" style="margin-top:20px" type="textarea" :rows="2" placeholder="请输入备注信息" v-model="remark"></el-input>
+        <el-input v-if="check.result==0" style="margin-top:20px" type="textarea" :rows="2" placeholder="请输入备注信息" v-model="check.remark"></el-input>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="sure">确 定</el-button>
@@ -128,6 +128,13 @@ export default {
       pass:'',
       remark:'',
       dialogVisible:false,
+      check:{
+        id:'',
+        tel:'',
+        name:'',
+        result:0,
+        remark:'',
+      },
     };
   },
   watch:{
@@ -139,6 +146,14 @@ export default {
   },
   components: {},
   methods: {
+    openCheckDialog(item){
+      this.dialogVisible=true;
+      this.check.id=item.id;
+      this.check.name=item.name;
+      this.check.tel=item.tel;
+      this.check.result=item.result;
+      this.check.remark=item.remark;
+    },
     //获取数据列表
     getDataList() {
       this.loading=true;
@@ -175,20 +190,16 @@ export default {
     },
     //审核
     sure(){
-      console.log(this.pass)
-      if(this.pass===''){
+      if(this.check.result===''){
         this.$message.warning('请选择通过或者驳回');
-      }else if(!this.pass && !this.remark){
+      }else if(!this.check.result && !this.check.remark){
         this.$message.warning('请填写驳回原因');
       }else{
-        this.$api.userStop({
-          uid:this.id,
-          result:this.pass,
-          remark:this.remark
-        })
+        this.$api.checkSupplier(this.check)
         .then(res=>{
-            this.dialogVisible=res.code?true:false;
+            console.log(res.code)
             this.$message[res.code?'error':'success'](res.data.message);
+            this.dialogVisible=res.code?true:false;
             this.getDataList();
         })
       }
