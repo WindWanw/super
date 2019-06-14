@@ -9,7 +9,13 @@
       >添加代理商</el-button>
       <div class="search_wrap">
         <el-input clearable v-model="username" placeholder="请输入账号" size="small" style="width:200px"></el-input>
-        <el-select clearable v-model="status" placeholder="请选择用户类型" size="small" style="margin: 0 10px">
+        <el-select
+          clearable
+          v-model="status"
+          placeholder="请选择用户类型"
+          size="small"
+          style="margin: 0 10px"
+        >
           <el-option label="正常" :value="1"></el-option>
           <el-option label="禁用" :value="-1"></el-option>
         </el-select>
@@ -25,16 +31,29 @@
           end-placeholder="结束日期"
           :picker-options="pickerOptions"
         ></el-date-picker>
-        <el-button type="primary" icon="el-icon-search" size="small" @click="search" style="margin-left:10px">搜索</el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-search"
+          size="small"
+          @click="search"
+          style="margin-left:10px"
+        >搜索</el-button>
       </div>
     </div>
     <div class="content" style="width:100%">
       <el-table :data="dataList.list" stripe border style="width:100%" v-loading="loading">
-       <el-table-column type="expand">
+        <el-table-column type="expand">
           <template slot-scope="props">
             <div class="expand_wrap">
-                <p><span>身份证号码:</span>{{props.row.idcard}}</p>
-                <p><span>身份证正反面:</span><img class="idcard_img" :src="props.row.picOn"><img class="idcard_img" :src="props.row.picOff"></p>
+              <p>
+                <span>身份证号码:</span>
+                {{props.row.idcard}}
+              </p>
+              <p>
+                <span>身份证正反面:</span>
+                <img class="idcard_img viewBig" :src="props.row.picOn" @click="viewBigImg(props.row.picOn)">
+                <img class="idcard_img viewBig" :src="props.row.picOff" @click="viewBigImg(props.row.picOff)">
+              </p>
             </div>
           </template>
         </el-table-column>
@@ -45,7 +64,12 @@
         <el-table-column prop="tel" label="手机号码"></el-table-column>
         <el-table-column prop label="账号状态">
           <template slot-scope="scope">
-            <el-button size="mini" :title="scope.row.status=='1'?'点击禁用':'点击解除禁用'" @click="userStop(scope.row.id)" :type="scope.row.status=='1'?'success':'info'">{{scope.row.status | userStatus}}</el-button>
+            <el-button
+              size="mini"
+              :title="scope.row.status=='1'?'点击禁用':'点击解除禁用'"
+              @click="userStop(scope.row.id)"
+              :type="scope.row.status=='1'?'success':'info'"
+            >{{scope.row.status | userStatus}}</el-button>
           </template>
         </el-table-column>
         <el-table-column prop="times" label="代理时间">
@@ -55,7 +79,7 @@
           <template slot-scope="scope">
             <div class="cz_btn">
               <el-button
-                @click="openAddEditDialog('edit',scope.row)" 
+                @click="openAddEditDialog('edit',scope.row)"
                 type="primary"
                 size="mini"
                 icon="el-icon-edit"
@@ -76,6 +100,9 @@
       ></el-pagination>
     </div>
 
+    <el-dialog class="big-img" top="50px" title="查看大图" :visible.sync="viewImg" width="800px">
+      <img style="width:100%;height:100%" :src="viewBigImage">
+    </el-dialog>
     <!-- 添加dialog -->
     <el-dialog
       top="20px"
@@ -86,14 +113,23 @@
     >
       <el-form status-icon :model="form" :rules="rules" ref="ruleForm" label-width="120px">
         <el-form-item label="城市">
-          <el-cascader :options="cityData" v-model="selectCity" change-on-select :placeholder="form.id?'如需修改请选择':'请选择代理城市'"></el-cascader>
+          <el-cascader
+            :options="cityData"
+            v-model="selectCity"
+            change-on-select
+            :placeholder="form.id?'如需修改请选择':'请选择代理城市'"
+          ></el-cascader>
           <span v-if="form.id" style="margin-left:20px">当前城市:{{city}}</span>
         </el-form-item>
         <el-form-item label="账号" v-if="!form.id" :prop="form.id?'':'username'">
           <el-input v-model="form.username" placeholder="请输入账号"></el-input>
         </el-form-item>
         <el-form-item label="密码" :prop="form.id?'':'password'">
-          <el-input type="password" v-model="form.password" :placeholder="form.id?'不填默认不修改':'请输入密码'"></el-input>
+          <el-input
+            type="password"
+            v-model="form.password"
+            :placeholder="form.id?'不填默认不修改':'请输入密码'"
+          ></el-input>
         </el-form-item>
         <el-form-item label="联系人姓名" prop="name">
           <el-input v-model="form.name" placeholder="请输入联系人姓名"></el-input>
@@ -115,10 +151,16 @@
           >
             <el-button size="small" type="primary">点击上传</el-button>
           </el-upload>
-            <img v-if="form.picOn" class="idcard_img" :src="form.picOn">
+          <img v-if="form.picOn" class="idcard_img" :src="form.picOn">
         </el-form-item>
         <el-form-item label="身份证反面" prop="picOff">
-          <el-upload :action="`${axios.defaults.baseURL}/common/upload/file/sfz_upload_dir/front`" accept="image/jpeg,image/gif,image/png,image/bmp" :before-upload="beforeUp2" :show-file-list="false" :on-success="upSuc2">
+          <el-upload
+            :action="`${axios.defaults.baseURL}/common/upload/file/sfz_upload_dir/front`"
+            accept="image/jpeg, image/gif, image/png, image/bmp"
+            :before-upload="beforeUp2"
+            :show-file-list="false"
+            :on-success="upSuc2"
+          >
             <el-button size="small" type="primary">点击上传</el-button>
           </el-upload>
           <img v-if="form.picOff" class="idcard_img" :src="form.picOff">
@@ -133,11 +175,11 @@
 </template>
 
 <script>
-import citys from '../../utils/city.js';
+import citys from "../../utils/city.js";
 export default {
   data() {
     return {
-      loading:false,
+      loading: false,
       pickerOptions: {
         //快捷键
         shortcuts: [
@@ -178,20 +220,22 @@ export default {
       limit: 10, //条
       dataList: [], //数据源
       AddEditDialog: false,
-      cityData:citys,//城市数据
-      selectCity:[],//选择城市
-      city:'',
+      cityData: citys, //城市数据
+      selectCity: [], //选择城市
+      city: "",
+      viewImg:false,//查看大图dialog
+      viewBigImage:'',//查看大图
       form: {
         username: "",
-        password:'',
+        password: "",
         city: "",
         tel: "",
         id: "",
         name: "",
         address: "",
         idcard: "",
-        picOn: '',
-        picOff: '',
+        picOn: "",
+        picOff: ""
       },
       rules: {
         username: [
@@ -200,7 +244,7 @@ export default {
         password: [
           { required: true, message: "密码不能为空", trigger: "blur" }
         ],
-        
+
         tel: [
           { validator: this.$rules.checkPhone, required: true, trigger: "blur" }
         ],
@@ -220,9 +264,15 @@ export default {
           { required: true, message: "身份证反面不能为空", trigger: "blur" }
         ]
       }
-    }
+    };
   },
   methods: {
+
+    viewBigImg(img){
+      this.viewImg=true;
+      this.viewBigImage=img;
+    },
+
     // 切换limit
     handleSizeChange(val) {
       this.limit = val;
@@ -235,7 +285,7 @@ export default {
     },
     //获取代理商列表
     getDataList() {
-      this.loading=true;
+      this.loading = true;
       this.$api
         .getAgentList({
           page: this.page,
@@ -246,10 +296,10 @@ export default {
         })
         .then(res => {
           this.dataList = res.data || [];
-          if(res.code){
+          if (res.code) {
             this.$message[res.code ? "warning" : "success"](res.data);
-         }
-          this.loading=false;
+          }
+          this.loading = false;
         });
     },
     //查询
@@ -262,14 +312,14 @@ export default {
       let that = this;
       if (type == "add") {
         for (let i in this.form) {
-            this.form[i] = "";
+          this.form[i] = "";
         }
-        this.selectCity=[];
+        this.selectCity = [];
       } else {
         that.form.id = item.id;
-        that.form.username=item.username;
-        that.form.password=item.password;
-        this.city=item.city;
+        that.form.username = item.username;
+        that.form.password = item.password;
+        this.city = item.city;
         this.selectCity = [];
         that.form.tel = item.tel;
         that.form.address = item.address;
@@ -281,12 +331,12 @@ export default {
 
       that.AddEditDialog = true;
     },
-     //上次图片前
+    //上次图片前
     beforeUp1(file) {
-       if (file.size > 1024*2 * 1024) {
+      if (file.size > 1024 * 2 * 1024) {
         // 超出2m  取消上传
-        this.$message.warning('图片不能超过2MB')
-        return false
+        this.$message.warning("图片不能超过2MB");
+        return false;
       }
     },
     //上传成功后
@@ -314,25 +364,24 @@ export default {
       let that = this;
       this.$refs.ruleForm.validate(valid => {
         if (valid) {
-          that.$api[that.form.id?'editAgent':'addAgent']({
-              citycode: that.selectCity,
-              idcard: that.form.idcard,
-              name: that.form.name,
-              password:that.form.password || '',
-              picOff: that.form.picOff,
-              picOn: that.form.picOn,
-              tel: that.form.tel,
-              username:that.form.username,
-              id: that.form.id,
-            })
-            .then(res => {
-              that.$message[res.code?'warning':'success'](res.data.message);
-              that.AddEditDialog=res.code?true:false;
-              if(!that.form.id){
-                that.page=1;
-              }
-              that.getDataList();
-            });
+          that.$api[that.form.id ? "editAgent" : "addAgent"]({
+            citycode: that.selectCity,
+            idcard: that.form.idcard,
+            name: that.form.name,
+            password: that.form.password || "",
+            picOff: that.form.picOff,
+            picOn: that.form.picOn,
+            tel: that.form.tel,
+            username: that.form.username,
+            id: that.form.id
+          }).then(res => {
+            that.$message[res.code ? "warning" : "success"](res.data.message);
+            that.AddEditDialog = res.code ? true : false;
+            if (!that.form.id) {
+              that.page = 1;
+            }
+            that.getDataList();
+          });
         } else {
           return false;
         }
@@ -354,7 +403,7 @@ export default {
         .catch(() => {
           this.$message.info("已取消删除");
         });
-    },
+    }
   },
   created() {
     this.getDataList();
@@ -368,11 +417,14 @@ export default {
   padding: 20px;
   box-sizing: border-box;
 }
-.idcardImg{
+.idcardImg {
   width: 300px;
   height: 150px;
   border: 1px dashed #ccc;
   margin-right: 10px;
   margin-top: 10px;
+}
+.viewBig{
+  cursor: pointer;
 }
 </style>

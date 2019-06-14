@@ -72,16 +72,7 @@ export const asyRouter = [{
             needLogin: true, //需要登录
         }
     },
-    {
-        path: '/finance',
-        name: 'finance',
-        component: finance,
-        meta: {
-            name: '财务中心',
-            iconfont: 'iconfont icon-test',
-            needLogin: true, //需要登录
-        }
-    },
+
     {
         path: '/checkMenage',
         name: 'checkMenage',
@@ -178,12 +169,32 @@ export const asyRouter = [{
         }, ]
     },
     {
+        path: '/teacher',
+        name: 'teacher',
+        component: teacher,
+        meta: {
+            name: '专引师管理',
+            iconfont: 'iconfont yonghu5',
+            needLogin: true, //需要登录
+        }
+    },
+    {
         path: '/order',
         name: 'order',
         component: order,
         meta: {
             name: '订单管理',
             iconfont: 'iconfont zongdingdanshu',
+            needLogin: true, //需要登录
+        }
+    },
+    {
+        path: '/finance',
+        name: 'finance',
+        component: finance,
+        meta: {
+            name: '财务中心',
+            iconfont: 'iconfont icon-test',
             needLogin: true, //需要登录
         }
     },
@@ -197,16 +208,7 @@ export const asyRouter = [{
             needLogin: true, //需要登录
         }
     },
-    {
-        path: '/teacher',
-        name: 'teacher',
-        component: teacher,
-        meta: {
-            name: '专引师管理',
-            iconfont: 'iconfont yonghu5',
-            needLogin: true, //需要登录
-        }
-    },
+
     {
         path: '/systemArticle',
         name: 'systemArticle',

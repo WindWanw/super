@@ -26,16 +26,18 @@
           :name="item.name"
         >
           <el-table :data="dataList.list" stripe border style="width:100%" v-loading="loading">
-            <el-table-column prop="to_uid" label="被处罚人"></el-table-column>
-            <el-table-column prop="from_uid" label="处罚人"></el-table-column>
-            <el-table-column prop="types" label="处罚类型"></el-table-column>
-            <el-table-column prop="values.label" label="处罚内容">
-
-            </el-table-column>
-            <el-table-column prop="times" label="处罚时间">
+            <el-table-column prop="to_uid" label="被处罚对象"></el-table-column>
+            <el-table-column prop="from_uid" label="处罚申请人"></el-table-column>
+            <el-table-column prop="types" label="处罚类型">
               <template slot-scope="scope">
-                {{scope.row.times | formatTimeStamp}}
+                {{scope.row.types | punishTypes}}
               </template>
+            </el-table-column>
+            <el-table-column prop="values.label" label="处罚内容"></el-table-column>
+            <el-table-column prop="times" label="处罚时间">
+              <!-- <template slot-scope="scope">
+                {{scope.row.times | formatTimeStamp}}
+              </template> -->
             </el-table-column>
             <el-table-column prop="status" label="处罚状态">
               <template slot-scope="scope">

@@ -1,45 +1,59 @@
 <template>
   <div class="teacherSh">
     <div class="table_title">
-    <div class="search_wrap">
-      <el-date-picker
-        value-format="timestamp"
-        size="small"
-        v-model="times"
-        type="daterange"
-        align="right"
-        unlink-panels
-        range-separator="至"
-        start-placeholder="开始日期"
-        end-placeholder="结束日期"
-        :picker-options="pickerOptions"
-      ></el-date-picker>
-      <el-button type="primary" icon="el-icon-search" size="small" @click="search" style="margin-left:10px">搜索</el-button>
-    </div>
+      <div class="search_wrap">
+        <el-date-picker
+          value-format="timestamp"
+          size="small"
+          v-model="times"
+          type="daterange"
+          align="right"
+          unlink-panels
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          :picker-options="pickerOptions"
+        ></el-date-picker>
+        <el-button
+          type="primary"
+          icon="el-icon-search"
+          size="small"
+          @click="search"
+          style="margin-left:10px"
+        >搜索</el-button>
+      </div>
     </div>
     <div class="content">
-       <el-table :data="dataList.info" stripe border style="width:100%" v-loading="loading">
+      <el-table :data="dataList.info" stripe border style="width:100%" v-loading="loading">
         <el-table-column type="expand">
           <template slot-scope="props">
             <div class="expand_wrap">
-                <p><span>手机号码:</span>{{props.row.tel}}</p>
-                <p><span>身份证号码:</span>{{props.row.idcard}}</p>
-                <p><span>身份证正反面:</span><img class="idcard_img" :src="props.row.picOn"><img class="idcard_img" :src="props.row.picOff"></p>
+              <p>
+                <span>手机号码:</span>
+                {{props.row.tel}}
+              </p>
+              <p>
+                <span>身份证号码:</span>
+                {{props.row.idcard}}
+              </p>
+              <p>
+                <span>身份证正反面:</span>
+                <img class="idcard_img viewBig" :src="props.row.picOn" @click="viewBigImg(props.row.picOn)">
+                <img class="idcard_img viewBig" :src="props.row.picOff" @click="viewBigImg(props.row.picOff)">
+              </p>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="username" label="用户名"></el-table-column>
         <el-table-column prop="city" label="专引城市"></el-table-column>
+        <el-table-column prop="username" label="用户名"></el-table-column>
         <el-table-column prop="tag" label="标签" width="300px">
           <template slot-scope="scope">
             <el-tag style="margin-right:10px" v-for="item in scope.row.tag" :key="item">{{item}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="shopname" label="商店"></el-table-column>
+        <!-- <el-table-column prop="shopname" label="商店"></el-table-column> -->
         <el-table-column prop="times" label="注册时间">
-          <template slot-scope="scope">
-            {{scope.row.times | formatTimeStamp}}
-          </template>
+          <template slot-scope="scope">{{scope.row.times | formatTimeStamp}}</template>
         </el-table-column>
         <el-table-column prop label="账号状态">
           <template slot-scope="scope">
@@ -50,7 +64,7 @@
           <template slot-scope="scope">
             <div class="cz_btn">
               <el-button
-              @click="dialogVisible=true;id=scope.row.id;pass='';remark=''"
+                @click="dialogVisible=true;id=scope.row.id;pass='';remark=''"
                 type="primary"
                 size="mini"
                 icon="el-icon-edit-outline"
@@ -72,23 +86,24 @@
       ></el-pagination>
     </div>
     <!-- 审核dialog -->
-    <el-dialog
-      title="审核"
-      :visible.sync="dialogVisible"
-      @close="pass='';remark=''"
-      width="30%">
-       <el-radio-group v-model="pass">
-          <el-radio :label="1">通过</el-radio>
-          <el-radio :label="0">驳回</el-radio>
-        </el-radio-group>
-        <el-input v-if="pass==0" style="margin-top:20px" type="textarea" :rows="2" placeholder="请输入备注信息" v-model="remark"></el-input>
+    <el-dialog title="审核" :visible.sync="dialogVisible" @close="pass='';remark=''" width="30%">
+      <el-radio-group v-model="pass">
+        <el-radio :label="1">通过</el-radio>
+        <el-radio :label="0">驳回</el-radio>
+      </el-radio-group>
+      <el-input
+        v-if="pass==0"
+        style="margin-top:20px"
+        type="textarea"
+        :rows="2"
+        placeholder="请输入备注信息"
+        v-model="remark"
+      ></el-input>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="sure">确 定</el-button>
       </span>
     </el-dialog>
-
-    
   </div>
 </template>
 
@@ -96,72 +111,83 @@
 export default {
   data() {
     return {
-      loading:false,
-      pickerOptions: {//快捷键
-            shortcuts: [{
-              text: '最近一周',
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-                picker.$emit('pick', [start, end]);
-              }
-            }, {
-              text: '最近一个月',
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-                picker.$emit('pick', [start, end]);
-              }
-            }, {
-              text: '最近三个月',
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-                picker.$emit('pick', [start, end]);
-              }
-            }]
+      loading: false,
+      pickerOptions: {
+        //快捷键
+        shortcuts: [
+          {
+            text: "最近一周",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit("pick", [start, end]);
+            }
           },
+          {
+            text: "最近一个月",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit("pick", [start, end]);
+            }
+          },
+          {
+            text: "最近三个月",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              picker.$emit("pick", [start, end]);
+            }
+          }
+        ]
+      },
       dataList: [],
       page: 1,
       limit: 10,
       status: 0,
       times: "",
       username: "",
-      pass:'',//通过/驳回
-      remark:'',//备注消息
-      dialogVisible:false,
-      id:'',//审核id
-      
+      pass: "", //通过/驳回
+      remark: "", //备注消息
+      dialogVisible: false,
+      id: "" ,//审核id
+      viewImg:false,//查看大图dialog
+      viewBigImage:'',//查看大图
     };
   },
   components: {},
-  watch:{
-    pass(newVal,oldVal){
-      if(newVal==1){
-        this.remark='';
+  watch: {
+    pass(newVal, oldVal) {
+      if (newVal == 1) {
+        this.remark = "";
       }
     }
   },
   methods: {
+
+    viewBigImg(img){
+      this.viewImg=true;
+      this.viewBigImage=img;
+    },
     //获取数据列表
     getDataList() {
-      this.loading=true;
+      this.loading = true;
       this.$api
         .getGuideList({
           page: this.page,
           limit: this.limit,
-          status:this.status,
-          times:this.times,
+          status: this.status,
+          times: this.times
         })
         .then(res => {
           this.dataList = res.data || [];
-          if(res.code){
+          if (res.code) {
             this.$message[res.code ? "warning" : "success"](res.data);
-         }
-          this.loading=false;
+          }
+          this.loading = false;
         });
     },
     //分页
@@ -175,29 +201,29 @@ export default {
       this.getDataList();
     },
     // 查询
-    search(){
-      this.page=1;
+    search() {
+      this.page = 1;
       this.getDataList();
     },
     //审核通过驳回
-   
-    sure(){
-      if(this.pass===''){
-        this.$message.warning('请选择通过或者驳回');
-      }else if(!this.pass && !this.remark){
-        this.$message.warning('请填写驳回原因');
-      }else{
-        this.$api.guideStop({
-          uid:this.id,
-        })
-        .then(res=>{
-            this.dialogVisible=res.code?true:false;
-            this.$message[res.code?'error':'success'](res.data.message);
-            this.getDataList();
-        })
-      }
 
-    },
+    sure() {
+      if (this.pass === "") {
+        this.$message.warning("请选择通过或者驳回");
+      } else if (!this.pass && !this.remark) {
+        this.$message.warning("请填写驳回原因");
+      } else {
+        this.$api
+          .guideStop({
+            uid: this.id
+          })
+          .then(res => {
+            this.dialogVisible = res.code ? true : false;
+            this.$message[res.code ? "error" : "success"](res.data.message);
+            this.getDataList();
+          });
+      }
+    }
     // 展开
     // toogleExpand(row){
     //   let $table = this.$refs.table;
@@ -216,16 +242,19 @@ export default {
 </script>
 
 <style scoped>
-.content{
-    background-color: #fff;
-    padding: 20px;
-    box-sizing: border-box;
-  }
-  .idcardImg{
+.content {
+  background-color: #fff;
+  padding: 20px;
+  box-sizing: border-box;
+}
+.idcardImg {
   width: 300px;
   height: 150px;
   border: 1px dashed #ccc;
   margin-right: 10px;
   margin-top: 10px;
+}
+.viewBig{
+  cursor: pointer;
 }
 </style>

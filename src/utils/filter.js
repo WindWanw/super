@@ -186,6 +186,26 @@ function authGenre(role) {
     }
 }
 
+function punishTypes(types) {
+    switch (types) {
+        case 'FORBID_LOGIN':
+            return '用户禁止登陆';
+            break;
+        case 'REDUCE_ACCOUNT':
+            return '扣除账户金币';
+            break;
+        case 'REDUCE_CREDIT':
+            return '扣除信用积分';
+            break;
+        case 'CANCEL_ZY_CF':
+            return '取消专引师认证'
+            break;
+        case 'COMPLAIN':
+            return '投诉'
+            break;
+    }
+}
+
 export default {
     formatTimeStamp,
     userStatus,
@@ -197,4 +217,5 @@ export default {
     withdrawStatus,
     withdrawText,
     authGenre,
+    punishTypes,
 }

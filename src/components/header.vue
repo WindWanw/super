@@ -30,9 +30,15 @@ import ThemePicker from "@/components/themePicker";
    },
    methods:{
      loginout(){
-       this.$router.replace('/login');
-       localStorage.clear('token');
-       localStorage.clear('userinfo');
+       this.$confirm('确定要退出当前登录吗？')
+          .then(_ => {
+            this.$router.replace('/login');
+            localStorage.clear('token');
+            localStorage.clear('userinfo');
+          })
+          .catch(_ => {
+            
+          });
      }
    }
   }
