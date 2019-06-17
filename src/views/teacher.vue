@@ -38,14 +38,16 @@
         <el-table-column prop="city" label="专引城市"></el-table-column>
         <el-table-column prop="tag" label="标签" width="300px">
           <template slot-scope="scope">
-            <el-tag style="margin-right:10px" v-for="(item,index) in scope.row.tag" v-if="index<4" :key="item">{{item}}</el-tag>
+            <template v-for="(item,index) in scope.row.tag">
+              <el-tag style="margin-right:10px" v-if="index<4" :key="item">{{item}}</el-tag>
+            </template>
           </template>
         </el-table-column>
-        <el-table-column prop="shopname" label="商店"></el-table-column>
+        <!-- <el-table-column prop="shopname" label="商店"></el-table-column> -->
         <el-table-column prop="times" label="注册时间">
-          <template slot-scope="scope">
+          <!-- <template slot-scope="scope">
             {{scope.row.times | formatTimeStamp}}
-          </template>
+          </template> -->
         </el-table-column>
         <el-table-column prop label="账号状态">
           <template slot-scope="scope">
@@ -183,12 +185,12 @@ export default {
     },
     //分页
     handleSizeChange(val) {
-      this.page = val;
+      this.limit = val;
       this.getDataList();
     },
     //分条
     handleCurrentChange(val) {
-      this.limit = val;
+      this.page = val;
       this.getDataList();
     },
     // 查询
