@@ -53,8 +53,9 @@
             </template>
         </el-table-column>
         <el-table-column prop="tel" label="手机号码"></el-table-column>
+        <el-table-column prop="checker" label="审核人"></el-table-column>
         <el-table-column prop="times" label="入驻时间">
-          <template slot-scope="scope">{{scope.row.times | formatTimeStamp}}</template>
+          <!-- <template slot-scope="scope">{{scope.row.times | formatTimeStamp}}</template> -->
         </el-table-column>
         <el-table-column prop label="账号状态">
           <template slot-scope="scope">
@@ -71,7 +72,7 @@
           <template slot-scope="scope">
             <el-button @click="openPunishDialog(scope.row)" type="warning" size="mini" icon="el-icon-edit-outline">处罚</el-button>
             <el-button @click="openAddEditDialog('edit',scope.row)" type="primary" size="mini" icon="el-icon-edit">编辑</el-button>
-            <el-button @click="del(scope.row.id)" type="danger" size="mini" icon="el-icon-delete">删除</el-button>
+            <!-- <el-button @click="del(scope.row.id)" type="danger" size="mini" icon="el-icon-delete">删除</el-button> -->
           </template>
         </el-table-column>
       </el-table>
