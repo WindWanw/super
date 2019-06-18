@@ -161,7 +161,7 @@ export default {
         id: "",
         tel: "",
         name: "",
-        result: 0,
+        result: 1,
         remark: ""
       }
     };
@@ -175,6 +175,7 @@ export default {
   },
   components: {},
   methods: {
+    //查看大图
     viewBigImg(img){
       this.viewImg=true;
       this.viewBigImage=img;
@@ -184,8 +185,6 @@ export default {
       this.check.id = item.id;
       this.check.name = item.name;
       this.check.tel = item.tel;
-      this.check.result = item.result;
-      this.check.remark = item.remark;
     },
     //获取数据列表
     getDataList() {
@@ -228,6 +227,9 @@ export default {
       } else if (!this.check.result && !this.check.remark) {
         this.$message.warning("请填写驳回原因");
       } else {
+        if(this.check.result=='1'){
+          this.check.remark='';
+        }
         this.$api.checkSupplier(this.check).then(res => {
           console.log(res.code);
           this.$message[res.code ? "error" : "success"](res.data.message);

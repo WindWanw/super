@@ -26,8 +26,8 @@
           :name="item.name"
         >
           <el-table :data="dataList.list" stripe border style="width:100%" v-loading="loading">
-            <el-table-column prop="to_uid" label="被处罚对象"></el-table-column>
-            <el-table-column prop="from_uid" label="处罚申请人"></el-table-column>
+            <el-table-column prop="to_name" label="被处罚对象"></el-table-column>
+            <el-table-column prop="from_name" label="处罚申请人"></el-table-column>
             <el-table-column prop="types" label="处罚类型">
               <template slot-scope="scope">
                 {{scope.row.types | punishTypes}}
@@ -41,10 +41,12 @@
             </el-table-column>
             <el-table-column prop="status" label="处罚状态">
               <template slot-scope="scope">
-                <el-button :type="scope.row.status=='1'?'success':'warning'" size="mini">{{scope.row.status=='1'?'已审核':'待审核'}}</el-button>
+                <el-tag type="warning" v-if="scope.row.status=='0'">审核中</el-tag>
+                <el-tag type="success" v-if="scope.row.status=='1'">已处罚</el-tag>
+                <el-tag type="danger" v-if="scope.row.status=='2'">处罚驳回</el-tag>
               </template>
             </el-table-column>
-            <el-table-column v-if="status=='1'" prop="checker" label="审核人"></el-table-column>
+            <el-table-column v-if="status=='1'" prop="checker_name" label="审核人"></el-table-column>
             <el-table-column v-if="status=='1'" prop="check_times" label="审核时间">
               <template slot-scope="scope">
                 {{scope.row.check_times | formatTimeStamp}}
@@ -56,7 +58,7 @@
                   <!-- <el-button size="mini" type="danger" @click="del(scope.row.id)">删除</el-button> -->
                   <el-button
                   v-if="status!=1"
-              @click="dialogVisible=true;id=scope.row.id;pass='';remark=''"
+              @click="openCheck(scope.row)"
                 type="primary"
                 size="mini"
                 icon="el-icon-edit-outline"
@@ -83,7 +85,9 @@
       title="审核"
       :visible.sync="dialogVisible"
       @close="pass='';remark=''"
-      width="30%">
+      width="30%"
+       v-loading="loading"
+      >
        <el-radio-group v-model="pass">
           <el-radio :label="1">通过</el-radio>
           <el-radio :label="2">驳回</el-radio>
@@ -140,6 +144,9 @@ export default {
       status:'0',
       pass:'',//通过/驳回
       remark:'',//备注消息
+      types:'',//处罚类型
+      to_uid:'',//处罚对象
+      values:'',//处罚具体数值
       dialogVisible:false,
       id:'',//审核id
     };
@@ -152,6 +159,16 @@ export default {
     }
   },
   methods: {
+    //审核
+    openCheck(item){
+      this.dialogVisible=true;
+      this.id=item.id;
+      this.types=item.types;
+      this.to_uid=item.to_uid;
+      this.values=item.values;
+      this.remark='';
+      this.pass='';
+    },
     //获取数据列表
     getDataList() {
       this.loading=true;
@@ -214,13 +231,18 @@ export default {
         this.$message.warning('请选择通过或者驳回');
       }else if(this.pass=='2' && !this.remark){
         this.$message.warning('请填写驳回原因');
-      }else{ 
+      }else{
+        this.loading=true;
         this.$api.editPunish({
           id:this.id,
           status:this.pass,
-          fail:this.remark
+          fail:this.remark,
+          types:this.types,
+          to_uid:this.to_uid,
+          values:this.values,
         })
         .then(res=>{
+          this.loading=false;
             this.dialogVisible=res.code?true:false;
             this.$message[res.code?'warning':'success'](res.data.message);
             this.page=this.$options.filters.pagination(this.page,this.limit,this.dataList.total);
