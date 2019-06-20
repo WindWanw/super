@@ -32,9 +32,14 @@
         >
           <el-table :data="dataList.list" stripe border v-loading="loading">
             <el-table-column prop="order_sn" label="订单编号"></el-table-column>
-            <el-table-column prop="uid" label="用户名"></el-table-column>
-            <el-table-column prop="tel" label="联系方式"></el-table-column>
-            <el-table-column prop="pay_amount" label="金额"></el-table-column>
+            <el-table-column prop="user_name" label="用户名"></el-table-column>
+            <!-- <el-table-column prop="tel" label="联系方式"></el-table-column> -->
+            <el-table-column prop="amount" label="订单金额(元)" width="120px"></el-table-column>
+            <el-table-column prop="admin_commission" label="平台获得(元)" width="120px"></el-table-column>
+            <el-table-column prop="ag_commission" label="代理商获得(元)" width="120px"></el-table-column>
+            <el-table-column prop="su_commission" label="商户获得(元)" width="120px"></el-table-column>
+            <el-table-column prop="gu_commission" label="专引师获得(元)" width="120px"></el-table-column>
+            <!-- <el-table-column prop="admin_commission" label="佣金(元)" width="120px"></el-table-column> -->
             <el-table-column prop="outlet" label="折扣减免金额"></el-table-column>
             <el-table-column prop="card_id" label="卡券编号"></el-table-column>
             <el-table-column prop="guide_name" label="所属专引师"></el-table-column>

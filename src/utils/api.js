@@ -126,7 +126,7 @@ export default {
      * 删除订单
      */
     getOrderList(params) {
-        return fetchPost('/orders/OrdersList', params)
+        return fetchPost('/orders/adminOrdersList', params)
     },
     delOrder(params) {
         return fetchPost('/orders/OrdersDelete', params)
