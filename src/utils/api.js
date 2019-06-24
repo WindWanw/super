@@ -6,6 +6,9 @@ export default {
     login(params) {
         return fetchPost('/admin/login', params)
     },
+    getVersions(params) {
+        return fetchPost('/common/getVersions', params)
+    },
     //获取数据统计
     getCount(params) {
         return fetchPost('/admin/adminCount', params)

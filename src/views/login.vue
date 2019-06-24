@@ -20,7 +20,7 @@
       <el-button type="primary" size="small" @click="login">登录</el-button>
     </div>
     <div class="footer">
-      <div class="text">版权所有@江西多淇信息科技有限公司&nbsp;&nbsp;&nbsp;&nbsp;版本1.0</div>
+      <div class="text">版权所有@江西多淇信息科技有限公司&nbsp;&nbsp;&nbsp;&nbsp;版本{{versions}}</div>
     </div>
   </div>
 </template>
@@ -28,6 +28,7 @@
 export default {
   data() {
     return {
+      versions:'',//版本号
       ruleForm: {
         username: "",
         password: "",
@@ -65,6 +66,11 @@ export default {
         }
       });
     },
+    getVersions(){
+      this.$api.getVersions().then(res=>{
+        this.versions=res.data.versions;
+      })
+    },
     reset() {
       this.ruleForm = {};
     },
@@ -83,6 +89,7 @@ export default {
     document.onkeydown = null;
   },
   created() {
+    this.getVersions();
     this.url = this.$route.query.redirect || "/home";
     if (localStorage.getItem("token")) {
       this.$router.replace(this.url);
