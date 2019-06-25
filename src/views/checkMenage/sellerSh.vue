@@ -207,12 +207,12 @@ export default {
     },
     //分页
     handleSizeChange(val) {
-      this.page = val;
+      this.limit = val;
       this.getDataList();
     },
     //分条
     handleCurrentChange(val) {
-      this.limit = val;
+      this.page = val;
       this.getDataList();
     },
     // 查询

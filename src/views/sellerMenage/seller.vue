@@ -370,7 +370,7 @@ export default {
     handleSizeChange(val) {
       this.limit = val;
       this.getDataList();
-    },
+    }, 
     //  切换page
     handleCurrentChange(val) {
       this.page = val;
