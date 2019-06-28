@@ -65,7 +65,7 @@
       <div>
         <div class="progress-box">
           <div class="time">
-            <el-tag>昨天(￥{{ptotal.yestoday}})</el-tag>
+            <el-tag>昨天进账(￥{{ptotal.yestoday}})</el-tag>
             <div></div>
           </div>
           <div class="progress">
@@ -74,7 +74,7 @@
         </div>
         <div class="progress-box">
           <div class="time">
-            <el-tag>上周(￥{{ptotal.lastWk}})</el-tag>
+            <el-tag>上周进账(￥{{ptotal.lastWk}})</el-tag>
           </div>
           <div class="progress">
             <el-progress :text-inside="true" :stroke-width="18" :percentage="percentWk"></el-progress>
@@ -83,7 +83,7 @@
       </div>
       <el-card class="box-card">
         <div>
-          红包送出总额:{{total.cards.total}}
+          优惠券送出总额: <b>￥{{total.cards.total}}</b>
         </div>
       </el-card>
       <div>
@@ -250,7 +250,7 @@ export default {
   margin:10px 10px;
 }
 .progress-box .time {
-  width: 100px;
+  width: 120px;
 }
 .progress-box .progress {
   flex: 1;

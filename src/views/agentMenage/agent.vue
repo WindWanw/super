@@ -62,6 +62,8 @@
         <el-table-column prop="name" label="联系人姓名"></el-table-column>
         <!-- <el-table-column prop="address" label="联系人地址"></el-table-column> -->
         <el-table-column prop="tel" label="手机号码"></el-table-column>
+        <el-table-column prop="city_count" label="商户数"></el-table-column>
+        <el-table-column prop="count_sum" label="最近三十天收益"></el-table-column>
         <el-table-column prop label="账号状态">
           <template slot-scope="scope">
             <el-button
