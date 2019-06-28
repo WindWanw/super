@@ -121,6 +121,9 @@ export default {
     delSeller(params) {
         return fetchPost('/supplier/supplierAdminDel', params)
     },
+    citySupplier(params) {
+        return fetchPost('/supplier/findSupplier', params)
+    },
 
 
     /**

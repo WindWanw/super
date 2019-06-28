@@ -1,16 +1,18 @@
 <template>
     <el-table
-            :data="tableData"
-            style="width: 50%">
+
+            style="width: 30%" :data="tableData">
         <el-table-column
-                prop="name"
+                prop=city
                 label="城市"
                 width="180">
         </el-table-column>
         <el-table-column
-                prop="address"
-                label="商户数">
+                prop=num
+                label="商户数量"
+                width="180">
         </el-table-column>
+
     </el-table>
 </template>
 
@@ -18,14 +20,20 @@
     export default {
         data() {
             return {
-                tableData: [{
-                    name: '南昌',
-                    address: 100
-                }, {
-                    name: '山西',
-                    address: 5
-                }]
+                tableData: []
             }
+        },
+        methods: {
+            getData() {
+                this.$api.citySupplier().then(res => {
+                    this.tableData = res.data;
+                    console.log(res.data);
+                });
+            }
+        },
+
+        created() {
+            this.getData();
         }
     }
 </script>
