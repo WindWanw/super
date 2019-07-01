@@ -24,6 +24,7 @@ const ad = () => import(/* webpackChunkName: "ad" */ './views/ad.vue')
 const systemArticle = () => import(/* webpackChunkName: "systenArticle" */ './views/systemArticle.vue')
 const card = () => import(/* webpackChunkName: "card" */ './views/card.vue')
 const citySupplier = ()=>import(/* webpackChunkName: "citySupplier" */ './views/citySupplier.vue')
+const userFlow = () => import(/* webpackChunkName: "userFlow" */ './views/userFlow.vue')
 Vue.use(Router)
 
 
@@ -209,6 +210,16 @@ export const asyRouter = [
       needLogin:true,//需要登录
     }
   },
+  {
+    path: '/userFlow',
+    name: 'userFlow',
+    component: userFlow,
+    meta: {
+      name: '用户流水列表',
+      iconfont: 'el-icon-loading',
+      needLogin:true,//需要登录
+    }
+  },
 
 ]
 
@@ -228,6 +239,15 @@ const router =new Router({
       name: 'home',
       component: home,
       redirect: '/dataStatistics',
+      children: [
+        ...asyRouter
+      ]
+    },
+    {
+      path: '/home',
+      name: 'home',
+      component: home,
+      redirect: '/userFlow',
       children: [
         ...asyRouter
       ]
