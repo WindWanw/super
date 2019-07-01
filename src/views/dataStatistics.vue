@@ -1,5 +1,5 @@
 <template>
-  <div class="dataStatistics">
+  <div class="dataStatistics" v-if="total !=''">
     <!-- 总计 -->
     <div class="total_wrap">
       <div class="title">总计</div>
@@ -122,7 +122,7 @@
 export default {
   data() {
     return {
-      total: {}, //总计
+      total: '', //总计
       messageList: [],
       ptotal:'',
       pallTotal:'',
