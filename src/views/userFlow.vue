@@ -2,9 +2,7 @@
   <div class="userList">
     <!-- 头部（搜索条件） -->
     <div class="table_title">
-        <div>
-        <el-button size="small" @click="returnHome()">返回列表首页</el-button>
-      </div>
+
       <div class="search_wrap">
         <el-input clearable v-model="username" placeholder="请输入用户名" size="small" style="width:200px"></el-input>
 
@@ -34,7 +32,7 @@
         :page-sizes="[10, 20, 50, 100]"
         :page-size="limit"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="dataList.total"
+        :total="total"
       ></el-pagination>
     </div>
   </div>
@@ -82,7 +80,8 @@ export default {
       date: "", //日期
       dataList: [], //数据源
       page: 1, //页
-      limit: 10 //条
+      limit: 10, //条
+      total:0
     };
   },
   methods: {
@@ -109,7 +108,7 @@ export default {
         .then(res => {
           console.log(res);
           this.dataList = res.data.list || [];
-
+          this.total = res.data.total;
           this.loading=false;
         });
     },
@@ -119,13 +118,6 @@ export default {
       this.getDataList();
     },
 
-    returnHome() {
-      this.page = 1;
-      this.limit = 10;
-      this.times = "";
-      this.username = "";
-      this.getDataList();
-    },
   },
   
   created() {
