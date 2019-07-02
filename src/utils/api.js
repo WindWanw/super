@@ -35,6 +35,11 @@ export default {
         return fetchPost('/admin/checkSupplier', params)
     },
 
+    //用户流水
+    userFlow(params) {
+        return fetchPost('/userflow/dataList', params)
+    },
+
 
     /**
      * @代理商管理
@@ -120,6 +125,9 @@ export default {
     },
     delSeller(params) {
         return fetchPost('/supplier/supplierAdminDel', params)
+    },
+    citySupplier(params) {
+        return fetchPost('/supplier/findSupplier', params)
     },
 
 
