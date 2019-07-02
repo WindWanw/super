@@ -48,6 +48,8 @@ const authorization = () =>
     import ( /* webpackChunkName: "authorization" */ './views/authorization.vue')
 const userSetting = () =>
     import ( /* webpackChunkName: "userSetting" */ './views/userSetting.vue')
+const citySupplier = ()=>import(/* webpackChunkName: "citySupplier" */ './views/citySupplier.vue')
+const userFlow = () => import(/* webpackChunkName: "userFlow" */ './views/userFlow.vue')
 Vue.use(Router)
 
 
@@ -247,6 +249,26 @@ export const asyRouter = [{
             name: '用户设置',
             iconfont: 'iconfont icon-test1',
             needLogin: true, //需要登录
+        }
+    },
+    {
+        path: '/citySupplier',
+        name: 'citySupplier',
+        component: citySupplier,
+        meta: {
+            name: '各城市下商户统计',
+            iconfont: 'el-icon-loading',
+            needLogin:true,//需要登录
+        }
+    },
+    {
+        path: '/userFlow',
+        name: 'userFlow',
+        component: userFlow,
+        meta: {
+            name: '用户流水列表',
+            iconfont: 'el-icon-loading',
+            needLogin:true,//需要登录
         }
     },
 ]
