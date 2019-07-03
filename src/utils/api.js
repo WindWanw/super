@@ -136,6 +136,17 @@ export default {
     },
 
     /**
+     * @售后管理
+     * 售后列表
+     */
+    getSaleList(params) {
+        return fetchPost('/after/suSaleList', params)
+    },
+    suProcess(params) {
+        return fetchPost('/after/suProcess', params)
+    },
+
+    /**
      * @专引师管理
      * 专引师列表
      */
