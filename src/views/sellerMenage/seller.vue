@@ -29,7 +29,7 @@
       </div>
     </div>
     <div class="content">
-      <el-table :data="dataList.list" stripe border v-loading="loading">
+      <el-table :data="dataList.list" stripe border v-loading="loading" @cell-click="toGoodlist">
         <el-table-column type="expand">
           <template slot-scope="props">
             <div class="expand_wrap">
@@ -53,6 +53,8 @@
             </template>
         </el-table-column>
         <el-table-column prop="tel" label="手机号码"></el-table-column>
+        <el-table-column prop="good_num" label="商品数量" ></el-table-column>
+        <el-table-column prop="guide_num" label="专引师数量"></el-table-column>
         <el-table-column prop="checker" label="审核人"></el-table-column>
         <el-table-column prop="times" label="入驻时间">
           <!-- <template slot-scope="scope">{{scope.row.times | formatTimeStamp}}</template> -->
@@ -342,7 +344,7 @@ export default {
       punishId:'',//处罚id
       punishType:'',
       punishContent:'',
-      types: [{ label: "线上非实体店", value: 1 }, { label: "线下实体店", value: 2 }]//商铺类型
+      types: [{ label: "线上非实体店", value: 1 }, { label: "线下实体店", value: 2 }],//商铺类型
     };
   },
   watch:{
@@ -388,6 +390,7 @@ export default {
           name: this.name
         })
         .then(res => {
+            console.log(res);
           this.dataList = res.data || [];
           if(res.code){
             this.$message[res.code ? "warning" : "success"](res.data);
@@ -398,6 +401,7 @@ export default {
     currentCity(e){
       console.log(e)
     },
+
     //查询用户
     search() {
       this.page = 1;
@@ -609,7 +613,16 @@ export default {
         this.punishDialog=res.code?true:false;
       })
     },
-    
+    toGoodlist(row,column,cell,event)
+    {
+      if(column.label=='商品数量'){
+        this.$router.push({path: '/goodList',query:{id:row.id}})
+      }
+      if(column.label=='专引师数量'){
+        this.$router.push({path: '/guidesList',query:{id:row.id}})
+      }
+    },
+
   },
   created() {
     this.getDataList();
