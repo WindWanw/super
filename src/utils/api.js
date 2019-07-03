@@ -129,6 +129,14 @@ export default {
     citySupplier(params) {
         return fetchPost('/supplier/findSupplier', params)
     },
+    goodList(params) {
+        return fetchPost('/supplier/countGoods', params)
+    },
+    guidesList(params) {
+        return fetchPost('/supplier/countGuides', params)
+    },
+
+
 
 
     /**

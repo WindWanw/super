@@ -50,6 +50,8 @@ const userSetting = () =>
     import ( /* webpackChunkName: "userSetting" */ './views/userSetting.vue')
 const citySupplier = ()=>import(/* webpackChunkName: "citySupplier" */ './views/citySupplier.vue')
 const userFlow = () => import(/* webpackChunkName: "userFlow" */ './views/userFlow.vue')
+const goodList = () => import(/* webpackChunkName: "goodList" */ './views/sellerMenage/goodList.vue')
+const guidesList = () => import(/* webpackChunkName: "userFlow" */ './views/sellerMenage/guidesList.vue')
 Vue.use(Router)
 
 
@@ -267,6 +269,26 @@ export const asyRouter = [{
         component: userFlow,
         meta: {
             name: '用户流水列表',
+            iconfont: 'el-icon-loading',
+            needLogin:true,//需要登录
+        }
+    },
+    {
+        path: '/goodList',
+        name: 'goodList',
+        component: goodList,
+        meta: {
+            name: '商家商品列表',
+            iconfont: 'el-icon-loading',
+            needLogin:true,//需要登录
+        }
+    },
+    {
+        path: '/guidesList',
+        name: 'guidesList',
+        component: guidesList,
+        meta: {
+            name: '商家专引师列表',
             iconfont: 'el-icon-loading',
             needLogin:true,//需要登录
         }
