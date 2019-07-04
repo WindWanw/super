@@ -1,6 +1,13 @@
 <template>
   <div class="userList">
+    <!-- 头部（搜索条件） -->
+    <div class="table_title">
 
+      <div class="search_wrap">
+        <el-input clearable v-model="keywords" placeholder="请输入关键词" size="small" style="width:200px"></el-input>
+        <el-button @click="search" type="primary" icon="el-icon-search" size="small" style="margin-left:10px">搜索</el-button>
+      </div>
+    </div>
     <!-- 内容（表单，分页） -->
     <div class="content">
       <el-table :data="dataList" stripe border v-loading="loading">
@@ -36,7 +43,8 @@
         dataList: [], //数据源
         page: 1, //页
         limit: 10, //条
-        total:0
+        total:0,
+        keywords:''
       };
     },
     methods: {
@@ -59,6 +67,7 @@
                   page: this.page,
                   limit: this.limit,
                   times: this.date,
+                  keywords:this.keywords
                 })
                 .then(res => {
                   console.log(res);
