@@ -2,14 +2,14 @@
   <div class="finance">
     <div class="table_title">
       <div class="search_wrap">
-        <el-select style="margin:0 10px" v-model="status" size="small" filterable placeholder="类型">
+        <!-- <el-select style="margin:0 10px" v-model="status" size="small" filterable placeholder="类型">
           <el-option
             v-for="item in options"
             :key="item.value"
             :label="item.label"
             :value="item.value"
           ></el-option>
-        </el-select>
+        </el-select>-->
         <el-input
           clearable
           v-model="name"
@@ -22,105 +22,114 @@
     </div>
 
     <div class="content">
-      <el-table :data="dataList.list" style="width: 100%">
-        <el-table-column type="expand">
-          <template slot-scope="props">
-            <el-form label-position="left" inline class="demo-table-expand">
-              <el-form-item label="ID">
-                <span>{{ props.row.id }}</span>
-              </el-form-item>
-              <el-form-item label="UID">
-                <span>{{ props.row.uid }}</span>
-              </el-form-item>
-              <el-form-item label="可提现金额">
-                <span>{{ props.row.use_amount }}</span>
-              </el-form-item>
-              <el-form-item label="锁定金额">
-                <span>{{ props.row.lock_money }}</span>
-              </el-form-item>
-              <el-form-item label="提现金额">
-                <span>{{ props.row.amount }}</span>
-              </el-form-item>
-              <el-form-item label="持卡人">
-                <span>{{ props.row.name }}</span>
-              </el-form-item>
-              <el-form-item label="银行">
-                <span>{{ props.row.bank }}</span>
-              </el-form-item>
-              <el-form-item label="银行卡号">
-                <span>{{ props.row.bank_account }}</span>
-              </el-form-item>
-              <el-form-item label="申请时间">
-                <span>{{ props.row.create_times }}</span>
-              </el-form-item>
-              <el-form-item label="反馈信息">
-                <span>{{ props.row.info }}</span>
-              </el-form-item>
-              <el-form-item label="审核人">
-                <span>{{ props.row.checker }}</span>
-              </el-form-item>
-              <el-form-item label="付款人">
-                <span>{{ props.row.payer }}</span>
-              </el-form-item>
-              <el-form-item label="个人所得税">
-                <span>{{ props.row.tax }}</span>
-              </el-form-item>
-              <el-form-item label="实际打款">
-                <span>{{ props.row.pay_amount }}</span>
-              </el-form-item>
-              <el-form-item label="审核时间">
-                <span>{{ props.row.check_times }}</span>
-              </el-form-item>
-              <el-form-item label="付款时间">
-                <span>{{ props.row.pay_times }}</span>
-              </el-form-item>
-            </el-form>
-          </template>
-        </el-table-column>
-        <el-table-column label="ID" prop="id"></el-table-column>
-        <el-table-column label="持卡人姓名" prop="name"></el-table-column>
-        <el-table-column label="可提现金额" prop="use_amount"></el-table-column>
-        <el-table-column label="锁定金额" prop="lock_money"></el-table-column>
-        <el-table-column label="提现金额" prop="amount"></el-table-column>
-        <el-table-column label="银行" prop="bank"></el-table-column>
-        <el-table-column label="申请时间" prop="create_times"></el-table-column>
-        <el-table-column label="状态" prop="status">
-          <template slot-scope="scope">
-            <el-button
-              :type="scope.row.status | withdrawStatus"
-              size="mini"
-            >{{scope.row.status | withdrawText}}</el-button>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" prop="status">
-          <template slot-scope="scope">
-            <el-button
-              type="primary"
-              @click="centerDialogVisible=true;id=scope.row.id"
-              v-if="scope.row.status == 0"
-              size="mini"
-            >审核通过</el-button>
-            <el-button
-              type="danger"
-              v-if="scope.row.status == 0"
-              @click="centerDialogVisible2=true;id=scope.row.id"
-              size="mini"
-            >驳回申请</el-button>
-            <el-button
-              type="success"
-              v-if="scope.row.status == 1"
-              @click="centerDialogVisible3=true;id=scope.row.id"
-              size="mini"
-            >确认打款</el-button>
-            <el-button
-              type="danger"
-              v-if="scope.row.status == 1"
-              @click="centerDialogVisible4=true;id=scope.row.id"
-              size="mini"
-            >打款失败</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
+      <el-tabs type="border-card" v-model="status" @tab-click="tabClick">
+        <el-tab-pane
+          v-for="(item,index) in tabList"
+          :key="index"
+          :label="item.label"
+          :name="item.name"
+        >
+          <el-table :data="dataList.list" style="width: 100%">
+            <el-table-column type="expand">
+              <template slot-scope="props">
+                <el-form label-position="left" inline class="demo-table-expand">
+                  <el-form-item label="ID">
+                    <span>{{ props.row.id }}</span>
+                  </el-form-item>
+                  <el-form-item label="UID">
+                    <span>{{ props.row.uid }}</span>
+                  </el-form-item>
+                  <el-form-item label="可提现金额">
+                    <span>{{ props.row.use_amount }}</span>
+                  </el-form-item>
+                  <el-form-item label="锁定金额">
+                    <span>{{ props.row.lock_money }}</span>
+                  </el-form-item>
+                  <el-form-item label="提现金额">
+                    <span>{{ props.row.amount }}</span>
+                  </el-form-item>
+                  <el-form-item label="持卡人">
+                    <span>{{ props.row.name }}</span>
+                  </el-form-item>
+                  <el-form-item label="银行">
+                    <span>{{ props.row.bank }}</span>
+                  </el-form-item>
+                  <el-form-item label="银行卡号">
+                    <span>{{ props.row.bank_account }}</span>
+                  </el-form-item>
+                  <el-form-item label="申请时间">
+                    <span>{{ props.row.create_times }}</span>
+                  </el-form-item>
+                  <el-form-item label="反馈信息">
+                    <span>{{ props.row.info }}</span>
+                  </el-form-item>
+                  <el-form-item label="审核人">
+                    <span>{{ props.row.checker }}</span>
+                  </el-form-item>
+                  <el-form-item label="付款人">
+                    <span>{{ props.row.payer }}</span>
+                  </el-form-item>
+                  <el-form-item label="个人所得税">
+                    <span>{{ props.row.tax }}</span>
+                  </el-form-item>
+                  <el-form-item label="实际打款">
+                    <span>{{ props.row.pay_amount }}</span>
+                  </el-form-item>
+                  <el-form-item label="审核时间">
+                    <span>{{ props.row.check_times }}</span>
+                  </el-form-item>
+                  <el-form-item label="付款时间">
+                    <span>{{ props.row.pay_times }}</span>
+                  </el-form-item>
+                </el-form>
+              </template>
+            </el-table-column>
+            <el-table-column label="ID" prop="id"></el-table-column>
+            <el-table-column label="持卡人姓名" prop="name"></el-table-column>
+            <el-table-column label="可提现金额" prop="use_amount"></el-table-column>
+            <el-table-column label="锁定金额" prop="lock_money"></el-table-column>
+            <el-table-column label="提现金额" prop="amount"></el-table-column>
+            <el-table-column label="银行" prop="bank"></el-table-column>
+            <el-table-column label="申请时间" prop="create_times"></el-table-column>
+            <el-table-column label="状态" prop="status">
+              <template slot-scope="scope">
+                <el-button
+                  :type="scope.row.status | withdrawStatus"
+                  size="mini"
+                >{{scope.row.status | withdrawText}}</el-button>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" prop="status">
+              <template slot-scope="scope">
+                <el-button
+                  type="primary"
+                  @click="centerDialogVisible=true;id=scope.row.id"
+                  v-if="scope.row.status == 0"
+                  size="mini"
+                >审核通过</el-button>
+                <el-button
+                  type="danger"
+                  v-if="scope.row.status == 0"
+                  @click="centerDialogVisible2=true;id=scope.row.id"
+                  size="mini"
+                >驳回申请</el-button>
+                <el-button
+                  type="success"
+                  v-if="scope.row.status == 1"
+                  @click="centerDialogVisible3=true;id=scope.row.id"
+                  size="mini"
+                >确认打款</el-button>
+                <el-button
+                  type="danger"
+                  v-if="scope.row.status == 1"
+                  @click="centerDialogVisible4=true;id=scope.row.id"
+                  size="mini"
+                >打款失败</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-tab-pane>
+      </el-tabs>
       <el-pagination
         background
         @size-change="handleSizeChange"
@@ -167,27 +176,34 @@
 export default {
   data() {
     return {
-      options: [
-        {
-          value: 0,
-          label: "待审核"
-        },
-        {
-          value: 1,
-          label: "已审核"
-        },
-        {
-          value: 2,
-          label: "已打款"
-        },
-        {
-          value: 3,
-          label: "未通过审核"
-        },
-        {
-          value: 4,
-          label: "打款失败"
-        }
+      // options: [
+      //   {
+      //     value: 0,
+      //     label: "待审核"
+      //   },
+      //   {
+      //     value: 1,
+      //     label: "已审核"
+      //   },
+      //   {
+      //     value: 2,
+      //     label: "已打款"
+      //   },
+      //   {
+      //     value: 3,
+      //     label: "未通过审核"
+      //   },
+      //   {
+      //     value: 4,
+      //     label: "打款失败"
+      //   }
+      // ],
+      tabList: [
+        { label: "待审核", name: "0" },
+        { label: "已审核", name: "1" },
+        { label: "已打款", name: "2" },
+        { label: "未通过审核", name: "3" },
+        { label: "打款失败", name: "4" }
       ],
       loading: false,
       dataList: [],
@@ -237,6 +253,11 @@ export default {
     },
     //搜索
     search() {
+      this.page = 1;
+      this.getDataList();
+    },
+    tabClick(val) {
+      this.status = val.name;
       this.page = 1;
       this.getDataList();
     },
@@ -302,7 +323,7 @@ export default {
   padding: 20px;
   box-sizing: border-box;
 }
-.el-button+.el-button {
-    margin-left: 0;
+.el-button + .el-button {
+  margin-left: 0;
 }
 </style>
