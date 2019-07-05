@@ -12,6 +12,7 @@
         <el-select clearable v-model="type" placeholder="请选择代金券来源" size="small">
           <el-option label="全平台" value="common"></el-option>
           <el-option label="商铺" value="shop"></el-option>
+          <el-option label="可叠加" value="super"></el-option>
         </el-select>
         <el-select clearable v-model="used_time" placeholder="代金券是否使用" size="small" style="margin:0 10px">
           <el-option label="已使用" value="2"></el-option>
@@ -123,7 +124,7 @@ export default {
           limit: this.limit,
           types:this.type,
           used_time:this.used_time,
-          'create_times[<>]':this.times
+          times:this.times
         })
         .then(res => {
           this.dataList = res.data || [];
@@ -135,12 +136,12 @@ export default {
     },
     //分页
     handleSizeChange(val) {
-      this.page = val;
+      this.limit = val;
       this.getDataList();
     },
     //分条
     handleCurrentChange(val) {
-      this.limit = val;
+      this.page = val;
       this.getDataList();
     },
     // 查询

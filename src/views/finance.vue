@@ -32,6 +32,12 @@
               <el-form-item label="UID">
                 <span>{{ props.row.uid }}</span>
               </el-form-item>
+              <el-form-item label="可提现金额">
+                <span>{{ props.row.use_amount }}</span>
+              </el-form-item>
+              <el-form-item label="锁定金额">
+                <span>{{ props.row.lock_money }}</span>
+              </el-form-item>
               <el-form-item label="提现金额">
                 <span>{{ props.row.amount }}</span>
               </el-form-item>
@@ -73,6 +79,8 @@
         </el-table-column>
         <el-table-column label="ID" prop="id"></el-table-column>
         <el-table-column label="持卡人姓名" prop="name"></el-table-column>
+        <el-table-column label="可提现金额" prop="use_amount"></el-table-column>
+        <el-table-column label="锁定金额" prop="lock_money"></el-table-column>
         <el-table-column label="提现金额" prop="amount"></el-table-column>
         <el-table-column label="银行" prop="bank"></el-table-column>
         <el-table-column label="申请时间" prop="create_times"></el-table-column>
@@ -211,9 +219,9 @@ export default {
         })
         .then(res => {
           this.dataList = res.data || [];
-         if(res.code){
+          if (res.code) {
             this.$message[res.code ? "warning" : "success"](res.data);
-         }
+          }
           this.loading = false;
         });
     },
@@ -293,5 +301,8 @@ export default {
   background-color: #fff;
   padding: 20px;
   box-sizing: border-box;
+}
+.el-button+.el-button {
+    margin-left: 0;
 }
 </style>
