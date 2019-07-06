@@ -1,0 +1,349 @@
+<template>
+  <div class="order">
+    <div class="table_title">
+      <el-button
+        v-if="show"
+        type="primary"
+        icon="el-icon-d-arrow-left"
+        size="mini"
+        @click="getBack"
+      >返回</el-button>
+
+      <span v-if="!show"></span>
+      <div class="search_wrap">
+        <el-input clearable v-model="name" placeholder="请输入关键字" size="small" style="width:200px"></el-input>
+        <el-input
+          clearable
+          v-model="order_num"
+          placeholder="请输入订单编号进行核销"
+          size="small"
+          style="width:200px"
+        ></el-input>下单时间：
+        <el-date-picker
+          style="margin:0 10px"
+          value-format="timestamp"
+          size="small"
+          v-model="date"
+          type="daterange"
+          align="right"
+          unlink-panels
+          range-separator="至"
+          start-placeholder="起始时间"
+          end-placeholder="终止时间"
+          :picker-options="pickerOptions"
+        ></el-date-picker>
+        <el-button type="primary" icon="el-icon-search" size="small" @click="search">搜索</el-button>
+        <el-button type="success" size="mini" @click="beforeExport" icon="iconfont daochu">导出</el-button>
+      </div>
+    </div>
+    <div class="content" style="width:100%">
+      <el-tabs type="border-card" v-model="status" @tab-click="tabClick">
+        <el-tab-pane
+          v-for="(item,index) in tabList"
+          :key="index"
+          :label="item.label"
+          :name="item.name"
+        >
+          <el-table :data="dataList.list" stripe border v-loading="loading" class="order-table">
+            <el-table-column prop="order_sn" label="订单编号" align="center"></el-table-column>
+            <el-table-column prop="order_type" label="订单类型" align="center">
+              <template slot-scope="scope">
+                <span v-if="scope.row.order_type=='1'" style="color:red">线上订单</span>
+                <span v-if="scope.row.order_type=='2'">线下订单</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="supplier_name" label="商户姓名" align="center"></el-table-column>
+            <el-table-column prop="user_name" label="用户名" align="center"></el-table-column>
+            <el-table-column prop="tel" label="联系方式" align="center"></el-table-column>
+            <el-table-column prop="amount" label="订单金额(元)" align="center"></el-table-column>
+            <el-table-column prop="actual" label="实际金额(元)" align="center">
+              <template slot-scope="scope">
+                <span v-if="scope.row.order_type==2 && scope.row.status!='5'">0</span>
+                <span v-else>{{scope.row.actual}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="su_commission" label="佣金(元)" align="center">
+              <template slot-scope="scope">
+                <span v-if="scope.row.order_type==2 && scope.row.status!='5'">0</span>
+                <span v-else>{{scope.row.su_commission}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="outlet" label="折扣减免金额(元)" align="center">
+              <template slot-scope="scope">
+                <span v-if="scope.row.order_type==2 && scope.row.status!='5'">0</span>
+                <span v-else>{{scope.row.outlet}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="guide_name" label="所属专引师" align="center">
+              <template slot-scope="scope">{{scope.row.guide_name}}</template>
+            </el-table-column>
+            <el-table-column prop="times" label="下单时间" align="center"></el-table-column>
+            <el-table-column prop="status" label="订单状态" align="center">
+              <template slot-scope="scope">
+                <el-tag
+                  :type="scope.row.status | payStatus"
+                  size="mini"
+                >{{scope.row.status | orderStatus}}</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" v-if="(status=='2' || status=='3' || status=='5')">
+              <template slot-scope="scope">
+                <el-button
+                  v-if="status=='2'"
+                  type="success"
+                  size="mini"
+                  @click="orderId=scope.row.id;guideId=scope.row.guide_id;dialog=true;address=scope.row.address;orderNumber='';orderCompany=''"
+                  icon="el-icon-goods"
+                >点击发货</el-button>
+                <el-button
+                  v-else
+                  type="success"
+                  size="mini"
+                  @click="address=scope.row.address;express_number=scope.row.express_number;express_company=scope.row.company;exdialog=true"
+                  icon="el-icon-goods"
+                >查看物流</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-tab-pane>
+      </el-tabs>
+
+      <el-pagination
+        background
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="page"
+        :page-sizes="[10, 20, 50, 100,200,500]"
+        :page-size="limit"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="dataList.total"
+      ></el-pagination>
+    </div>
+
+    <!-- 发货dialog -->
+    <el-dialog title="发货" :visible.sync="dialog" @close="orderNumber='';orderCompany=''">
+      <el-form label-width="100px">
+        <el-form-item label="目的地">
+          <el-input v-model="address"></el-input>
+        </el-form-item>
+        <el-form-item label="物流单号">
+          <el-input v-model="orderNumber" placeholder="请输入物流单号"></el-input>
+        </el-form-item>
+        <el-form-item label="物流公司">
+          <el-input v-model="orderCompany" placeholder="请输入物流公司"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialog = false">取 消</el-button>
+        <el-button type="primary" @click="sendGoods">确 定</el-button>
+      </div>
+    </el-dialog>
+    <!-- 查看物流dialog -->
+    <el-dialog title="查看物流" :visible.sync="exdialog">
+      <el-form label-width="100px">
+        <el-form-item label="目的地">
+          <el-input v-model="address"></el-input>
+        </el-form-item>
+        <el-form-item label="物流单号">
+          <el-input v-model="express_number"></el-input>
+        </el-form-item>
+        <el-form-item label="物流公司">
+          <el-input v-model="express_company"></el-input>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+  </div>
+</template>
+
+<script>
+import FileSaver from "file-saver";
+import XLSX from "xlsx";
+export default {
+  data() {
+    return {
+      loading: false,
+      pickerOptions: {
+        //快捷键
+        shortcuts: [
+          {
+            text: "最近一周",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit("pick", [start, end]);
+            }
+          },
+          {
+            text: "最近一个月",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit("pick", [start, end]);
+            }
+          },
+          {
+            text: "最近三个月",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              picker.$emit("pick", [start, end]);
+            }
+          }
+        ]
+      },
+      tabList: [
+        { label: "全部", name: "0" },
+        { label: "待付款", name: "1" },
+        { label: "待发货", name: "2" },
+        { label: "已发货", name: "3" },
+        { label: "退单", name: "4" },
+        { label: "交易成功", name: "5" }
+      ],
+      name: "",
+      date: [],
+      status: "0",
+      dataList: [],
+      page: 1,
+      limit: 10,
+      dialog: false, //发货物流dialog
+      exdialog: false, //查看物流
+      orderId: "", //订单id
+      guideId: "", //专引师id
+      orderNumber: "", //物流单号
+      orderCompany: "", //物流公司
+      express_number: "",
+      express_company: "",
+      address: "",
+      order_num: "", //订单编号
+      show: false //线上返回
+    };
+  },
+  mounted: function() {},
+  methods: {
+    //导出之前
+    beforeExport() {
+      this.$confirm("确定导出当前页数据吗？(选择100条/页试试)")
+        .then(_ => {
+          this.exportExcel();
+        })
+        .catch(_ => {});
+    },
+    //导出
+    exportExcel() {
+      /* generate workbook object from table */
+      var wb = XLSX.utils.table_to_book(document.querySelector(".order-table"));
+
+      /* get binary string as output */
+      var wbout = XLSX.write(wb, {
+        bookType: "xlsx",
+        bookSST: true,
+        type: "array"
+      });
+      try {
+        FileSaver.saveAs(
+          new Blob([wbout], { type: "application/octet-stream" }),
+          "orderList.xlsx"
+        );
+      } catch (e) {
+        if (typeof console !== "undefined") console.log(e, wbout);
+      }
+      return wbout;
+    },
+    //分页
+    handleSizeChange(val) {
+      this.limit = val;
+      this.getDataList();
+    },
+    //分条
+    handleCurrentChange(val) {
+      this.page = val;
+      this.getDataList();
+    },
+
+    getBack() {
+      this.loading = true;
+      this.$api
+        .vestOrderList({
+          page: 1,
+          limit: 10
+        })
+        .then(res => {
+          this.dataList = res.data || [];
+          this.loading = false;
+          this.show = false;
+          this.status = "0";
+          this.date = [];
+          this.name = "";
+          this.order_num = "";
+          this.is_online = "";
+        });
+    },
+
+    //获取数据
+    getDataList() {
+      this.loading = true;
+      this.$api
+        .vestOrderList({
+          page: this.page,
+          limit: this.limit,
+          status: this.status,
+          times: this.date,
+          keywords: this.name,
+          is_online: this.is_online,
+          order_sn: this.order_num
+        })
+        .then(res => {
+          this.dataList = res.data || [];
+          this.loading = false;
+        });
+    },
+    // tab切换
+    tabClick(val) {
+      this.status = val.name;
+      this.page = 1;
+      this.getDataList();
+    },
+    //查询
+    search() {
+      this.show = true;
+      this.page = 1;
+      this.getDataList();
+    },
+    //确认发货
+    sendGoods() {
+      if (!this.orderNumber) return this.$message.warning("请输入物流单号");
+      if (!this.orderCompany) return this.$message.warning("请输入物公司");
+      this.$api
+        .sendGoods({
+          id: this.orderId,
+          guide_id: this.guideId,
+          express_number: this.orderNumber,
+          company: this.orderCompany
+        })
+        .then(res => {
+          this.dialog = res.code ? true : false;
+          this.$message[res.code ? "warning" : "success"](res.data.message);
+          if (res.code) return;
+          this.getDataList();
+        });
+    },
+    clickitem(e) {
+      e === this.is_online ? (this.is_online = "") : (this.is_online = e);
+    }
+  },
+  created() {
+    this.getDataList();
+  }
+};
+</script>
+
+<style scoped>
+.content {
+  background-color: #fff;
+  padding: 20px;
+  box-sizing: border-box;
+}
+</style>

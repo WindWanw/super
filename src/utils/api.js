@@ -150,6 +150,9 @@ export default {
     delOrder(params) {
         return fetchPost('/orders/OrdersDelete', params)
     },
+    vestOrderList(params) {
+        return fetchPost('/supplier/vestOrderList', params)
+    },
 
     /**
      * @售后管理

@@ -36,6 +36,8 @@ const teacherSh = () =>
 
 const order = () =>
     import ( /* webpackChunkName: "order" */ './views/order.vue')
+const vestOrder = () =>
+    import ( /* webpackChunkName: "vestOrder" */ './views/vestOrder.vue')
 const sale = () =>
     import ( /* webpackChunkName: "sale" */ './views/sale.vue')
 const teacher = () =>
@@ -194,6 +196,16 @@ export const asyRouter = [{
         component: order,
         meta: {
             name: '订单管理',
+            iconfont: 'iconfont zongdingdanshu',
+            needLogin: true, //需要登录
+        }
+    },
+    {
+        path: '/vestOrder',
+        name: 'vestOrder',
+        component: vestOrder,
+        meta: {
+            name: '马甲商户订单管理',
             iconfont: 'iconfont zongdingdanshu',
             needLogin: true, //需要登录
         }

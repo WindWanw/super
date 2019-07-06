@@ -44,16 +44,13 @@
         <el-table-column prop="name" label="姓名"></el-table-column>
         <el-table-column prop="address" label="详细地址"></el-table-column>
         <!-- <el-table-column prop="open_times" label="营业时间"></el-table-column> -->
-        <el-table-column prop="shop_info" label="商户描述">
-          <!-- <template slot-scope="scope">
-            {{scope.row.shop_info || '无'}}
-          </template> -->
+        <!-- <el-table-column prop="shop_info" label="商户描述">
            <template slot-scope="scope">
               <el-button size="mini" type="success" @click="form.shop_info=scope.row.shop_info;previewDialog=true">预览</el-button>
             </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column prop="tel" label="手机号码"></el-table-column>
-        <el-table-column prop="good_num" label="商品数量" ></el-table-column>
+        <!-- <el-table-column prop="good_num" label="商品数量" ></el-table-column> -->
         <el-table-column prop="guide_num" label="专引师数量"></el-table-column>
         <el-table-column prop="checker" label="审核人"></el-table-column>
         <el-table-column prop="times" label="入驻时间">
