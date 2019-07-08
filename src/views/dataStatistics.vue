@@ -247,7 +247,7 @@ export default {
 .progress-box {
   display: flex;
   align-items: center;
-  margin:10px 10px;
+  padding:10px 10px;
 }
 .progress-box .time {
   width: 120px;
