@@ -48,7 +48,7 @@
         <div class="item">
           <i class="iconfont shouru2"></i>
           <div class="item_right">
-            <p>总金额</p>
+            <p>总收入金额</p>
             <p>￥{{total.amount}}</p>
           </div>
         </div>
@@ -107,14 +107,14 @@
       </div>
     </div>
     <!-- 消息 -->
-    <div class="message_info">
+    <!-- <div class="message_info">
       <div class="title">消息中心</div>
       <div class="info" v-for="(item,index) in messageList" :key="index">
         <div class="info_text">{{index+1}}.{{item.title}}</div>
         <div class="info_date">{{item.times | formatTimeStamp}}</div>
         <el-badge class="mark" :value="item.count"/>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
