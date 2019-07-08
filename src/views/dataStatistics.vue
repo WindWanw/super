@@ -26,8 +26,7 @@
         </div>
         <div class="item" @click="toCitySupplier">
           <i class="iconfont dailishang"></i>
-          <div class="item_right" >
-
+          <div class="item_right">
             <p>代理商数</p>
             <p>
               {{total.agentCount}}
@@ -54,13 +53,12 @@
         </div>
 
         <div class="item">
-          <i class="iconfont porders"></i>
+          <i class="iconfont qian"></i>
           <div class="item_right">
             <p>进账</p>
             <p>￥{{pallTotal}}</p>
           </div>
         </div>
-
       </div>
       <div>
         <div class="progress-box">
@@ -81,27 +79,31 @@
           </div>
         </div>
       </div>
-      <el-card class="box-card">
+      <div style="margin-top: 20px;color:#F59E66;" class="title">
         <div>
-          优惠券送出总额: <b>￥{{total.cards.total}}</b>
+          优惠券送出总额:
+          <b>￥{{total.cards.total}}</b>
         </div>
-      </el-card>
+      </div>
+      <!-- <el-card class="box-card">
+        <div>
+          优惠券送出总额:
+          <b>￥{{total.cards.total}}</b>
+        </div>
+      </el-card> -->
       <div>
         <div class="progress-box">
           <div class="time">
-            <el-tag>已使用(￥{{total.cards.isPay}})</el-tag>
-            <div></div>
+            <el-tag type="success">已使用(￥{{total.cards.isPay}})</el-tag>
           </div>
           <div class="progress">
-            <el-progress :text-inside="true" :stroke-width="18" :percentage="percentPay"></el-progress>
+            <el-progress type="circle" color="#67C23A" :percentage="percentPay"></el-progress>
           </div>
-        </div>
-        <div class="progress-box">
           <div class="time">
-            <el-tag>未使用(￥{{total.cards.unUse}})</el-tag>
+            <el-tag type="warning">未使用(￥{{total.cards.unUse}})</el-tag>
           </div>
           <div class="progress">
-            <el-progress :text-inside="true" :stroke-width="18" :percentage="percentUnUse"></el-progress>
+            <el-progress type="circle" color="#F59E66"  :percentage="percentUnUse"></el-progress>
           </div>
         </div>
       </div>
@@ -114,7 +116,7 @@
         <div class="info_date">{{item.times | formatTimeStamp}}</div>
         <el-badge class="mark" :value="item.count"/>
       </div>
-    </div> -->
+    </div>-->
   </div>
 </template>
 
@@ -122,14 +124,14 @@
 export default {
   data() {
     return {
-      total: '', //总计
+      total: "", //总计
       messageList: [],
-      ptotal:'',
-      pallTotal:'',
-      percentDay:0,
-      percentWk:0,
-      percentPay:0,
-      percentUnUse:0
+      ptotal: "",
+      pallTotal: "",
+      percentDay: 0,
+      percentWk: 0,
+      percentPay: 0,
+      percentUnUse: 0
     };
   },
   components: {},
@@ -152,9 +154,8 @@ export default {
         this.messageList = res.data || [];
       });
     },
-    toCitySupplier()
-    {
-      this.$router.push({path: '/citySupplier'})
+    toCitySupplier() {
+      this.$router.push({ path: "/citySupplier" });
     }
   },
   created() {
@@ -247,7 +248,7 @@ export default {
 .progress-box {
   display: flex;
   align-items: center;
-  padding:10px 10px;
+  padding: 10px 10px;
 }
 .progress-box .time {
   width: 120px;
@@ -255,7 +256,7 @@ export default {
 .progress-box .progress {
   flex: 1;
 }
-.box-card {
+/* .box-card {
   width: 480px;
-}
+} */
 </style>
