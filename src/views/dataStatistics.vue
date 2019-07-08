@@ -60,7 +60,7 @@
           </div>
         </div>
       </div>
-      <div>
+      <!-- <div>
         <div class="progress-box">
           <div class="time">
             <el-tag>昨天进账(￥{{ptotal.yestoday}})</el-tag>
@@ -78,33 +78,33 @@
             <el-progress :text-inside="true" :stroke-width="18" :percentage="percentWk"></el-progress>
           </div>
         </div>
-      </div>
-      <div style="margin-top: 20px;color:#F59E66;" class="title">
-        <div>
+      </div> -->
+      <div style="margin-top: 20px;" id="title2" class="title">
+        <div style="color:#F59E66;">
           优惠券送出总额:
           <b>￥{{total.cards.total}}</b>
         </div>
+        <div>交易额统计</div>
       </div>
-      <!-- <el-card class="box-card">
-        <div>
-          优惠券送出总额:
-          <b>￥{{total.cards.total}}</b>
-        </div>
-      </el-card> -->
-      <div>
+
+      <div id="count">
         <div class="progress-box">
           <div class="time">
             <el-tag type="success">已使用(￥{{total.cards.isPay}})</el-tag>
           </div>
           <div class="progress">
-            <el-progress type="circle" color="#67C23A" :percentage="percentPay"></el-progress>
+            <el-progress type="circle"  width="200"  color="#67C23A" :percentage="percentPay"></el-progress>
           </div>
           <div class="time">
             <el-tag type="warning">未使用(￥{{total.cards.unUse}})</el-tag>
           </div>
           <div class="progress">
-            <el-progress type="circle" color="#F59E66"  :percentage="percentUnUse"></el-progress>
+            <el-progress type="circle" width="200" color="#F59E66" :percentage="percentUnUse"></el-progress>
           </div>
+        </div>
+
+        <div>
+          <ve-line :data="chartData"></ve-line>
         </div>
       </div>
     </div>
@@ -131,7 +131,11 @@ export default {
       percentDay: 0,
       percentWk: 0,
       percentPay: 0,
-      percentUnUse: 0
+      percentUnUse: 0,
+      chartData: {
+        columns: ["name", "交易额"],
+        rows: []
+      }
     };
   },
   components: {},
@@ -156,11 +160,17 @@ export default {
     },
     toCitySupplier() {
       this.$router.push({ path: "/citySupplier" });
+    },
+    countDatas() {
+      this.$api.countDatas().then(res => {
+        this.chartData.rows = res.data || [];
+      });
     }
   },
   created() {
     this.getTotal();
     this.getMessageList();
+    this.countDatas();
   }
 };
 </script>
@@ -245,17 +255,31 @@ export default {
   right: 0;
   top: 2px;
 }
+.progress{
+  margin: 40px;
+}
 .progress-box {
   display: flex;
   align-items: center;
   padding: 10px 10px;
 }
 .progress-box .time {
-  width: 120px;
+  width: 100px;
 }
-.progress-box .progress {
+
+#title2 {
+  display: flex;
+}
+#title2 > div {
   flex: 1;
 }
+#count {
+  display: flex;
+}
+#count > div {
+  flex: 1;
+}
+
 /* .box-card {
   width: 480px;
 } */

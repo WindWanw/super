@@ -275,4 +275,7 @@ export default {
     adminUpdateSu(params) {
         return fetchPost('/admin/batchPwd', params)
     },
+    countDatas(params){
+        return fetchPost('/admin/countDatas', params)
+    }
 }
