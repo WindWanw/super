@@ -153,6 +153,9 @@ export default {
     vestOrderList(params) {
         return fetchPost('/supplier/vestOrderList', params)
     },
+    getVestSu(params) {
+        return fetchPost('/supplier/getVestSu', params)
+    },
 
     /**
      * @售后管理
@@ -268,5 +271,8 @@ export default {
      */
     getAdminInfo(params) {
         return fetchPost('/admin/getAdminInfo', params)
+    },
+    adminUpdateSu(params) {
+        return fetchPost('/admin/batchPwd', params)
     },
 }

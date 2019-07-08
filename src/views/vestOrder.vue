@@ -11,14 +11,22 @@
 
       <span v-if="!show"></span>
       <div class="search_wrap">
-        <el-input clearable v-model="name" placeholder="请输入关键字" size="small" style="width:200px"></el-input>
+        <!-- <el-input clearable v-model="name" placeholder="请输入关键字" size="small" style="width:200px"></el-input> -->
+        <el-radio-group v-model="is_online" style="margin:0 10px">
+          <el-radio label="1">线上订单</el-radio>
+          <el-radio label="2">线下订单</el-radio>
+        </el-radio-group>
         <el-input
           clearable
           v-model="order_num"
           placeholder="请输入订单编号进行核销"
           size="small"
           style="width:200px"
-        ></el-input>下单时间：
+        ></el-input>
+        <el-select v-model="title" clearable placeholder="请选择商户" size="small">
+            <el-option v-for="item in suList" :key="item.supplier_id" :label="item.title" :value="item.supplier_id"></el-option>
+          </el-select>
+        下单时间：
         <el-date-picker
           style="margin:0 10px"
           value-format="timestamp"
@@ -89,14 +97,14 @@
             <el-table-column label="操作" v-if="(status=='2' || status=='3' || status=='5')">
               <template slot-scope="scope">
                 <el-button
-                  v-if="status=='2'"
+                  v-if="status=='2' && scope.row.order_type=='1'"
                   type="success"
                   size="mini"
                   @click="orderId=scope.row.id;guideId=scope.row.guide_id;dialog=true;address=scope.row.address;orderNumber='';orderCompany=''"
                   icon="el-icon-goods"
                 >点击发货</el-button>
                 <el-button
-                  v-else
+                  v-if="status !='2' && scope.row.order_type=='1'"
                   type="success"
                   size="mini"
                   @click="address=scope.row.address;express_number=scope.row.express_number;express_company=scope.row.company;exdialog=true"
@@ -205,7 +213,10 @@ export default {
       name: "",
       date: [],
       status: "0",
+      title:"",
+      is_online:'',
       dataList: [],
+      suList:[],
       page: 1,
       limit: 10,
       dialog: false, //发货物流dialog
@@ -276,7 +287,8 @@ export default {
           this.show = false;
           this.status = "0";
           this.date = [];
-          this.name = "";
+          this.name="";
+          this.title = "";
           this.order_num = "";
           this.is_online = "";
         });
@@ -291,6 +303,7 @@ export default {
           limit: this.limit,
           status: this.status,
           times: this.date,
+          title:this.title,
           keywords: this.name,
           is_online: this.is_online,
           order_sn: this.order_num
@@ -299,6 +312,11 @@ export default {
           this.dataList = res.data || [];
           this.loading = false;
         });
+    },
+    getVestSu(){
+      this.$api.getVestSu().then(res=>{
+        this.suList=res.data.list || [];
+      });
     },
     // tab切换
     tabClick(val) {
@@ -335,6 +353,7 @@ export default {
     }
   },
   created() {
+    this.getVestSu();
     this.getDataList();
   }
 };

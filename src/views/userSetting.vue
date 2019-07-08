@@ -1,5 +1,10 @@
 <template>
   <div class="card">
+    <div class="table_title">
+      <div>
+        <el-button type="primary" size="small" @click="userSettingDialog=true" v-if="admin==1">设置商户密码</el-button>
+      </div>
+    </div>
     <div class="content">
       <el-table :data="authList.list" style="width: 100%">
         <el-table-column prop="username" label="账号"></el-table-column>
@@ -10,17 +15,36 @@
         </el-table-column>
         <el-table-column prop="tel" label="联系方式"></el-table-column>
         <el-table-column fixed="right" label="操作">
-            <template slot-scope="scope">
-            <el-button
-              @click="openEditPassword(scope.row)"
-              type="primary"
-              size="small"
-            >修改密码</el-button>
-            </template>
+          <template slot-scope="scope">
+            <el-button @click="openEditPassword(scope.row)" type="primary" size="small">修改密码</el-button>
+          </template>
         </el-table-column>
       </el-table>
     </div>
-    <el-dialog title="修改密码" width="750px" :visible.sync="retrieveDialog" append-to-body @close="$refs['ruleForm'].resetFields()">
+
+    <!-- 超级管理员设置商户密码 -->
+    <el-dialog title="设置商户密码" width="750px" :visible.sync="userSettingDialog" append-to-body @close="su.tels='';su.password=''">
+      <el-form label-width="120px" :model="su" ref="su">
+        <el-form-item label="手机号" prop="tels">
+          <el-input v-model="su.tels" placeholder="请输入手机号，多个手机号用空格或者“,”隔开"></el-input>
+        </el-form-item>
+        <el-form-item label="密码" prop="password">
+          <el-input type="password" v-model="su.password" show-password></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="userSettingDialog = false">取 消</el-button>
+        <el-button type="primary" @click="userSetting()">确 定</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog
+      title="修改密码"
+      width="750px"
+      :visible.sync="retrieveDialog"
+      append-to-body
+      @close="$refs['ruleForm'].resetFields()"
+    >
       <el-form label-width="120px" :model="retrieve" :rules="rules" ref="retrieve">
         <el-form-item label="注册手机号" prop="tel">
           <el-input v-model="retrieve.tel" disabled></el-input>
@@ -60,6 +84,8 @@ export default {
       btn_show1: true, //发送验证码
       btn_show2: false, //重新发送
       retrieveDialog: false,
+      userSettingDialog: false, //超级管理员设置商户密码
+      admin:JSON.parse(localStorage.getItem('userinfo')).id || '',
       retrieve: {
         id: "",
         tel: "",
@@ -67,6 +93,10 @@ export default {
         oldpassword: "",
         password: "",
         repassword: ""
+      },
+      su: {
+        tels: "",
+        password:'',
       },
       authList: "",
       rules: {
@@ -111,7 +141,7 @@ export default {
         this.authList = res.data || [];
       });
     },
-//修改密码
+    //修改密码
     openEditPassword(item) {
       this.retrieveDialog = true;
       for (let i in this.retrieve) {
@@ -133,6 +163,21 @@ export default {
         }
       });
     },
+
+    userSetting() {
+      if(!this.su.password){
+        this.$notify({
+          title: '注意',
+          message: '密码不能为空，请填写',
+          type: 'warning'
+        });
+        return ;
+      }
+      this.$api.adminUpdateSu(this.su).then(res=>{
+        this.$message[res.code ? 'warning':'success'](res.data.message);
+        if(!res.code) this.userSettingDialog=false;
+      });
+    }
   },
   created() {
     this.getAuthList();
