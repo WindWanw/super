@@ -28,27 +28,26 @@
 export default {
   data() {
     return {
-      versions:'',//版本号
+      versions: "", //版本号
       ruleForm: {
         username: "",
         password: "",
-        character:4,//角色，商家
+        character: 4, //角色，商家
         url: ""
-      },
+      }
     };
   },
   components: {},
   //页面加载调用获取cookie值
-  mounted() {
-    
-  },
+  mounted() {},
   methods: {
     login() {
       if (!this.ruleForm.username)
         return this.$message.error("“账号不能为空，请填写账号");
       if (!this.ruleForm.password)
         return this.$message.error("密码不能为空，请填写密码");
-      this.$api.login(this.ruleForm).then(res => {
+      this.$api.login(this.ruleForm)
+      .then(res => {
         if (!res.code) {
           localStorage.setItem("token", res.data.token);
           localStorage.setItem("userinfo", JSON.stringify(res.data.userinfo));
@@ -66,10 +65,10 @@ export default {
         }
       });
     },
-    getVersions(){
-      this.$api.getVersions().then(res=>{
-        this.versions=res.data.versions;
-      })
+    getVersions() {
+      this.$api.getVersions().then(res => {
+        this.versions = res.data.versions;
+      });
     },
     reset() {
       this.ruleForm = {};
@@ -83,7 +82,7 @@ export default {
           _self.login();
         }
       };
-    },
+    }
   },
   destroyed() {
     document.onkeydown = null;
@@ -146,7 +145,7 @@ export default {
   position: absolute;
   bottom: 0px;
   background-color: #409eff;
-  height:50px;
+  height: 50px;
 }
 .text {
   text-align: center;

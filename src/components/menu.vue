@@ -1,7 +1,8 @@
 <template>
    <div class='menu'>
        <router-link class="href" :to="item.path" v-for="(item,index) in menuList" :key="index">
-          <el-button :type="item.path==$route.path?'primary':''" size="mini">{{item.name}}
+          <el-button :type="item.path==$route.path?'primary':''" size="mini">
+            {{item.name}}
              <span v-if="menuList.length!=1" class='el-icon-close' @click.prevent.stop="closeTags(item)"></span>
           </el-button>
        </router-link>
