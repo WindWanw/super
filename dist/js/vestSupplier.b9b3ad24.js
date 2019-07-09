@@ -1,0 +1,2 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["vestSupplier"],{"4e5f":function(e,n,t){"use strict";t.r(n);var r=function(){var e=this,n=e.$createElement,t=e._self._c||n;return t("div",{},[t("router-view")],1)},u=[],o={data:function(){return{}},components:{}},a=o,c=t("2877"),i=Object(c["a"])(a,r,u,!1,null,"7ad9123b",null);n["default"]=i.exports}}]);
+//# sourceMappingURL=vestSupplier.b9b3ad24.js.map

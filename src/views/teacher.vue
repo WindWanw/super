@@ -26,11 +26,11 @@
       <el-table :data="dataList.info" stripe border style="width:100%" v-loading="loading">
         <el-table-column type="expand">
           <template slot-scope="props">
-            <div class="expand_wrap">
-              <p>
+            <div class="expand_wrap" v-if="props.row.idcard!=''">
+              <!-- <p>
                 <span>手机号码:</span>
                 {{props.row.tel}}
-              </p>
+              </p> -->
               <p>
                 <span>身份证号码:</span>
                 {{props.row.idcard}}
@@ -41,14 +41,18 @@
                 <img class="idcard_img" :src="props.row.picOff" />
               </p>
             </div>
+            <div v-else>
+              <span>无实名信息</span>
+            </div>
           </template>
         </el-table-column>
         <el-table-column prop="username" label="用户名"></el-table-column>
         <el-table-column prop="city" label="专引城市"></el-table-column>
+        <el-table-column prop="tel" label="联系方式"></el-table-column>
         <el-table-column prop="tag" label="标签" width="300px">
           <template slot-scope="scope">
             <template v-for="(item,index) in scope.row.tag">
-              <el-tag style="margin-right:10px" v-if="index<4" :key="item">{{item}}</el-tag>
+              <el-tag style="margin-right:10px" v-if="index<3" :key="item">{{item}}</el-tag>
             </template>
           </template>
         </el-table-column>

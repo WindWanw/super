@@ -105,6 +105,33 @@ export default {
     },
 
 
+    /**
+     * 
+     * @param 资讯管理
+     * 
+     * 资讯列表
+     * 添加资讯
+     * 修改资讯
+     * 删除资讯
+     * 资讯类型
+     */
+    getCmsList(params) {
+        return fetchPost('/cms/cmsList', params)
+    },
+    addCms(params) {
+        return fetchPost('/cms/addCms', params)
+    },
+    editCms(params) {
+        return fetchPost('/cms/editCms', params)
+    },
+    delCms(params) {
+        return fetchPost('/cms/delCms', params)
+    },
+    geCmsType(params) {
+        return fetchPost('/cms/cmsType', params)
+    },
+
+
 
     /**
      * @商户管理
@@ -143,6 +170,9 @@ export default {
      * @订单管理
      * 订单列表
      * 删除订单
+     * 马甲商户订单列表
+     * 马甲商户id和商铺名称
+     * 马甲商户的商品
      */
     getOrderList(params) {
         return fetchPost('/orders/adminOrdersList', params)
@@ -155,6 +185,12 @@ export default {
     },
     getVestSu(params) {
         return fetchPost('/supplier/getVestSu', params)
+    },
+    vestSuGoods(params) {
+        return fetchPost('/supplier/vestSuGoods', params)
+    },
+    getVestGoods(params) {
+        return fetchPost('/supplier/getVestGoods', params)
     },
 
     /**
@@ -275,7 +311,7 @@ export default {
     adminUpdateSu(params) {
         return fetchPost('/admin/batchPwd', params)
     },
-    countDatas(params){
+    countDatas(params) {
         return fetchPost('/admin/countDatas', params)
     }
 }

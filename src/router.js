@@ -36,8 +36,14 @@ const teacherSh = () =>
 
 const order = () =>
     import ( /* webpackChunkName: "order" */ './views/order.vue')
+const vestSupplier = () =>
+    import ( /* webpackChunkName: "vestSupplier" */ './views/vestSupplier')
 const vestOrder = () =>
-    import ( /* webpackChunkName: "vestOrder" */ './views/vestOrder.vue')
+    import ( /* webpackChunkName: "vestOrder" */ './views/vestSupplier/vestOrder.vue')
+const suGoods = () =>
+    import ( /* webpackChunkName: "suGoods" */ './views/vestSupplier/suGoods.vue')
+const goods = () =>
+    import ( /* webpackChunkName: "goods" */ './views/vestSupplier/goods.vue')
 const sale = () =>
     import ( /* webpackChunkName: "sale" */ './views/sale.vue')
 const teacher = () =>
@@ -46,6 +52,8 @@ const ad = () =>
     import ( /* webpackChunkName: "ad" */ './views/ad.vue')
 const systemArticle = () =>
     import ( /* webpackChunkName: "systenArticle" */ './views/systemArticle.vue')
+const information = () =>
+    import ( /* webpackChunkName: "information" */ './views/information.vue')
 const card = () =>
     import ( /* webpackChunkName: "card" */ './views/card.vue')
 const authorization = () =>
@@ -201,14 +209,46 @@ export const asyRouter = [{
         }
     },
     {
-        path: '/vestOrder',
-        name: 'vestOrder',
-        component: vestOrder,
+        path: '/vestSupplier',
+        name: 'vestSupplier',
+        component: vestSupplier,
         meta: {
-            name: '马甲商户订单管理',
-            iconfont: 'iconfont zongdingdanshu',
+            name: '马甲商户管理',
+            iconfont: 'iconfont dianpu1',
             needLogin: true, //需要登录
-        }
+        },
+        redirect: '/vestSupplier/vestOrder',
+        children: [{
+                path: '/vestSupplier/vestOrder',
+                name: 'vestOrder',
+                component: vestOrder,
+                meta: {
+                    name: '订单管理',
+                    iconfont: 'iconfont zongdingdanshu',
+                    needLogin: true, //需要登录
+                }
+            },
+            {
+                path: '/vestSupplier/suGoods',
+                name: 'suGoods',
+                component: suGoods,
+                meta: {
+                    name: '商户管理',
+                    iconfont: 'iconfont zongdingdanshu',
+                    needLogin: true, //需要登录
+                }
+            },
+            {
+                path: '/vestSupplier/goods',
+                name: 'goods',
+                component: goods,
+                meta: {
+                    name: '商品管理',
+                    iconfont: 'iconfont zongdingdanshu',
+                    needLogin: true, //需要登录
+                }
+            },
+        ]
     },
     {
         path: '/sale',
@@ -248,6 +288,16 @@ export const asyRouter = [{
         meta: {
             name: '系统文章管理',
             iconfont: 'iconfont navicon-wzgl',
+            needLogin: true, //需要登录
+        }
+    },
+    {
+        path: '/information',
+        name: 'information',
+        component: information,
+        meta: {
+            name: '资讯管理',
+            iconfont: 'iconfont zixun1',
             needLogin: true, //需要登录
         }
     },
