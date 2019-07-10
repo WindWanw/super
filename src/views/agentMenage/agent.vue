@@ -177,7 +177,8 @@
 </template>
 
 <script>
-import citys from "../../utils/city.js";
+// import citys from "../../utils/city.js";
+import citys from "../../utils/province.js";
 export default {
   data() {
     return {

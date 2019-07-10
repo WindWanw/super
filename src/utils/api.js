@@ -67,20 +67,23 @@ export default {
      * 添加广告位
      * 修改广告位
      * 删除广告位
+     * 广告类型
      * */
     getAdList(params) {
-        return fetchPost('/ads/AdsList', params)
+        return fetchPost('/ads/adsList', params)
     },
     addAd(params) {
-        return fetchPost('/ads/AdsAdd', params, { headers: { 'Content-Type': 'multipart/form-data' } })
+        return fetchPost('/ads/adsAdd', params, { headers: { 'Content-Type': 'multipart/form-data' } })
     },
     editAd(params) {
-        return fetchPost('/ads/AdsEdit', params)
+        return fetchPost('/ads/adsEdit', params)
     },
     delAd(params) {
-        return fetchPost('/ads/AdsDelete', params)
+        return fetchPost('/ads/adsDelete', params)
     },
-
+    adsType(params) {
+        return fetchPost('/ads/getAdsType', params)
+    },
     /**
      * @系统文章管理
      * 获取系统文章列表
