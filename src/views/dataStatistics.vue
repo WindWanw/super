@@ -93,13 +93,13 @@
             <el-tag type="success">已使用(￥{{total.cards.isPay}})</el-tag>
           </div>
           <div class="progress">
-            <el-progress type="circle"  width="200"  color="#67C23A" :percentage="percentPay"></el-progress>
+            <el-progress type="circle" :width="width" color="#67C23A" :percentage="percentPay"></el-progress>
           </div>
           <div class="time">
             <el-tag type="warning">未使用(￥{{total.cards.unUse}})</el-tag>
           </div>
           <div class="progress">
-            <el-progress type="circle" width="200" color="#F59E66" :percentage="percentUnUse"></el-progress>
+            <el-progress type="circle" :width="width" color="#F59E66" :percentage="percentUnUse"></el-progress>
           </div>
         </div>
 
@@ -132,6 +132,7 @@ export default {
       percentWk: 0,
       percentPay: 0,
       percentUnUse: 0,
+      width:200,
       chartData: {
         columns: ["name", "交易额"],
         rows: []

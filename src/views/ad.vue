@@ -20,7 +20,7 @@
           change-on-select
           placeholder="请选择城市搜索"
         ></el-cascader>
-        <el-input clearable v-model="keywords" placeholder="请输入关键字" size="small" style="width:200px"></el-input>
+        <!-- <el-input clearable v-model="keywords" placeholder="请输入关键字" size="small" style="width:200px"></el-input> -->
         <el-button style="margin:0 10px" type="primary" icon="el-icon-search" size="small" @click="search">搜索</el-button>
         <el-button
           type="primary"
