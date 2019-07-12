@@ -3,16 +3,14 @@
     <!-- 头部（搜索条件） -->
     <div class="table_title">
         <div>
-        <el-button size="small" @click="returnHome()">返回列表首页</el-button>
+        <el-button @click="returnHome" type="primary" icon="iconfont refresh" size="mini" style="margin-left:10px">   刷新</el-button>
       </div>
       <div class="search_wrap">
-        <el-input clearable v-model="username" placeholder="请输入用户名" size="small" style="width:200px"></el-input>
-
-        <el-date-picker size="small" v-model="date" type="daterange" align="right" unlink-panels value-format="timestamp" range-separator="至" start-placeholder="开始日期" 
+        <el-date-picker size="mini" v-model="date" type="daterange" align="right" unlink-panels value-format="timestamp" range-separator="至" start-placeholder="开始日期" 
            end-placeholder="结束日期"
           :picker-options="pickerOptions"
         ></el-date-picker>
-        <el-button @click="search" type="primary" icon="el-icon-search" size="small" style="margin-left:10px">搜索</el-button>
+        <el-button @click="search" type="primary" icon="el-icon-search" size="mini" style="margin-left:10px">搜索</el-button>
       </div>
     </div>
     <!-- 内容（表单，分页） -->
@@ -96,11 +94,7 @@ export default {
           }
         ]
       },
-      username: "", //用户名
-      status: "", //用户状态
       date: "", //日期
-      sex:"",
-      city:"",
       dataList: [], //数据源
       page: 1, //页
       limit: 10 ,//条
@@ -133,11 +127,7 @@ export default {
         .getNeedList({
           page: this.page,
           limit: this.limit,
-          status: this.status,
-          times: this.date,
-          gender:this.sex,
-          city:this.city,
-          username: this.username
+          date: this.date,
         })
         .then(res => {
           this.dataList = res.data || [];
@@ -153,13 +143,9 @@ export default {
       this.getDataList();
     },
     returnHome() {
-      this.page = 1;
-      this.limit = 10;
-      this.status = "";
-      this.times = "";
-      this.username = "";
-      this.getDataList();
-    },
+      this.date=[];
+      this.getDataList()
+  },
   },
   
   created() {

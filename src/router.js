@@ -44,6 +44,7 @@ const vestOrder = () =>
     import ( /* webpackChunkName: "vestOrder" */ './views/vestSupplier/vestOrder.vue')
 const suGoods = () =>
     import ( /* webpackChunkName: "suGoods" */ './views/vestSupplier/suGoods.vue')
+
 const goods = () =>
     import ( /* webpackChunkName: "goods" */ './views/vestSupplier/goods.vue')
 const sale = () =>
@@ -62,6 +63,8 @@ const authorization = () =>
     import ( /* webpackChunkName: "authorization" */ './views/authorization.vue')
 const userSetting = () =>
     import ( /* webpackChunkName: "userSetting" */ './views/userSetting.vue')
+const investment = () =>
+    import ( /* webpackChunkName: "investment" */ './views/investment.vue')
 const citySupplier = () =>
     import ( /* webpackChunkName: "citySupplier" */ './views/citySupplier.vue')
 const userFlow = () =>
@@ -206,6 +209,16 @@ export const asyRouter = [{
         meta: {
             name: '专引师管理',
             iconfont: 'iconfont yonghu5',
+            needLogin: true, //需要登录
+        }
+    },
+    {
+        path: '/investment',
+        name: 'investment',
+        component: investment,
+        meta: {
+            name: '招商管理',
+            iconfont: 'iconfont zhaoshang',
             needLogin: true, //需要登录
         }
     },

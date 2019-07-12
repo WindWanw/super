@@ -283,7 +283,7 @@ export default {
     getBack() {
       this.loading = true;
       this.$api
-        .vestOrderList({
+        .getInvest({
           page: 1,
           limit: 10
         })
@@ -304,7 +304,7 @@ export default {
     getDataList() {
       this.loading = true;
       this.$api
-        .vestOrderList({
+        .getInvest({
           page: this.page,
           limit: this.limit,
           status: this.status,
