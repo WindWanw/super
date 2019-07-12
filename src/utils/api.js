@@ -228,6 +228,16 @@ export default {
         return fetchPost('/guide/guideStop', params)
     },
 
+    /**
+     * 
+     * @招商管理
+     * 招商列表
+     * 
+     */
+    getInvest(params) {
+        return fetchPost('/admin/getInvestment', params);
+    },
+
 
 
     /**

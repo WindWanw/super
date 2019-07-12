@@ -11,30 +11,18 @@
 
       <span v-if="!show"></span>
       <div class="search_wrap">
-        <!-- <el-input clearable v-model="name" placeholder="请输入关键字" size="small" style="width:200px"></el-input> -->
-        <el-radio-group v-model="is_online" style="margin:0 10px">
-          <el-radio label="1">线上订单</el-radio>
-          <el-radio label="2">线下订单</el-radio>
-        </el-radio-group>
-        <el-input
-          clearable
-          v-model="order_num"
-          placeholder="请输入订单编号进行核销"
-          size="small"
-          style="width:200px"
-        ></el-input>
-        <el-select v-model="title" clearable placeholder="请选择商户" size="small">
-          <el-option
-            v-for="item in suList"
-            :key="item.supplier_id"
-            :label="item.title"
-            :value="item.supplier_id"
-          ></el-option>
-        </el-select>下单时间：
+        <el-input clearable v-model="name" placeholder="请输入招商者姓名" size="mini" style="width:200px"></el-input>
+        <el-cascader
+          size="mini"
+          :options="cityData"
+          v-model="citycode"
+          change-on-select
+          placeholder="请选择城市搜索"
+        ></el-cascader>
         <el-date-picker
           style="margin:0 10px"
           value-format="timestamp"
-          size="small"
+          size="mini"
           v-model="date"
           type="daterange"
           align="right"
@@ -44,84 +32,27 @@
           end-placeholder="终止时间"
           :picker-options="pickerOptions"
         ></el-date-picker>
-        <el-button type="primary" icon="el-icon-search" size="small" @click="search">搜索</el-button>
+        <el-button type="primary" icon="el-icon-search" size="mini" @click="search">搜索</el-button>
         <el-button type="success" size="mini" @click="beforeExport" icon="iconfont daochu">导出</el-button>
       </div>
     </div>
     <div class="content" style="width:100%">
-      <el-tabs type="border-card" v-model="status" @tab-click="tabClick">
-        <el-tab-pane
-          v-for="(item,index) in tabList"
-          :key="index"
-          :label="item.label"
-          :name="item.name"
-        >
-          <el-table :data="dataList.list" stripe border v-loading="loading" class="order-table">
-            <el-table-column prop="order_sn" label="订单编号" align="center"></el-table-column>
-            <el-table-column prop="order_type" label="订单类型" align="center">
-              <template slot-scope="scope">
-                <span v-if="scope.row.order_type=='1'" style="color:red">线上订单</span>
-                <span v-if="scope.row.order_type=='2'">线下订单</span>
-              </template>
-            </el-table-column>
-            <el-table-column prop="supplier_name" label="商户姓名" align="center"></el-table-column>
-            
-            <el-table-column prop="amount" label="订单金额(元)" align="center"></el-table-column>
-            <el-table-column prop="actual" label="实际金额(元)" align="center">
-              <template slot-scope="scope">
-                <span v-if="scope.row.order_type==2 && scope.row.status!='5'">0</span>
-                <span v-else>{{scope.row.actual}}</span>
-              </template>
-            </el-table-column>
-            <el-table-column prop="su_commission" label="佣金(元)" align="center">
-              <template slot-scope="scope">
-                <span v-if="scope.row.order_type==2 && scope.row.status!='5'">0</span>
-                <span v-else>{{scope.row.su_commission}}</span>
-              </template>
-            </el-table-column>
-            <el-table-column prop="outlet" label="折扣减免金额(元)" align="center">
-              <template slot-scope="scope">
-                <span v-if="scope.row.order_type==2 && scope.row.status!='5'">0</span>
-                <span v-else>{{scope.row.outlet}}</span>
-              </template>
-            </el-table-column>
-            <el-table-column prop="guide_name" label="所属专引师" align="center">
-              <template slot-scope="scope">{{scope.row.guide_name}}</template>
-            </el-table-column>
-            <el-table-column prop="times" label="下单时间" align="center"></el-table-column>
-            <el-table-column prop="status" label="订单状态" align="center">
-              <template slot-scope="scope">
-                <el-tag
-                  :type="scope.row.status | payStatus"
-                  size="mini"
-                >{{scope.row.status | orderStatus}}</el-tag>
-              </template>
-            </el-table-column>
-            <el-table-column prop="user_name" label="消费者姓名" align="center"></el-table-column>
-            <el-table-column prop="tel" label="联系方式" align="center"></el-table-column>
-            <el-table-column prop="address" label="收货地址" align="center"></el-table-column>
-            <el-table-column label="操作" v-if="(status=='2' || status=='3' || status=='5')">
-              <template slot-scope="scope">
-                <el-button
-                  v-if="status=='2' && scope.row.order_type=='1'"
-                  type="success"
-                  size="mini"
-                  @click="orderId=scope.row.id;guideId=scope.row.guide_id;dialog=true;address=scope.row.address;orderNumber='';orderCompany=''"
-                  icon="el-icon-goods"
-                >点击发货</el-button>
-                <el-button
-                  v-if="status !='2' && scope.row.order_type=='1'"
-                  type="success"
-                  size="mini"
-                  @click="address=scope.row.address;express_number=scope.row.express_number;express_company=scope.row.company;exdialog=true"
-                  icon="el-icon-goods"
-                >查看物流</el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-        </el-tab-pane>
-      </el-tabs>
+      <el-table :data="dataList.list" stripe border v-loading="loading" class="order-table">
+        <el-table-column prop="name" label="招商者姓名" align="center"></el-table-column>
 
+        <el-table-column prop="tel" label="联系电话" align="center"></el-table-column>
+
+        <el-table-column prop="f2" label="意向城市" align="center"></el-table-column>
+
+        <el-table-column prop="f1" label="职业名称" align="center"></el-table-column>
+
+        <el-table-column prop="times" label="提交时间" align="center">
+          <template slot-scope="scope">{{scope.row.times | formatTimeStamp(1)}}</template>
+        </el-table-column>
+        <!-- <el-table-column label="操作">
+             
+        </el-table-column>-->
+      </el-table>
       <el-pagination
         background
         @size-change="handleSizeChange"
@@ -133,43 +64,11 @@
         :total="dataList.total"
       ></el-pagination>
     </div>
-
-    <!-- 发货dialog -->
-    <el-dialog title="发货" :visible.sync="dialog" @close="orderNumber='';orderCompany=''">
-      <el-form label-width="100px">
-        <el-form-item label="目的地">
-          <el-input v-model="address"></el-input>
-        </el-form-item>
-        <el-form-item label="物流单号">
-          <el-input v-model="orderNumber" placeholder="请输入物流单号"></el-input>
-        </el-form-item>
-        <el-form-item label="物流公司">
-          <el-input v-model="orderCompany" placeholder="请输入物流公司"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialog = false">取 消</el-button>
-        <el-button type="primary" @click="sendGoods">确 定</el-button>
-      </div>
-    </el-dialog>
-    <!-- 查看物流dialog -->
-    <el-dialog title="查看物流" :visible.sync="exdialog">
-      <el-form label-width="100px">
-        <el-form-item label="目的地">
-          <el-input v-model="address"></el-input>
-        </el-form-item>
-        <el-form-item label="物流单号">
-          <el-input v-model="express_number"></el-input>
-        </el-form-item>
-        <el-form-item label="物流公司">
-          <el-input v-model="express_company"></el-input>
-        </el-form-item>
-      </el-form>
-    </el-dialog>
   </div>
 </template>
 
 <script>
+import citys from "../utils/province.js";
 import FileSaver from "file-saver";
 import XLSX from "xlsx";
 export default {
@@ -208,33 +107,15 @@ export default {
           }
         ]
       },
-      tabList: [
-        { label: "全部", name: "0" },
-        { label: "待付款", name: "1" },
-        { label: "待发货", name: "2" },
-        { label: "已发货", name: "3" },
-        { label: "退单", name: "4" },
-        { label: "交易成功", name: "5" }
-      ],
       name: "",
+      cityData: citys, //城市数据
+      selectCity: [], //选择城市
+      citycode:'',//城市
       date: [],
-      status: "0",
-      title: "",
-      is_online: "",
       dataList: [],
       suList: [],
       page: 1,
       limit: 10,
-      dialog: false, //发货物流dialog
-      exdialog: false, //查看物流
-      orderId: "", //订单id
-      guideId: "", //专引师id
-      orderNumber: "", //物流单号
-      orderCompany: "", //物流公司
-      express_number: "",
-      express_company: "",
-      address: "",
-      order_num: "", //订单编号
       show: false //线上返回
     };
   },
@@ -262,7 +143,7 @@ export default {
       try {
         FileSaver.saveAs(
           new Blob([wbout], { type: "application/octet-stream" }),
-          "orderList.xlsx"
+          "investmentList.xlsx"
         );
       } catch (e) {
         if (typeof console !== "undefined") console.log(e, wbout);
@@ -282,22 +163,10 @@ export default {
 
     getBack() {
       this.loading = true;
-      this.$api
-        .getInvest({
-          page: 1,
-          limit: 10
-        })
-        .then(res => {
-          this.dataList = res.data || [];
-          this.loading = false;
-          this.show = false;
-          this.status = "0";
-          this.date = [];
-          this.name = "";
-          this.title = "";
-          this.order_num = "";
-          this.is_online = "";
-        });
+      this.name='';
+      this.times='';
+      this.citycode='';
+      this.getDataList();
     },
 
     //获取数据
@@ -307,22 +176,14 @@ export default {
         .getInvest({
           page: this.page,
           limit: this.limit,
-          status: this.status,
           times: this.date,
-          title: this.title,
-          keywords: this.name,
-          is_online: this.is_online,
-          order_sn: this.order_num
+          name:this.name,
+          citycode:this.citycode
         })
         .then(res => {
           this.dataList = res.data || [];
           this.loading = false;
         });
-    },
-    getVestSu() {
-      this.$api.getVestSu().then(res => {
-        this.suList = res.data.list || [];
-      });
     },
     // tab切换
     tabClick(val) {
@@ -336,30 +197,12 @@ export default {
       this.page = 1;
       this.getDataList();
     },
-    //确认发货
-    sendGoods() {
-      if (!this.orderNumber) return this.$message.warning("请输入物流单号");
-      if (!this.orderCompany) return this.$message.warning("请输入物公司");
-      this.$api
-        .sendGoods({
-          id: this.orderId,
-          guide_id: this.guideId,
-          express_number: this.orderNumber,
-          company: this.orderCompany
-        })
-        .then(res => {
-          this.dialog = res.code ? true : false;
-          this.$message[res.code ? "warning" : "success"](res.data.message);
-          if (res.code) return;
-          this.getDataList();
-        });
-    },
+
     clickitem(e) {
       e === this.is_online ? (this.is_online = "") : (this.is_online = e);
     }
   },
   created() {
-    this.getVestSu();
     this.getDataList();
   }
 };
