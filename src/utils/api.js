@@ -40,7 +40,17 @@ export default {
         return fetchPost('/userflow/dataList', params)
     },
 
-
+    /**
+     * @需求管理
+     * 获取需求列表
+     * 二维码
+     */
+    getNeedList(params) {
+        return fetchPost('/admin/getNeedUser', params)
+    },
+    transWx(params) {
+        return fetchPost('/qrcode/createImQrcode', params)
+    },
     /**
      * @代理商管理
      * 获取列表

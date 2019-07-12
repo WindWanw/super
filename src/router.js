@@ -10,6 +10,8 @@ const dataStatistics = () =>
     import ( /* webpackChunkName: "dataStatistics" */ './views/dataStatistics.vue')
 const userList = () =>
     import ( /* webpackChunkName: "userList" */ './views/userList.vue')
+const needList = () =>
+    import ( /* webpackChunkName: "needList" */ './views/needList.vue')
 const finance = () =>
     import ( /* webpackChunkName: "userList" */ './views/finance.vue')
 
@@ -92,7 +94,16 @@ export const asyRouter = [{
             needLogin: true, //需要登录
         }
     },
-
+    {
+        path: '/needList',
+        name: 'needList',
+        component: needList,
+        meta: {
+            name: '需求管理',
+            iconfont: 'iconfont shouhou-',
+            needLogin: true, //需要登录
+        }
+    },
     {
         path: '/checkMenage',
         name: 'checkMenage',

@@ -10,6 +10,7 @@
       >返回</el-button>
       <span v-if="!show"></span>
       <div class="search_wrap">
+        <el-input clearable v-model="goodsname" placeholder="请输入商品名称" size="small" style="width:200px"></el-input>
         <el-select v-model="su_id" clearable placeholder="请选择商户" size="small">
           <el-option
             v-for="item in suList"
@@ -122,6 +123,7 @@ export default {
       page: 1,
       limit: 10,
       su_id: "", //商户id
+      goodsname:"",//商品名称
       date: [], //时间
       status: "", //上下架状态查询
       dataList: [],
@@ -156,6 +158,7 @@ export default {
           this.su_id = "";
           this.date = [];
           this.status = "";
+          this.goodsname="";
         });
     },
     getVestSu() {
@@ -173,7 +176,8 @@ export default {
           limit: this.limit,
           su_id: this.su_id,
           date: this.date,
-          status: this.status
+          status: this.status,
+          goodsname:this.goodsname,
         })
         .then(res => {
           this.dataList = res.data || [];
