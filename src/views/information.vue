@@ -18,12 +18,12 @@
       <el-table :data="dataList.list" stripe border v-loading="loading">
         <el-table-column prop="id" label="ID" align="center"></el-table-column>
         <el-table-column prop label="资讯封面" align="center">
-              <template slot-scope="scope">
-                <img class="avatar" :src="scope.row.cover" />
-              </template>
-            </el-table-column>
+          <template slot-scope="scope">
+            <img class="avatar" :src="scope.row.cover" />
+          </template>
+        </el-table-column>
         <el-table-column prop="type" label="资讯类型" align="center"></el-table-column>
-        
+
         <el-table-column prop="title" label="资讯标题" align="center"></el-table-column>
         <el-table-column prop="body" label="资讯内容" align="center">
           <template slot-scope="scope">
@@ -82,32 +82,42 @@
             ></el-option>
           </el-select>
         </el-form-item>
-         <el-form-item label="资讯封面图" style="width:100%">
-        <el-upload
-          :action="`${axios.defaults.baseURL}/common/upload/file/goods_upload_dir`"
-          accept="image/jpeg, image/gif, image/png, image/bmp"
-          :before-upload="beforeUp1"
-          :show-file-list="false"
-          :on-success="upSuc1"
-          multiple
-        >
-          <el-button icon="el-icon-upload" size="small" type="primary" :disabled="upLoading">{{upLoading?'正在上传中...':'点击上传'}}</el-button>
-          <div class="el-upload__tip" slot="tip">单张图片大小不超过2MB</div>
-        </el-upload>
-        <div class="imgPreview" v-if="form.pics && form.pics.length">
-          <div class="img_box" v-for="(item,index) in form.pics" :key="index">
-            <img :src="item">
-            <div class="model">
-              <i class="el-icon-delete" @click="form.pics.splice(index,1)" title="删除"></i>
+        <el-form-item label="资讯封面图" style="width:100%">
+          <el-upload
+            :action="`${axios.defaults.baseURL}/common/upload/file/goods_upload_dir`"
+            accept="image/jpeg, image/gif, image/png, image/bmp"
+            :before-upload="beforeUp1"
+            :show-file-list="false"
+            :on-success="upSuc1"
+            multiple
+          >
+            <el-button
+              icon="el-icon-upload"
+              size="small"
+              type="primary"
+              :disabled="upLoading"
+            >{{upLoading?'正在上传中...':'点击上传'}}</el-button>
+            <div class="el-upload__tip" slot="tip">单张图片大小不超过2MB</div>
+          </el-upload>
+          <div class="imgPreview" v-if="form.pics && form.pics.length">
+            <div class="img_box" v-for="(item,index) in form.pics" :key="index">
+              <img :src="item" />
+              <div class="model">
+                <i class="el-icon-delete" @click="form.pics.splice(index,1)" title="删除"></i>
+              </div>
             </div>
-          </div> 
-        </div>
-        <div v-else>
-          <i class="el-icon-picture" style="font-size:100px;color:#ccc"></i>
-        </div>
-      </el-form-item>
+          </div>
+          <div v-else>
+            <i class="el-icon-picture" style="font-size:100px;color:#ccc"></i>
+          </div>
+        </el-form-item>
         <el-form-item label="资讯排序">
           <el-input v-model="form.sort" placeholder="请输入排序"></el-input>
+        </el-form-item>
+        <el-form-item label="发布时间">
+          <div class="block">
+            <el-date-picker v-model="form.times" type="datetime" placeholder="选择日期时间"></el-date-picker>
+          </div>
         </el-form-item>
         <el-form-item label="资讯标题">
           <el-input v-model="form.title" placeholder="请输入资讯标题"></el-input>
@@ -147,21 +157,22 @@ export default {
       type: "",
       form: {
         code: "",
-        pics:[],//资讯封面图
+        pics: [], //资讯封面图
         title: "",
         body: "",
         id: "",
-        sort: ""
+        sort: "",
+        times:'',
       },
       previewDialog: false, //预览资讯内容
-      upLoading:false
+      upLoading: false
     };
   },
   components: { EditorBar },
   methods: {
-    change(val){
-          //  this.test = val
-       },
+    change(val) {
+      //  this.test = val
+    },
     // 切换limit
     handleSizeChange(val) {
       this.limit = val;
@@ -195,7 +206,7 @@ export default {
       that
         .$confirm("确认删除该项吗?", "提示")
         .then(() => {
-          that.$api.delCms({id:id}).then(res => {
+          that.$api.delCms({ id: id }).then(res => {
             this.$message[res.code ? "error" : "success"](res.data.message);
             this.page = this.$options.filters.pagination(
               this.page,
@@ -217,7 +228,7 @@ export default {
         }
       } else {
         this.form.title = item.title;
-        this.form.pics=item.pics;
+        this.form.pics = item.pics;
         this.form.code = item.code;
         this.form.body = item.body;
         this.form.sort = item.sort;
@@ -249,9 +260,9 @@ export default {
       this.page = 1;
       this.getDataList();
     },
-     //上次图片前
+    //上次图片前
     beforeUp1(file) {
-      this.upLoading=true;
+      this.upLoading = true;
       if (file.size > 1024 * 2 * 1024) {
         // 超出2m  取消上传
         this.$message.warning("单张图片不能超过2MB");
@@ -259,20 +270,20 @@ export default {
       }
     },
     //上传成功后
-    upSuc1(res,file,fileList,i) {
-      this.upLoading=false;
+    upSuc1(res, file, fileList, i) {
+      this.upLoading = false;
       console.log(res);
       if (res.code) {
-        this.$message.error('上传失败');
+        this.$message.error("上传失败");
         return;
       } else {
-        if(typeof  this.form.pics =='string'){
-          this.form.pics=[];
+        if (typeof this.form.pics == "string") {
+          this.form.pics = [];
         }
-        
+
         this.form.pics.push(res.data.host + res.data.name);
       }
-    },
+    }
   },
 
   created() {
@@ -301,8 +312,8 @@ export default {
 .table_title {
   /* justify-content: flex-start; */
 }
-.el-button+.el-button {
-    margin-left: 0;
+.el-button + .el-button {
+  margin-left: 0;
 }
 .imgPreview {
   display: flex;

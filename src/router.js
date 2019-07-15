@@ -44,6 +44,8 @@ const vestOrder = () =>
     import ( /* webpackChunkName: "vestOrder" */ './views/vestSupplier/vestOrder.vue')
 const suGoods = () =>
     import ( /* webpackChunkName: "suGoods" */ './views/vestSupplier/suGoods.vue')
+const vestSuSale = () =>
+    import ( /* webpackChunkName: "suGoods" */ './views/vestSupplier/vestSuSale.vue')
 
 const goods = () =>
     import ( /* webpackChunkName: "goods" */ './views/vestSupplier/goods.vue')
@@ -268,6 +270,16 @@ export const asyRouter = [{
                 component: goods,
                 meta: {
                     name: '商品管理',
+                    iconfont: 'iconfont zongdingdanshu',
+                    needLogin: true, //需要登录
+                }
+            },
+            {
+                path: '/vestSupplier/vestSuSale',
+                name: 'vestSuSale',
+                component: vestSuSale,
+                meta: {
+                    name: '售后管理',
                     iconfont: 'iconfont zongdingdanshu',
                     needLogin: true, //需要登录
                 }
