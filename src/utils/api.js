@@ -205,6 +205,9 @@ export default {
     getVestGoods(params) {
         return fetchPost('/supplier/getVestGoods', params)
     },
+    sendGoods(params) {
+        return fetchPost('/orders/sh_express_add', params)
+    },
 
     /**
      * @售后管理
