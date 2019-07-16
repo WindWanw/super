@@ -78,13 +78,23 @@
             <el-progress :text-inside="true" :stroke-width="18" :percentage="percentWk"></el-progress>
           </div>
         </div>
-      </div> -->
+      </div>-->
       <div style="margin-top: 20px;" id="title2" class="title">
         <div style="color:#F59E66;">
           优惠券送出总额:
           <b>￥{{total.cards.total}}</b>
         </div>
-        <div>交易额统计</div>
+        <div class="countTable">
+           <span>交易额统计</span> 
+          <el-select size="mini" style="width:100px;" @change="selectTable" v-model="value" placeholder="7天">
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </div>
       </div>
 
       <div id="count">
@@ -132,11 +142,31 @@ export default {
       percentWk: 0,
       percentPay: 0,
       percentUnUse: 0,
-      width:200,
+      width: 200,
       chartData: {
         columns: ["name", "交易额"],
         rows: []
-      }
+      },
+      num: 7,
+      options: [
+        {
+          value: "12",
+          label: "12个月"
+        },
+        {
+          value: "6",
+          label: "6个月"
+        },
+        {
+          value: "30",
+          label: "30天"
+        },
+        {
+          value: "7",
+          label: "7天"
+        }
+      ],
+      value: ""
     };
   },
   components: {},
@@ -163,7 +193,12 @@ export default {
       this.$router.push({ path: "/citySupplier" });
     },
     countDatas() {
-      this.$api.countDatas().then(res => {
+      this.$api.countDatas({ num: this.num }).then(res => {
+        this.chartData.rows = res.data || [];
+      });
+    },
+    selectTable(value) {
+      this.$api.countDatas({ num: value }).then(res => {
         this.chartData.rows = res.data || [];
       });
     }
@@ -256,7 +291,7 @@ export default {
   right: 0;
   top: 2px;
 }
-.progress{
+.progress {
   margin: 40px;
 }
 .progress-box {
@@ -267,7 +302,10 @@ export default {
 .progress-box .time {
   width: 100px;
 }
-
+.countTable{
+  display: flex;
+  justify-content: space-between;
+}
 #title2 {
   display: flex;
 }
