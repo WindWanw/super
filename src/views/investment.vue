@@ -49,9 +49,18 @@
         <el-table-column prop="times" label="提交时间" align="center">
           <template slot-scope="scope">{{scope.row.times | formatTimeStamp(1)}}</template>
         </el-table-column>
-        <!-- <el-table-column label="操作">
-             
-        </el-table-column>-->
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <div class="cz_btn">
+              <el-button
+                @click="del(scope.row.id)"
+                type="danger"
+                size="mini"
+                icon="el-icon-delete"
+              >删除</el-button>
+            </div>
+          </template>
+        </el-table-column>
       </el-table>
       <el-pagination
         background
@@ -110,7 +119,7 @@ export default {
       name: "",
       cityData: citys, //城市数据
       selectCity: [], //选择城市
-      citycode:'',//城市
+      citycode: "", //城市
       date: [],
       dataList: [],
       suList: [],
@@ -163,9 +172,9 @@ export default {
 
     getBack() {
       this.loading = true;
-      this.name='';
-      this.times='';
-      this.citycode='';
+      this.name = "";
+      this.times = "";
+      this.citycode = "";
       this.getDataList();
     },
 
@@ -177,8 +186,8 @@ export default {
           page: this.page,
           limit: this.limit,
           times: this.date,
-          name:this.name,
-          citycode:this.citycode
+          name: this.name,
+          citycode: this.citycode
         })
         .then(res => {
           this.dataList = res.data || [];
@@ -196,6 +205,27 @@ export default {
       this.show = true;
       this.page = 1;
       this.getDataList();
+    },
+
+    //删除
+    del(id) {
+      let that = this;
+      that
+        .$confirm("确认删除该项吗?", "提示")
+        .then(() => {
+          that.$api.delInvest({ id: id }).then(res => {
+            this.$message[res.code ? "error" : "success"](res.data.message);
+            this.page = this.$options.filters.pagination(
+              this.page,
+              this.limit,
+              this.dataList.total
+            );
+            that.getDataList();
+          });
+        })
+        .catch(() => {
+          that.$message.info("已取消删除");
+        });
     },
 
     clickitem(e) {

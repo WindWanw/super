@@ -207,7 +207,7 @@ export default {
         status: "",
         result: ""
       },
-      vest:true,//马甲商户
+      vest: true //马甲商户
     };
   },
   mounted: function() {},
@@ -255,7 +255,7 @@ export default {
           status: this.status,
           times: this.date,
           order_sn: this.order_sn,
-          vest:this.vest
+          vest: this.vest
         })
         .then(res => {
           this.dataList = res.data || [];
@@ -277,16 +277,16 @@ export default {
 
     //处理
     handle() {
-      if(this.form.status='3'){
-        this.form.result='';
+      if ((this.form.status = "3")) {
+        this.form.result = "";
       }
-      if(this.form.status=='4' && this.form.result==''){
+      if (this.form.status == "4" && this.form.result == "") {
         this.$notify({
-          title: '警告',
-          message: '请填写拒绝原因',
-          type: 'warning'
+          title: "警告",
+          message: "请填写拒绝原因",
+          type: "warning"
         });
-        return ;
+        return;
       }
       this.$api.suProcess(this.form).then(res => {
         this.$message(res.data.message);
