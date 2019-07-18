@@ -235,10 +235,14 @@ export default {
      * 
      * @招商管理
      * 招商列表
+     * 删除招商
      * 
      */
     getInvest(params) {
         return fetchPost('/admin/getInvestment', params);
+    },
+    delInvest(params) {
+        return fetchPost('/admin/delInvest', params);
     },
 
 
