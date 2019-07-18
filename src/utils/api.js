@@ -339,5 +339,12 @@ export default {
     },
     countDatas(params) {
         return fetchPost('/admin/countDatas', params)
+    },
+    billList(params) {
+        return fetchPost('/orders/billList', params)
+    },
+    exportAdmin(params) {
+        return fetchGet('/getorders/exportAdmin', params)
     }
+
 }

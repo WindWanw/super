@@ -81,6 +81,20 @@
                   <el-form-item label="付款时间">
                     <span>{{ props.row.pay_times }}</span>
                   </el-form-item>
+                  <el-form-item label="身份证正反面">
+                    <span>
+                      <img
+                        class="idcard_img"
+                        :src="props.row.idcard_on"
+                        @click="viewBigImg(props.row.idcard_on)"
+                      />
+                      <img
+                        class="idcard_img"
+                        :src="props.row.idcard_off"
+                        @click="viewBigImg(props.row.idcard_off)"
+                      />
+                    </span>
+                  </el-form-item>
                 </el-form>
               </template>
             </el-table-column>
@@ -169,6 +183,9 @@
         <el-button type="primary" @click="unquaWithdraw">确 定</el-button>
       </span>
     </el-dialog>
+    <el-dialog class="big-img" top="50px" title="查看大图" :visible.sync="viewImg" width="800px">
+      <img style="width:100%;height:100%" :src="viewBigImage" />
+    </el-dialog>
   </div>
 </template>
 
@@ -213,6 +230,8 @@ export default {
       name: "",
       tax: "",
       info: "",
+      viewImg: false,
+      viewBigImage: "",
       pay_amount: "",
       centerDialogVisible: false,
       centerDialogVisible2: false,
@@ -309,6 +328,10 @@ export default {
           this.$message[res.code ? "warning" : "success"](res.data);
           this.getDataList();
         });
+    },
+    viewBigImg(img) {
+      this.viewImg = true;
+      this.viewBigImage = img;
     }
   },
   created() {
@@ -325,5 +348,8 @@ export default {
 }
 .el-button + .el-button {
   margin-left: 0;
+}
+.idcard_img {
+  cursor: pointer;
 }
 </style>

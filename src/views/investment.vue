@@ -110,7 +110,7 @@ export default {
       name: "",
       cityData: citys, //城市数据
       selectCity: [], //选择城市
-      citycode:'',//城市
+      citycode: "", //城市
       date: [],
       dataList: [],
       suList: [],
@@ -163,9 +163,9 @@ export default {
 
     getBack() {
       this.loading = true;
-      this.name='';
-      this.times='';
-      this.citycode='';
+      this.name = "";
+      this.times = "";
+      this.citycode = "";
       this.getDataList();
     },
 
@@ -177,8 +177,8 @@ export default {
           page: this.page,
           limit: this.limit,
           times: this.date,
-          name:this.name,
-          citycode:this.citycode
+          name: this.name,
+          citycode: this.citycode
         })
         .then(res => {
           this.dataList = res.data || [];
