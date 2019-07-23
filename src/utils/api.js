@@ -23,6 +23,7 @@ export default {
      * 获取用户列表
      * 查询列表
      * 停用，启用
+     * 设置马甲用户
      */
     getUserlist(params) {
         return fetchPost('/Client/userList', params)
@@ -39,7 +40,9 @@ export default {
     userFlow(params) {
         return fetchPost('/userflow/dataList', params)
     },
-
+    setVestUser(params) {
+        return fetchPost('/admin/setVestUser', params)
+    },
     /**
      * @需求管理
      * 获取需求列表
@@ -69,6 +72,33 @@ export default {
     },
 
 
+    /**
+     * @众筹商品
+     * 众筹商品列表
+     * 获取商品分类
+     * 添加商品
+     * 修改商品
+     * 下架商品
+     * 获取服务城市
+     * */
+    getCrowdList(params) {
+        return fetchPost('/crowd/getCrowdList', params)
+    },
+    getGoodsCate(params) {
+        return fetchPost('/goods/GoodsCate', params)
+    },
+    addCrowdGoods(params) {
+        return fetchPost('/crowd/addCrowdGoods', params)
+    },
+    editCrowdGoods(params) {
+        return fetchPost('/crowd/editCrowdGoods', params)
+    },
+    goodUpDown(params) {
+        return fetchPost('/crowd/goodUpDown', params)
+    },
+    getCitys(params) {
+        return fetchPost('/supplier/getCitys', params);
+    },
 
 
     /**
