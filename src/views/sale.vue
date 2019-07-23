@@ -89,6 +89,7 @@
             <el-table-column label="操作" v-if="status=='2' || status=='3'">
               <template slot-scope="scope">
                 <el-button
+                 class="mini-button"
                   v-if="status=='2'"
                   type="success"
                   size="mini"
@@ -96,6 +97,7 @@
                   icon="iconfont daichuli"
                 >处理</el-button>
                 <el-button
+                 class="mini-button"
                   v-if="status=='3'"
                   type="primary"
                   size="mini"

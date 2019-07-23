@@ -21,7 +21,7 @@
           <el-table-column prop="title" label="文章标题"></el-table-column>
           <el-table-column prop="body" label="文章内容">
             <template slot-scope="scope">
-              <el-button size="mini" type="success" @click="form.body=scope.row.body;previewDialog=true">预览</el-button>
+              <el-button class="mini-button" size="mini" type="success" @click="form.body=scope.row.body;previewDialog=true">预览</el-button>
             </template>
           </el-table-column>
           <el-table-column prop="times" label="发布时间">
@@ -32,8 +32,8 @@
           <el-table-column prop="" label="操作">
               <template slot-scope="scope">
               <div class="cz_btn">
-                <el-button @click="openAddEditDialog('edit',scope.row)" type="primary" size="mini" icon="el-icon-edit">编辑</el-button>
-                <el-button @click="del(scope.row.id)" type="danger" size="mini" icon="el-icon-delete">删除</el-button>
+                <el-button class="mini-button" @click="openAddEditDialog('edit',scope.row)" type="primary" size="mini" icon="el-icon-edit">编辑</el-button>
+                <el-button class="mini-button" @click="del(scope.row.id)" type="danger" size="mini" icon="el-icon-delete">删除</el-button>
               </div>
             </template>
           </el-table-column>

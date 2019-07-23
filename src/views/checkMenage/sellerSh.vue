@@ -51,13 +51,14 @@
           <template slot-scope="scope">{{scope.row.times | formatTimeStamp}}</template>
         </el-table-column>
         <el-table-column prop label="账号状态">
-          <el-button type="warning" size="mini">待审核</el-button>
+          <el-button class="mini-button" type="warning" size="mini">待审核</el-button>
         </el-table-column>
 
         <el-table-column prop label="操作" width="200px">
           <template slot-scope="scope">
             <div class="cz_btn">
               <el-button
+               class="mini-button"
                 @click="openCheckDialog(scope.row)"
                 type="primary"
                 size="mini"

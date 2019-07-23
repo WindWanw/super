@@ -92,6 +92,7 @@
             <el-table-column prop="status" label="订单状态" align="center">
               <template slot-scope="scope">
                 <el-tag
+                 class="mini-button"
                   :type="scope.row.status | payStatus"
                   size="mini"
                 >{{scope.row.status | orderStatus}}</el-tag>
@@ -103,6 +104,7 @@
             <el-table-column label="操作" v-if="(status=='2' || status=='3' || status=='5')">
               <template slot-scope="scope">
                 <el-button
+                 class="mini-button"
                   v-if="status=='2' && scope.row.order_type=='1'"
                   type="success"
                   size="mini"
@@ -110,6 +112,7 @@
                   icon="el-icon-goods"
                 >点击发货</el-button>
                 <el-button
+                  class="mini-button"
                   v-if="status !='2' && scope.row.order_type=='1'"
                   type="success"
                   size="mini"

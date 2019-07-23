@@ -61,6 +61,7 @@
              <!-- :title="scope.row.status=='1'?'点击禁用':'点击解除禁用'"
               @click="userStop(scope.row.id)" -->
             <el-button
+             class="mini-button"
               size="mini"
               :type="scope.row.status=='1'?'success':'info'"
             >{{scope.row.status | userStatus}}</el-button>
@@ -69,8 +70,8 @@
 
         <el-table-column prop label="操作" width="300px">
           <template slot-scope="scope">
-            <el-button @click="openPunishDialog(scope.row)" type="warning" size="mini" icon="el-icon-edit-outline">处罚</el-button>
-            <el-button @click="openAddEditDialog('edit',scope.row)" type="primary" size="mini" icon="el-icon-edit">编辑</el-button>
+            <el-button class="mini-button" @click="openPunishDialog(scope.row)" type="warning" size="mini" icon="el-icon-edit-outline">处罚</el-button>
+            <el-button class="mini-button" @click="openAddEditDialog('edit',scope.row)" type="primary" size="mini" icon="el-icon-edit">编辑</el-button>
             <!-- <el-button @click="del(scope.row.id)" type="danger" size="mini" icon="el-icon-delete">删除</el-button> -->
           </template>
         </el-table-column>

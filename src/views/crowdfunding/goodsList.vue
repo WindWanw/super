@@ -66,6 +66,7 @@
           <template slot-scope="scope">
             <div class="button">
               <el-button
+                class="mini-button"
                 @click="addEditCrowd('edit',scope.row)"
                 type="primary"
                 icon="el-icon-edit"
@@ -74,6 +75,7 @@
             </div>
             <div class="button">
               <el-button
+                class="mini-button"
                 @click="upDown(scope.row.id,scope.row.status)"
                 :type="scope.row.status==1?'danger':'success'"
                 size="mini"
@@ -175,6 +177,7 @@
             :on-success="upSuc3"
           >
             <el-button
+              class="mini-button"
               size="small"
               type="primary"
               :disabled="up3Loading"
@@ -200,6 +203,7 @@
             multiple
           >
             <el-button
+              class="mini-button"
               size="small"
               type="primary"
               :disabled="up1Loading"
@@ -240,10 +244,16 @@
             style="width:350px"
             :disabled="showAttr && showAttr1"
           ></el-input>
-          <el-button v-if="!showAttr || !showAttr1" type="danger" size="small" @click="form.attr.splice(index,1)">删除</el-button>
+          <el-button
+            v-if="!showAttr || !showAttr1"
+            type="danger"
+            size="small"
+            @click="form.attr.splice(index,1)"
+          >删除</el-button>
         </el-form-item>
         <el-button
-        v-if="!showAttr || !showAttr1"
+          class="mini-button"
+          v-if="!showAttr || !showAttr1"
           style="margin-bottom:20px"
           type="primary"
           icon="el-icon-plus"
@@ -263,7 +273,7 @@
             <el-table-column v-for="(item,index) in form.attr" :key="index" :label="item.attr">
               <template slot-scope="scope">
                 <el-input
-                :disabled="scope.row.id?true:false"
+                  :disabled="scope.row.id?true:false"
                   v-model="scope.row.attr_val[index]"
                   :placeholder="`请填写${item.attr}`"
                   clearable
@@ -272,12 +282,22 @@
             </el-table-column>
             <el-table-column prop="attr_price" label="原价" align="center">
               <template slot-scope="scope">
-                <el-input :disabled="scope.row.id?true:false" v-model="scope.row.attr_price" placeholder="请填写原价" clearable></el-input>
+                <el-input
+                  :disabled="scope.row.id?true:false"
+                  v-model="scope.row.attr_price"
+                  placeholder="请填写原价"
+                  clearable
+                ></el-input>
               </template>
             </el-table-column>
             <el-table-column prop="attr_current_price" label="现价" align="center">
               <template slot-scope="scope">
-                <el-input :disabled="scope.row.id?true:false" v-model="scope.row.attr_current_price" placeholder="请填写现价" clearable></el-input>
+                <el-input
+                  :disabled="scope.row.id?true:false"
+                  v-model="scope.row.attr_current_price"
+                  placeholder="请填写现价"
+                  clearable
+                ></el-input>
               </template>
             </el-table-column>
             <el-table-column prop="attr_num" label="库存" align="center">
@@ -394,8 +414,8 @@ export default {
       up1Loading: false, //上传1状态
       up2Loading: false, //上传1状态
       up3Loading: false, //上传3状态
-      showAttr:false,
-      showAttr1:false,
+      showAttr: false,
+      showAttr1: false,
       cityData: citys, //城市数据
       selectCity: [], //选择城市
       page: 1,
@@ -458,10 +478,10 @@ export default {
     getBack() {
       this.loading = true;
       this.show = false;
-      this.status='';
-      this.date=[];
-      this.cate='';
-      this.name='';
+      this.status = "";
+      this.date = [];
+      this.cate = "";
+      this.name = "";
       this.getDataList();
     },
 
@@ -472,10 +492,10 @@ export default {
         .getCrowdList({
           page: this.page,
           limit: this.limit,
-          status:this.status,
-          date:this.date,
-          tag:this.cate,
-          title:this.name,
+          status: this.status,
+          date: this.date,
+          tag: this.cate,
+          title: this.name
         })
         .then(res => {
           this.dataList = res.data || [];
@@ -628,7 +648,7 @@ export default {
           this.form.attr = [];
           this.form.attr_val = [];
         }
-        this.showAttr=false;
+        this.showAttr = false;
       } else if (type == "edit") {
         this.form.id = item.id;
         this.form.title = item.title;
@@ -649,9 +669,9 @@ export default {
         this.form.attr = item.attr;
         this.form.attr_val = item.attr_val;
         this.editGoodsDialog = true;
-        this.showAttr=true;
-        if(this.form.attr_val.length){
-          this.showAttr1=true;
+        this.showAttr = true;
+        if (this.form.attr_val.length) {
+          this.showAttr1 = true;
         }
       }
     },
@@ -672,7 +692,7 @@ export default {
 
         this.getDataList();
       });
-    }, 
+    }
   },
   created() {
     this.getCitys();

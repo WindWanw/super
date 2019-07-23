@@ -10,13 +10,13 @@
         <el-table-column prop="username" label="账号"></el-table-column>
         <el-table-column prop="role" label="角色">
           <template slot-scope="scope">
-            <el-tag>{{scope.row.role | authGenre}}</el-tag>
+            <el-tag class="mini-button">{{scope.row.role | authGenre}}</el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="tel" label="联系方式"></el-table-column>
         <el-table-column fixed="right" label="操作">
           <template slot-scope="scope">
-            <el-button @click="openEditPassword(scope.row)" type="primary" size="small">修改密码</el-button>
+            <el-button class="mini-button" @click="openEditPassword(scope.row)" type="primary" size="small">修改密码</el-button>
           </template>
         </el-table-column>
       </el-table>

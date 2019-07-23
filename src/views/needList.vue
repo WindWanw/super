@@ -33,7 +33,7 @@
         </el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
-              <el-button @click="qrcode(scope.row)" type="primary" icon="iconfont qrcode-1-copy" size="mini">点击联系</el-button>
+              <el-button @click="qrcode(scope.row)" type="primary" icon="iconfont qrcode-1-copy" size="mini" class="mini-button">点击联系</el-button>
           </template>
         </el-table-column>
       </el-table>

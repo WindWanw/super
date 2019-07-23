@@ -67,6 +67,7 @@
         <el-table-column prop label="账号状态">
           <template slot-scope="scope">
             <el-button
+             class="mini-button"
               size="mini"
               :title="scope.row.status=='1'?'点击禁用':'点击解除禁用'"
               @click="userStop(scope.row.id)"
@@ -81,6 +82,7 @@
           <template slot-scope="scope">
             <div class="cz_btn">
               <el-button
+               class="mini-button"
                 @click="openAddEditDialog('edit',scope.row)"
                 type="primary"
                 size="mini"

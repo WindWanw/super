@@ -49,10 +49,10 @@
         <el-table-column prop="username" label="用户名"></el-table-column>
         <el-table-column prop="city" label="专引城市"></el-table-column>
         <el-table-column prop="tel" label="联系方式"></el-table-column>
-        <el-table-column prop="tag" label="标签" width="300px">
+        <el-table-column prop="tag" label="标签">
           <template slot-scope="scope">
             <template v-for="(item,index) in scope.row.tag">
-              <el-tag style="margin-right:10px" v-if="index<3" :key="item">{{item}}</el-tag>
+              <el-tag class="mini-button" style="margin-right:10px" v-if="index<3" :key="item">{{item}}</el-tag>
             </template>
           </template>
         </el-table-column>
@@ -71,6 +71,7 @@
               @click="userStop(scope.row.id)"
               :type="scope.row.status=='1'?'success':'info'"
               size="mini"
+               class="mini-button"
             >{{scope.row.status | userStatus}}</el-button>
           </template>
         </el-table-column>
@@ -82,6 +83,7 @@
                 type="warning"
                 size="mini"
                 icon="el-icon-edit-outline"
+                 class="mini-button"
               >处罚</el-button>
             </div>
           </template>

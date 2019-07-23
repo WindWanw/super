@@ -2,12 +2,17 @@
   <div class="order">
     <div class="table_title">
       <div class="search_wrap">
-          <el-select v-model="is_online" class="selectOrder" clearable placeholder="请选择订单类型">
-            <el-option v-for="item in order_typeList" :key="item.value" :label="item.label" :value="item.val"></el-option>
-          </el-select>
+        <el-select v-model="is_online" class="selectOrder" clearable placeholder="请选择订单类型">
+          <el-option
+            v-for="item in order_typeList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.val"
+          ></el-option>
+        </el-select>
         <el-input clearable v-model="name" placeholder="请输入订单" size="small" style="width:200px"></el-input>
         <el-date-picker
-        style="margin:0 10px"
+          style="margin:0 10px"
           value-format="timestamp"
           size="small"
           v-model="date"
@@ -23,7 +28,7 @@
       </div>
     </div>
     <div class="content" style="width:100%">
-      <el-tabs type="border-card" v-model="status" @tab-click=tabClick>
+      <el-tabs type="border-card" v-model="status" @tab-click="tabClick">
         <el-tab-pane
           v-for="(item,index) in tabList"
           :key="index"
@@ -48,10 +53,12 @@
             </el-table-column>
             <el-table-column prop="status" label="订单状态" width="100px">
               <template slot-scope="scope">
-                <el-button :type="scope.row.status | payStatus" size="mini">
-                  {{scope.row.status | orderStatus}}
-                </el-button>
-                </template>
+                <el-button
+                  class="mini-button"
+                  :type="scope.row.status | payStatus"
+                  size="mini"
+                >{{scope.row.status | orderStatus}}</el-button>
+              </template>
             </el-table-column>
           </el-table>
         </el-tab-pane>
@@ -67,17 +74,16 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="dataList.total"
       ></el-pagination>
-
     </div>
   </div>
 </template>
 
 <script>
-import { constants } from 'crypto';
+import { constants } from "crypto";
 export default {
   data() {
     return {
-      loading:false,
+      loading: false,
       pickerOptions: {
         //快捷键
         shortcuts: [
@@ -124,49 +130,49 @@ export default {
       dataList: [],
       page: 1,
       limit: 10,
-      is_online:"", // 订单类型
+      is_online: "", // 订单类型
       order_typeList: [
-          {label: '线上订单',val: 1},
-          {label: '线下订单' ,val: 2},
-          {label: '技术服务费',val: 3}
-        ]
+        { label: "线上订单", val: 1 },
+        { label: "线下订单", val: 2 },
+        { label: "技术服务费", val: 3 }
+      ]
     };
   },
   methods: {
     //分页
-    handleSizeChange(val){
-      this.limit=val;
+    handleSizeChange(val) {
+      this.limit = val;
       this.getDataList();
     },
     //分条
-    handleCurrentChange(val){
-      this.page=val;
+    handleCurrentChange(val) {
+      this.page = val;
       this.getDataList();
     },
     //获取数据
     getDataList() {
-      this.loading=true;
+      this.loading = true;
       this.$api
         .getOrderList({
           page: this.page,
           limit: this.limit,
           status: this.status,
-          times:this.date,
-          order_sn:this.name,
-          is_online:this.is_online
+          times: this.date,
+          order_sn: this.name,
+          is_online: this.is_online
         })
         .then(res => {
           this.dataList = res.data || [];
-          if(res.code){
+          if (res.code) {
             this.$message[res.code ? "warning" : "success"](res.data);
-         }
-          this.loading=false;
+          }
+          this.loading = false;
         });
     },
     // tab切换
-    tabClick(val){
-      this.status=val.name;
-      this.page=1;
+    tabClick(val) {
+      this.status = val.name;
+      this.page = 1;
       this.getDataList();
     },
     //查询
@@ -175,12 +181,12 @@ export default {
       this.getDataList();
     },
     //订单类型查询
-    searchTypeList(val){
-      console.log(val)
+    searchTypeList(val) {
+      console.log(val);
     }
   },
   created() {
-    this.getDataList()
+    this.getDataList();
   }
 };
 </script>
@@ -191,10 +197,10 @@ export default {
   padding: 20px;
   box-sizing: border-box;
 }
-.el-tag{
+.el-tag {
   margin-right: 10px;
 }
-.selectOrder{
-   margin-right: 20px;
+.selectOrder {
+  margin-right: 20px;
 }
 </style>

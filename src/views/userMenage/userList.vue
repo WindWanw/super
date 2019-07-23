@@ -48,6 +48,7 @@
               @click="userStop(scope.row.id)"
               :type="scope.row.status=='1'?'success':'info'"
               size="mini"
+              class="mini-button"
             >{{scope.row.status | userStatus}}</el-button>
           </template>
         </el-table-column>
@@ -57,12 +58,12 @@
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button
-              :title="scope.row.vest ? '马甲用户' : '设置马甲'"
-              @click="setVestUser(scope.row.id)"
-              :type="scope.row.vest ? 'warning' : 'primary'"
+              title="设置马甲"
+              @click="openSetVestUser(scope.row.id)"
+              type="primary"
               size="mini"
-              :disabled="scope.row.vest"
-            >{{scope.row.vest ? '马甲用户' : '设置马甲'}}</el-button>
+              class="mini-button"
+            >设置马甲</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -77,6 +78,18 @@
         :total="dataList.total"
       ></el-pagination>
     </div>
+
+    <el-dialog title="设置马甲用户" width="750px" :visible.sync="openSetVestUserDialog" append-to-body @close="form.uids=''">
+      <el-form label-width="120px" :model="form" ref="form">
+        <el-form-item label="马甲用户">
+          <el-input type="textarea" v-model="form.uids" placeholder="请输入马甲用户id，多个用户id用“,”隔开"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="openSetVestUserDialog = false">取 消</el-button>
+        <el-button type="primary" @click="setVestUser()">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -124,7 +137,12 @@ export default {
       city:"",
       dataList: [], //数据源
       page: 1, //页
-      limit: 10 //条
+      limit: 10 ,//条
+      openSetVestUserDialog:false,
+      form:{
+        id:'',
+        uids:'',
+      },
     };
   },
   methods: {
@@ -183,9 +201,15 @@ export default {
           this.$message.info("已取消操作");
         });
     },
-    setVestUser(id){
-      this.$api.setVestUser({id:id}).then(res=>{
+    openSetVestUser(item){
+      this.openSetVestUserDialog=true;
+      this.form.id=item;
+    },
+    setVestUser(){
+      this.$api.setVestUser(this.form).then(res=>{
         this.$message[res.code ? 'warning' : 'success'](res.data.message)
+        if(res.code) return ;
+        this.openSetVestUserDialog=false;
         this.getDataList();
       });
     },

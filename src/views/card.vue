@@ -50,7 +50,7 @@
         </el-table-column>
         <el-table-column prop="types" label="来源">
           <template slot-scope="scope">
-            <el-button :type="scope.row.types=='common'?'primary':'success'" size="mini">{{scope.row.types=='common'?'全平台':'商铺'}}</el-button>
+            <el-button class="mini-button" :type="scope.row.types=='common'?'primary':'success'" size="mini">{{scope.row.types=='common'?'全平台':'商铺'}}</el-button>
           </template>
         </el-table-column>
       </el-table>

@@ -115,8 +115,7 @@ html,
   box-sizing: border-box;
   color: #99a9bf;
 }
-.el-button--mini,
- .el-button--small {
+.mini-button {
   font-size: 12px;
   border-radius: 3px;
   padding: 3px 6px !important;

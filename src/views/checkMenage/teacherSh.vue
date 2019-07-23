@@ -48,7 +48,7 @@
         <el-table-column prop="username" label="用户名"></el-table-column>
         <el-table-column prop="tag" label="标签" width="300px">
           <template slot-scope="scope">
-            <el-tag style="margin-right:10px" v-for="item in scope.row.tag" :key="item">{{item}}</el-tag>
+            <el-tag class="mini-button" style="margin-right:10px" v-for="item in scope.row.tag" :key="item">{{item}}</el-tag>
           </template>
         </el-table-column>
         <!-- <el-table-column prop="shopname" label="商店"></el-table-column> -->
@@ -57,13 +57,14 @@
         </el-table-column>
         <el-table-column prop label="账号状态">
           <template slot-scope="scope">
-            <el-button type="warning" size="mini">{{scope.row.status | userStatus}}</el-button>
+            <el-button class="mini-button" type="warning" size="mini">{{scope.row.status | userStatus}}</el-button>
           </template>
         </el-table-column>
         <el-table-column prop label="操作" width="200px">
           <template slot-scope="scope">
             <div class="cz_btn">
               <el-button
+               class="mini-button"
                 @click="dialogVisible=true;id=scope.row.id;pass='';remark=''"
                 type="primary"
                 size="mini"

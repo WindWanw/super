@@ -53,6 +53,7 @@
           <template slot-scope="scope">
             <div class="cz_btn">
               <el-button
+               class="mini-button"
                 @click="del(scope.row.id)"
                 type="danger"
                 size="mini"

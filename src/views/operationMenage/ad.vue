@@ -54,12 +54,14 @@
           <template slot-scope="scope">
             <div class="cz_btn">
               <el-button
+               class="mini-button"
                 @click="openAddEditDialog('edit',scope.row)"
                 type="primary"
                 size="mini"
                 icon="el-icon-edit"
               >编辑</el-button>
               <el-button
+               class="mini-button"
                 @click="del(scope.row.id)"
                 type="danger"
                 size="mini"

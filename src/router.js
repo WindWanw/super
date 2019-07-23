@@ -89,10 +89,10 @@ const citySupplier = () =>
     import ( /* webpackChunkName: "citySupplier" */ './views/citySupplier.vue')
 const userFlow = () =>
     import ( /* webpackChunkName: "userFlow" */ './views/userFlow.vue')
-const goodList = () =>
-    import ( /* webpackChunkName: "goodList" */ './views/sellerMenage/goodList.vue')
-const guidesList = () =>
-    import ( /* webpackChunkName: "userFlow" */ './views/sellerMenage/guidesList.vue')
+    // const goodList = () =>
+    //     import ( /* webpackChunkName: "goodList" */ './views/sellerMenage/goodList.vue')
+    // const guidesList = () =>
+    //     import ( /* webpackChunkName: "userFlow" */ './views/sellerMenage/guidesList.vue')
     // const bill = () =>
     //     import ( /* webpackChunkName: "userFlow" */ './views/bill.vue')
 Vue.use(Router)
@@ -303,7 +303,7 @@ export const asyRouter = [{
         name: 'crowdfunding',
         component: crowdfunding,
         meta: {
-            name: '众筹商品',
+            name: '计划生产',
             iconfont: 'iconfont zhongchoushangpin',
             needLogin: true, //需要登录
         },

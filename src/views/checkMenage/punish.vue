@@ -41,9 +41,9 @@
             </el-table-column>
             <el-table-column prop="status" label="处罚状态">
               <template slot-scope="scope">
-                <el-tag type="warning" v-if="scope.row.status=='0'">审核中</el-tag>
-                <el-tag type="success" v-if="scope.row.status=='1'">已处罚</el-tag>
-                <el-tag type="danger" v-if="scope.row.status=='2'">处罚驳回</el-tag>
+                <el-tag class="mini-button" type="warning" v-if="scope.row.status=='0'">审核中</el-tag>
+                <el-tag class="mini-button" type="success" v-if="scope.row.status=='1'">已处罚</el-tag>
+                <el-tag class="mini-button" type="danger" v-if="scope.row.status=='2'">处罚驳回</el-tag>
               </template>
             </el-table-column>
             <el-table-column v-if="status=='1'" prop="checker_name" label="审核人"></el-table-column>
@@ -63,6 +63,7 @@
                 size="mini"
                 icon="el-icon-edit-outline"
                 title="点我对该条信息进行审核认证"
+                 class="mini-button"
               >点击审核</el-button>
                 </div>
               </template>
