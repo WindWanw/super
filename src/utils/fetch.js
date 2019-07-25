@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import axios from 'axios';
 import router from '../router'
+
 Vue.prototype.axios = axios;
 axios.defaults.timeout = 10000; //响应时间
 import { Message } from 'element-ui';

@@ -1,2 +1,0 @@
-(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["userMenage"],{"6fe5":function(e,n,t){"use strict";t.r(n);var r=function(){var e=this,n=e.$createElement,t=e._self._c||n;return t("div",{},[t("router-view")],1)},u=[],o={data:function(){return{}},components:{}},a=o,c=t("2877"),s=Object(c["a"])(a,r,u,!1,null,"2b96001e",null);n["default"]=s.exports}}]);
-//# sourceMappingURL=userMenage.3e0ec48a.js.map

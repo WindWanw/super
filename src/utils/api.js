@@ -379,6 +379,9 @@ export default {
     },
     exportAdmin(params) {
         return fetchGet('/getorders/exportAdmin', params)
+    },
+    setVestUserInfo(params) {
+        return fetchPost('/admin/setVestUserInfo', params)
     }
 
 }
