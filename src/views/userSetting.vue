@@ -80,6 +80,12 @@
             <template slot="append">个</template>
           </el-input>
         </el-form-item>
+        <el-form-item label="用户类型" prop="type">
+          <template>
+            <el-radio v-model="vest.type" label="_U">消费者</el-radio>
+            <el-radio v-model="vest.type" label="_G">专引师</el-radio>
+          </template>
+        </el-form-item>
         <el-form-item label="用户头像" style="width:100%" prop="pics">
           <el-upload
             :action="`${axios.defaults.baseURL}/common/upload/file/upload_dir`"
@@ -89,6 +95,8 @@
             :on-success="upSuc1"
             multiple
           >
+
+          
             <el-button
               class="mini-button"
               size="small"
@@ -219,7 +227,8 @@ export default {
       vest: {
         num: "",
         pics: [],
-        citycode: [] //选择城市
+        citycode: [], //选择城市
+        type:'_U',//用户类型
       },
       authList: "",
       rules: {
