@@ -23,7 +23,7 @@
       </div>
     </div>
     <div class="content">
-      <el-table :data="dataList.info" stripe border style="width:100%" v-loading="loading">
+      <el-table :data="dataList.list" stripe border style="width:100%" v-loading="loading">
         <el-table-column type="expand">
           <template slot-scope="props">
             <div class="expand_wrap" v-if="props.row.idcard!=''">

@@ -3,7 +3,7 @@
              unique-opened class="el-menu-vertical-demo" :collapse="collapse">
     <!-- 一级菜单 -->
     <template v-for="item in asideList">
-      <el-submenu v-if="item.children && item.children.length" :index="item.path" :key="item.path">
+      <el-submenu v-if="item.children && item.children.length" :index="item.path" :key="item.path"  :hidden="(admin !=1 && path.length!=0 && path.indexOf(item.name) ==-1)">
         <template slot="title">
           <i :class="item.meta.iconfont"></i>
           <span>{{item.meta.name}}</span>
@@ -32,14 +32,14 @@
             </el-menu-item>
           </el-submenu>
 
-          <el-menu-item v-else :index="itemChild.path" :key="itemChild.path">
+          <el-menu-item v-else :index="itemChild.path" :key="itemChild.path" :hidden="(admin !=1 && path.length!=0 && path.indexOf(itemChild.name) ==-1)">
             <i :class="itemChild.meta.iconfont"></i>
             <span slot="title">{{itemChild.meta.name}}</span>
           </el-menu-item>
         </template>
       </el-submenu>
 
-      <el-menu-item v-else :index="item.path" :key="item.path">
+      <el-menu-item v-else :index="item.path" :key="item.path" :hidden="(admin !=1 && path.length!=0 && path.indexOf(item.name) ==-1)">
         <i :class="item.meta.iconfont"></i>
         <span slot="title">{{item.meta.name}}</span>
       </el-menu-item>
@@ -53,7 +53,19 @@ export default {
   data() {
     return {
       active:this.$route.path,
+      path:[],
+      admin: JSON.parse(localStorage.getItem("userinfo")).id || "",
     }
+  },
+  methods:{
+
+    setPath(){
+      var p=localStorage.getItem("path");
+
+      this.path=p.split(",")
+
+    }
+    
   },
   computed:{
     asideList(){
@@ -68,6 +80,7 @@ export default {
   components: {},
   created(){
     this.active=this.$route.path;
+    this.setPath()
   }
 };
 </script>

@@ -52,6 +52,7 @@ export default {
           localStorage.setItem("token", res.data.token);
           localStorage.setItem("userinfo", JSON.stringify(res.data.userinfo));
           localStorage.setItem("type", res.data.type);
+          localStorage.setItem("path",res.data.path)
           // this.getMessageCount(res.data.userinfo.id);
           this.$router.replace(this.url);
           return this.$message.success({

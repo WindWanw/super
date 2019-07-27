@@ -364,6 +364,11 @@ export default {
      * 用户信息
      * 修改密码
      * 发送短信
+     * 
+     * 
+     * 设置马甲用户
+     * 获取路由
+     * 设置角色路由权限
      */
     getAdminInfo(params) {
         return fetchPost('/admin/getAdminInfo', params)
@@ -382,6 +387,12 @@ export default {
     },
     setVestUserInfo(params) {
         return fetchPost('/admin/setVestUserInfo', params)
-    }
+    },
+    getRouting(params) {
+        return fetchPost('/admin/getRouting', params)
+    },
+    setUserRouting(params) {
+        return fetchPost('/admin/setUserRouting', params)
+    },
 
 }

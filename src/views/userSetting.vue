@@ -49,6 +49,54 @@
         >点击生成</el-button>
       </div>
     </div>
+    <div class="diy-content" v-if="admin==1">
+      <div>
+        <span>3.设置用户权限</span>
+      </div>
+      <div>
+        <el-button
+          class="mini-button"
+          type="primary"
+          size="small"
+          @click="openRoutDialog=true"
+          
+        >点击设置</el-button>
+      </div>
+    </div>
+<!--设置权限 -->
+    <el-dialog
+      title="设置用户权限"
+      width="750px"
+      :visible.sync="openRoutDialog"
+      append-to-body
+    >
+      <el-form label-width="120px" :model="rout" ref="rout" :rules="rules">
+        <el-form-item label="角色类型" prop="genre">
+          <el-select v-model="rout.genre" placeholder="请选择角色类型">
+            <el-option
+              v-for="item in genreList.list"
+              :key="item.val"
+              :label="item.label"
+              :value="item.val"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="权限模块" prop="routing">
+          <el-tree
+            :data="routingList"
+            show-checkbox
+            node-key="path"
+            ref="tree"
+            highlight-current
+            :props="defaultProps">
+          </el-tree>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="openRoutDialog = false">取 消</el-button>
+        <el-button type="primary" @click="setRouting()">确 定</el-button>
+      </div>
+    </el-dialog>
 
     <el-dialog width="750px" :visible.sync="openVestUidDialog" append-to-body>
       <el-form>
@@ -95,8 +143,6 @@
             :on-success="upSuc1"
             multiple
           >
-
-          
             <el-button
               class="mini-button"
               size="small"
@@ -208,10 +254,19 @@ export default {
       userSettingDialog: false, //超级管理员设置商户密码
       openVestDialog: false, //马甲用户
       openVestUidDialog: false, //马甲用户id
+      openRoutDialog:false,//权限
       up1Loading: false, //上传1状态
+      isIndeterminate: true,
+      checkAll: false,
       admin: JSON.parse(localStorage.getItem("userinfo")).id || "",
       vestuid: "", //马甲用户id
       cityData: citys, //城市数据
+      routingList:[],
+      defaultProps: {
+          children: 'children',
+          label: 'label'
+        },
+      genreList:[],
       retrieve: {
         id: "",
         tel: "",
@@ -229,6 +284,10 @@ export default {
         pics: [],
         citycode: [], //选择城市
         type:'_U',//用户类型
+      },
+      rout:{
+        genre:'',
+        routing:[],
       },
       authList: "",
       rules: {
@@ -259,7 +318,13 @@ export default {
         ],
         pics: [
           { required: true, message: "请上传至少一张图片", trigger: "blur" }
-        ]
+        ],
+        genre: [
+          { required: true, message: "角色必须选择", trigger: "blur" }
+        ],
+        routing: [
+          { required: true, message: "功能模块必须选择", trigger: "blur" }
+        ],
       }
     };
   },
@@ -366,10 +431,43 @@ export default {
         this.$message[res.code ? "warning" : "success"](res.data.message);
         if (!res.code) this.userSettingDialog = false;
       });
-    }
+    },
+
+    //获取路由
+    getRouting(){
+      this.$api.getRouting().then(res=>{
+        this.routingList=res.data.list
+      });
+    },
+
+//设置权限
+    setRouting(){
+      console.log(this.$refs.tree.getCheckedNodes());
+      console.log(this.$refs.tree.getCheckedKeys())
+
+      this.rout.routing=this.$refs.tree.getCheckedNodes();
+
+      this.$refs.rout.validate(valid => {
+        if (valid) {
+          this.$api.setUserRouting(this.rout).then(res=>{
+            this.$message[res.code ? 'warning' : 'success'](res.data.message)
+            if(!res.code) this.openRoutDialog=false
+            
+          })
+        }
+      });
+    },
+    //角色类型
+    getAuthGenre() {
+      this.$api.getAuthGenre().then(res => {
+        this.genreList = res.data || [];
+      });
+    },
   },
   created() {
     this.getAuthList();
+    this.getRouting();
+    this.getAuthGenre();
   }
 };
 </script>
