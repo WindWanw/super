@@ -172,7 +172,7 @@
       @close="form.uids=''"
     >
       <el-form label-width="120px" :model="form" ref="form">
-        <el-form-item label="已存在的马甲id" v-if="vestIdTag && vestIdTag.length">
+        <el-form-item label="已存在的马甲id" v-if="vestIdTag">
           <template v-for="item in vestIdTag">
             <el-tag
               closable
@@ -295,13 +295,15 @@ export default {
     toogleExpand(row) {
       
       let $table = this.$refs.table;
-      console.log($table[0].toggleRowExpansion());
+
+      let $t=$table[this.utype]
+      console.log($t);
       this.dataList.list.map(item => {
         if (row.id != item.id) {
-          $table.toggleRowExpansion(item, false);
+          $t.toggleRowExpansion(item, false);
         }
       });
-      $table.toggleRowExpansion(row);
+      $t.toggleRowExpansion(row);
     },
 
     handleClose(tag) {

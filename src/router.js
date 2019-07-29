@@ -13,6 +13,8 @@ const userMenage = () =>
     import ( /* webpackChunkName: "userMenage" */ './views/userMenage')
 const userList = () =>
     import ( /* webpackChunkName: "userList" */ './views/userMenage/userList.vue')
+const operator = () =>
+    import ( /* webpackChunkName: "operator" */ './views/userMenage/operator.vue')
 
 const teacher = () =>
     import ( /* webpackChunkName: "teacher" */ './views/userMenage/teacher.vue')
@@ -146,6 +148,16 @@ export const asyRouter = [{
                 meta: {
                     name: '专引师管理',
                     iconfont: 'iconfont yonghu5',
+                    needLogin: true, //需要登录
+                }
+            },
+            {
+                path: '/userMenage/operator',
+                name: 'operator',
+                component: operator,
+                meta: {
+                    name: '运营者管理',
+                    iconfont: 'iconfont renshu',
                     needLogin: true, //需要登录
                 }
             },
