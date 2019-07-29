@@ -57,7 +57,7 @@
                   <span v-else>该商户还没有添加推荐商品</span>
                 </div>
               </template>
-            </el-table-column>
+            </el-table-column> 
             <el-table-column prop label="商户头像" align="center">
               <template slot-scope="scope">
                 <img class="avatar" :src="scope.row.shop_avatar" />

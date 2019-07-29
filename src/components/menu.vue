@@ -13,7 +13,7 @@
    export default {
      data () {
        return {
-
+         
      }
    },
    computed:{
@@ -35,7 +35,8 @@
            this.$router.push(res[res.length-1].path);
          }
        })
-     }
+     },
+
    },
    created(){
      this.$store.dispatch('addTab',this.$route);

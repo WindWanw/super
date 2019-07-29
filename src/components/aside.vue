@@ -62,7 +62,7 @@ export default {
     setPath(){
       var p=localStorage.getItem("path");
 
-      this.path=p.split(",")
+      this.path=p ? p.split(",") : []
 
     }
     

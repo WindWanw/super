@@ -46,26 +46,20 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="username" label="用户名"></el-table-column>
-        <el-table-column prop="city" label="专引城市"></el-table-column>
-        <el-table-column prop="tel" label="联系方式"></el-table-column>
-        <el-table-column prop="tag" label="标签">
+        <el-table-column prop="username" label="用户名" align="center"></el-table-column>
+        <el-table-column prop="city" label="专引城市" align="center"></el-table-column>
+        <el-table-column prop="tel" label="联系方式" align="center"></el-table-column>
+        <el-table-column prop="tag" label="标签" align="center">
           <template slot-scope="scope">
             <template v-for="(item,index) in scope.row.tag">
-              <el-tag class="mini-button" style="margin-right:10px" v-if="index<3" :key="item">{{item}}</el-tag>
+              <el-tag type="mini" v-if="index<3" :key="item">{{item}}</el-tag>
             </template>
           </template>
         </el-table-column>
-        <!-- <el-table-column prop="shopname" label="商店"></el-table-column> -->
-        <el-table-column prop="times" label="注册时间">
-          <!-- <template slot-scope="scope">
-            {{scope.row.times | formatTimeStamp}}
-          </template>-->
+        <el-table-column prop="times" label="注册时间" align="center">
         </el-table-column>
-        <el-table-column prop label="账号状态">
+        <el-table-column prop label="账号状态" align="center">
           <template slot-scope="scope">
-            <!-- @click="userStop(scope.row.id)"
-            :title="scope.row.status=='1'?'点击禁用':'点击解除禁用'"-->
             <el-button
               :title="scope.row.status=='1'?'点击禁用':'点击解除禁用'"
               @click="userStop(scope.row.id)"

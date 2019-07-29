@@ -43,6 +43,9 @@ export default {
     setVestUser(params) {
         return fetchPost('/admin/setVestUser', params)
     },
+    delVestUsers(params) {
+        return fetchPost('/admin/delVestUsers', params)
+    },
     /**
      * @需求管理
      * 获取需求列表
@@ -369,6 +372,8 @@ export default {
      * 设置马甲用户
      * 获取路由
      * 设置角色路由权限
+     * 设置版本
+     * 获取版本
      */
     getAdminInfo(params) {
         return fetchPost('/admin/getAdminInfo', params)
@@ -393,6 +398,12 @@ export default {
     },
     setUserRouting(params) {
         return fetchPost('/admin/setUserRouting', params)
+    },
+    setVersion(params) {
+        return fetchPost('/admin/setVersion', params)
+    },
+    getVersion(params) {
+        return fetchPost('/admin/getVersion', params)
     },
 
 }

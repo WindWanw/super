@@ -450,7 +450,7 @@ export const asyRouter = [{
         name: 'userSetting',
         component: userSetting,
         meta: {
-            name: '用户设置',
+            name: '设置',
             iconfont: 'iconfont icon-test1',
             needLogin: true, //需要登录
         }
