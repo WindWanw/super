@@ -24,6 +24,7 @@ export default {
      * 查询列表
      * 停用，启用
      * 设置马甲用户
+     * 解除马甲用户的使用限制
      */
     getUserlist(params) {
         return fetchPost('/Client/userList', params)
@@ -33,6 +34,9 @@ export default {
     },
     getVestInfo(params) {
         return fetchPost('/Client/getVestInfo', params)
+    },
+    vestUserDel(params) {
+        return fetchPost('/Client/vestUserDel', params)
     },
 
     //审核商户
@@ -396,6 +400,9 @@ export default {
     },
     setVestUserInfo(params) {
         return fetchPost('/admin/setVestUserInfo', params)
+    },
+    setOneUserInfo(params) {
+        return fetchPost('/admin/setOneUserInfo', params)
     },
     getRouting(params) {
         return fetchPost('/admin/getRouting', params)

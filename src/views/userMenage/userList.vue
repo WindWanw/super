@@ -82,9 +82,21 @@
                     <template slot-scope="scope">{{scope.row.sex | sexStatus}}</template>
                   </el-table-column>
                   <el-table-column prop="city" label="城市" align="center"></el-table-column>
+                  <el-table-column prop label="账号状态" align="center">
+                    <template slot-scope="scope">
+                      <el-button
+                        :title="scope.row.status==1?'点击禁用':'点击解除'"
+                        @click="vestUserDel(scope.row.id,scope.row.status)"
+                        :type="scope.row.status==1 ?'success':'info'"
+                        size="mini"
+                        class="mini-button"
+                      >{{scope.row.status ? '正常' : '超出次数'}}</el-button>
+                    </template>
+                  </el-table-column>
                   <el-table-column prop="times" label="注册日期" align="center">
                     <template slot-scope="scope">{{scope.row.times | formatTimeStamp(1)}}</template>
                   </el-table-column>
+                  <el-table-column prop="use" label="使用次数" align="center"></el-table-column>
                   <el-table-column prop="nickname" label="昵称" align="center"></el-table-column>
                   <el-table-column label="操作" align="center">
                     <template slot-scope="prop">
@@ -232,11 +244,8 @@ export default {
           }
         ]
       },
-      tabList: [
-        { label: "全部", name: "0" },
-        { label: "马甲主号", name: "1" },
-      ],
-      utype:'0',//用户类型
+      tabList: [{ label: "全部", name: "0" }, { label: "马甲主号", name: "1" }],
+      utype: "0", //用户类型
       username: "", //用户名
       status: "", //用户状态
       date: "", //日期
@@ -271,7 +280,7 @@ export default {
         .getUserlist({
           page: this.page,
           limit: this.limit,
-          utype:this.utype,
+          utype: this.utype,
           status: this.status,
           times: this.date,
           gender: this.sex,
@@ -293,10 +302,9 @@ export default {
     },
     //展开行
     toogleExpand(row) {
-      
       let $table = this.$refs.table;
 
-      let $t=$table[this.utype]
+      let $t = $table[this.utype];
       console.log($t);
       this.dataList.list.map(item => {
         if (row.id != item.id) {
@@ -359,6 +367,17 @@ export default {
         this.openSetVestUserDialog = false;
         this.getDataList();
       });
+    },
+
+    //解除马甲商户的使用限制
+    vestUserDel(id,status){
+      this.$api.vestUserDel({
+        id:id,
+        status:status,
+      }).then(res=>{
+        this.$message[res.code ? 'warning' : 'success'](res.data.message)
+        this.search();
+      })
     },
     tabClick(val) {
       this.utype = val.name;

@@ -115,60 +115,69 @@
       append-to-body
       @close="vest.num='';vest.pics=[];vest.citycode=[];"
     >
-      <el-form label-width="120px" :model="vest" :rules="rules" ref="vest">
-        <el-form-item label="生成个数" prop="num">
-          <el-input v-model="vest.num" placeholder="请输入生成用户个数">
-            <template slot="append">个</template>
-          </el-input>
-        </el-form-item>
-        <el-form-item label="用户类型" prop="type">
-          <template>
-            <el-radio v-model="vest.type" label="_U">消费者</el-radio>
-            <el-radio v-model="vest.type" label="_G">专引师</el-radio>
-          </template>
-        </el-form-item>
-        <el-form-item label="用户头像" style="width:100%" prop="pics">
-          <el-upload
-            :action="`${axios.defaults.baseURL}/common/upload/file/upload_dir`"
-            accept="image/jpeg, image/gif, image/png, image/bmp"
-            :before-upload="beforeUp1"
-            :show-file-list="false"
-            :on-success="upSuc1"
-            multiple
-          >
-            <el-button
-              class="mini-button"
-              size="small"
-              type="primary"
-              :disabled="up1Loading"
-            >{{up1Loading?'正在上传中...':'点击上传'}}</el-button>
-            <div
-              class="el-upload__tip"
-              slot="tip"
-              v-if="vest.num && vest.num >0"
-            >请上传{{vest.num}}张用户头像</div>
-          </el-upload>
-          <div class="imgPreview" v-if="vest.pics && vest.pics.length">
-            <div class="img_box" v-for="(item,index) in vest.pics" :key="index">
-              <img :src="item" />
-              <div class="model">
-                <i class="el-icon-delete" @click="vest.pics.splice(index,1)" title="删除"></i>
+      <el-tabs type="border-card" v-model="vest.vtype" @tab-click="tabClick">
+        <el-tab-pane
+          v-for="(item,index) in tabList"
+          :key="index"
+          :label="item.label"
+          :name="item.name"
+        >
+          <el-form label-width="120px" :model="vest" :rules="rules" ref="vest">
+            <el-form-item label="生成个数" prop="num" v-if="vest.vtype==1">
+              <el-input v-model="vest.num" placeholder="请输入生成用户个数">
+                <template slot="append">个</template>
+              </el-input>
+            </el-form-item>
+            <el-form-item label="用户类型" prop="type" v-if="vest.vtype==1">
+              <template>
+                <el-radio v-model="vest.type" label="_U">消费者</el-radio>
+                <el-radio v-model="vest.type" label="_G">专引师</el-radio>
+              </template>
+            </el-form-item>
+            <el-form-item label="用户头像" style="width:100%" prop="pics">
+              <el-upload
+                :action="`${axios.defaults.baseURL}/common/upload/file/upload_dir`"
+                accept="image/jpeg, image/gif, image/png, image/bmp"
+                :before-upload="beforeUp1"
+                :show-file-list="false"
+                :on-success="upSuc1"
+                multiple
+              >
+                <el-button
+                  class="mini-button"
+                  size="small"
+                  type="primary"
+                  :disabled="up1Loading"
+                >{{up1Loading?'正在上传中...':'点击上传'}}</el-button>
+                <div
+                  class="el-upload__tip"
+                  slot="tip"
+                  v-if="vest.num && vest.num >0"
+                >请上传{{vest.num}}张用户头像</div>
+              </el-upload>
+              <div class="imgPreview" v-if="vest.pics && vest.pics.length">
+                <div class="img_box" v-for="(item,index) in vest.pics" :key="index">
+                  <img :src="item" />
+                  <div class="model">
+                    <i class="el-icon-delete" @click="vest.pics.splice(index,1)" title="删除"></i>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-          <div v-else>
-            <i class="el-icon-picture" style="font-size:100px;color:#ccc"></i>
-          </div>
-        </el-form-item>
-        <el-form-item label="所在城市">
-          <el-cascader
-            :options="cityData"
-            v-model="vest.citycode"
-            change-on-select
-            placeholder="请选择城市"
-          ></el-cascader>
-        </el-form-item>
-      </el-form>
+              <div v-else>
+                <i class="el-icon-picture" style="font-size:100px;color:#ccc"></i>
+              </div>
+            </el-form-item>
+            <el-form-item label="所在城市">
+              <el-cascader
+                :options="cityData"
+                v-model="vest.citycode"
+                change-on-select
+                placeholder="请选择城市"
+              ></el-cascader>
+            </el-form-item>
+          </el-form>
+        </el-tab-pane>
+      </el-tabs>
       <div slot="footer" class="dialog-footer">
         <el-button @click="openVestDialog = false">取 消</el-button>
         <el-button type="primary" @click="setVestUserInfo()">确 定</el-button>
@@ -240,6 +249,10 @@ import citys from "../utils/province.js";
 export default {
   data() {
     return {
+      tabList: [
+        { label: "单个设置", name: "0" },
+        { label: "批量设置", name: "1" }
+      ],
       loading: false,
       btn_show1: true, //发送验证码
       btn_show2: false, //重新发送
@@ -260,7 +273,7 @@ export default {
         label: "label"
       },
       genreList: [],
-      version:'',//版本
+      version: "", //版本
       retrieve: {
         id: "",
         tel: "",
@@ -277,7 +290,8 @@ export default {
         num: "",
         pics: [],
         citycode: [], //选择城市
-        type: "_U" //用户类型
+        type: "_U" ,//用户类型
+        vtype:'0'
       },
       rout: {
         genre: "",
@@ -385,21 +399,32 @@ export default {
       }
     },
 
+    tabClick(val) {
+      this.vest.vtype = val.name;
+      this.vest.num = "";
+    },
+
     //设置马甲用户信息
     setVestUserInfo() {
+      if (this.vest.vtype == "0") {
+        this.vest.num = 2;
+      }
       if (this.vest.num < 1) {
         this.$message("请正确填写用户数");
         return;
       }
-      this.$refs.vest.validate(valid => {
-        if (valid) {
-          this.$api.setVestUserInfo(this.vest).then(res => {
-            if (res.code) return;
-            this.vestuid = res.data.list;
-            this.openVestDialog = false;
-            this.openVestUidDialog = true;
-          });
-        }
+      if(this.vest.pics.length==0){
+        this.$message("请上传至少一张头像图")
+        return ;
+      }
+
+      this.$api.setVestUserInfo(
+        this.vest
+      ).then(res => {
+        if (res.code) return;
+        this.vestuid = res.data.list;
+        this.openVestDialog = false;
+        this.openVestUidDialog = true;
       });
     },
 
@@ -455,20 +480,19 @@ export default {
       });
     },
 
-
     //设置版本号
-    setVersion(){
-      this.$api.setVersion({version:this.version}).then(res=>{
-        this.$message[res.code ? 'warning' : 'success'](res.data.message)
-        this.getVersion()
-      })
+    setVersion() {
+      this.$api.setVersion({ version: this.version }).then(res => {
+        this.$message[res.code ? "warning" : "success"](res.data.message);
+        this.getVersion();
+      });
     },
 
-//获取版本
-    getVersion(){
-      this.$api.getVersion().then(res=>{
-        if(!res.code) this.version=res.data.version;
-      })
+    //获取版本
+    getVersion() {
+      this.$api.getVersion().then(res => {
+        if (!res.code) this.version = res.data.version;
+      });
     }
   },
   created() {
