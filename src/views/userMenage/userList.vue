@@ -113,7 +113,10 @@
               </template>
             </el-table-column>
             <el-table-column prop="username" label="用户名" align="center">
-              <template slot-scope="scope">{{scope.row.username}}{{scope.row.isVest ? '(马甲)' : ''}}</template>
+              <template slot-scope="scope">
+                {{scope.row.username}}
+                <div>{{scope.row.isVest | vestStatus}}</div>
+                </template>
             </el-table-column>
             <el-table-column prop label="头像" align="center">
               <template slot-scope="scope">

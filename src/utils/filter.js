@@ -79,6 +79,23 @@ function payStatus(status) {
     }
 }
 
+function vestStatus(status) {
+    switch (status) {
+        case 0:
+            return '';
+            break;
+        case 1:
+            return '(马甲)';
+            break;
+        case 2:
+            return '(马甲|使用中)';
+            break;
+        case 3:
+            return '(马甲|超出次数)';
+            break;
+    }
+}
+
 //数组深拷贝
 function copyArray(arr, result) {
     var arr = arr || [];
@@ -218,4 +235,5 @@ export default {
     withdrawText,
     authGenre,
     punishTypes,
+    vestStatus,
 }
