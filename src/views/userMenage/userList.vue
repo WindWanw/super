@@ -186,7 +186,7 @@
       append-to-body
       @close="form.uids=''"
     >
-      <el-form label-width="120px" :model="form" ref="form">
+      <el-form label-width="150px" :model="form" ref="form">
         <el-form-item label="已存在的马甲id" v-if="vestIdTag">
           <template v-for="item in vestIdTag">
             <el-tag

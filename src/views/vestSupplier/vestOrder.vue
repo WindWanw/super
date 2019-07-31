@@ -65,7 +65,7 @@
               </template>
             </el-table-column>
             <el-table-column prop="supplier_name" label="商户姓名" align="center"></el-table-column>
-            
+
             <el-table-column prop="amount" label="订单金额(元)" align="center"></el-table-column>
             <el-table-column prop="actual" label="实际金额(元)" align="center">
               <template slot-scope="scope">
@@ -92,19 +92,30 @@
             <el-table-column prop="status" label="订单状态" align="center">
               <template slot-scope="scope">
                 <el-tag
-                 class="mini-button"
                   :type="scope.row.status | payStatus"
                   size="mini"
                 >{{scope.row.status | orderStatus}}</el-tag>
               </template>
             </el-table-column>
             <el-table-column prop="user_name" label="消费者姓名" align="center"></el-table-column>
+            <el-table-column prop="order_goods" label="订单商品" align="center">
+              <template slot-scope="scope">
+                <el-button
+                  title="点击查看订单商品"
+                  class="mini-button"
+                  type="success"
+                  size="mini"
+                  icon="el-icon-view"
+                  @click="openOrderGoods(scope.row.order_goods)"
+                >订单商品</el-button>
+              </template>
+            </el-table-column>
             <el-table-column prop="tel" label="联系方式" align="center"></el-table-column>
             <el-table-column prop="address" label="收货地址" align="center"></el-table-column>
             <el-table-column label="操作" v-if="(status=='2' || status=='3' || status=='5')">
               <template slot-scope="scope">
                 <el-button
-                 class="mini-button"
+                  class="mini-button"
                   v-if="status=='2' && scope.row.order_type=='1'"
                   type="success"
                   size="mini"
@@ -136,6 +147,23 @@
         :total="dataList.total"
       ></el-pagination>
     </div>
+
+    <!-- 订单商品 -->
+    <el-dialog title="订单商品" :visible.sync="openOrderGoodsDialog">
+      <el-table :data="order_goods" stripe border v-loading="loading">
+        <el-table-column prop="title" label="商品名称" align="center"></el-table-column>
+        <el-table-column prop label="商品图片" align="center">
+          <template slot-scope="scope">
+            <img class="avatar" :src="scope.row.pics" />
+          </template>
+        </el-table-column>
+        <el-table-column prop="attr" label="商品属性" align="center">
+          <template slot-scope="scope">
+            <span>{{scope.row.goods_attr.attr_val}}</span>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-dialog>
 
     <!-- 发货dialog -->
     <el-dialog title="发货" :visible.sync="dialog" @close="orderNumber='';orderCompany=''">
@@ -238,7 +266,9 @@ export default {
       express_company: "",
       address: "",
       order_num: "", //订单编号
-      show: false //线上返回
+      show: false, //线上返回
+      openOrderGoodsDialog: false, //订单商品
+      order_goods: [] //订单商品列表
     };
   },
   mounted: function() {},
@@ -285,22 +315,14 @@ export default {
 
     getBack() {
       this.loading = true;
-      this.$api
-        .vestOrderList({
-          page: 1,
-          limit: 10
-        })
-        .then(res => {
-          this.dataList = res.data || [];
-          this.loading = false;
-          this.show = false;
-          this.status = "0";
-          this.date = [];
-          this.name = "";
-          this.title = "";
-          this.order_num = "";
-          this.is_online = "";
-        });
+      this.show = false;
+      this.status = "0";
+      this.date = [];
+      this.name = "";
+      this.title = "";
+      this.order_num = "";
+      this.is_online = "";
+      this.getDataList();
     },
 
     //获取数据
@@ -322,6 +344,13 @@ export default {
           this.loading = false;
         });
     },
+
+    //订单商品
+    openOrderGoods(item) {
+      this.openOrderGoodsDialog = true;
+      this.order_goods = item;
+    },
+
     getVestSu() {
       this.$api.getVestSu().then(res => {
         this.suList = res.data.list || [];
@@ -373,5 +402,9 @@ export default {
   background-color: #fff;
   padding: 20px;
   box-sizing: border-box;
+}
+.avatar {
+  width: 50px;
+  height: 50px;
 }
 </style>

@@ -19,7 +19,7 @@
           <div class="item_right">
             <p>总专引师数</p>
             <p>
-              {{total.guideCount}}
+              {{total.guideCount}}({{total.vestGuide}})
               <span>个</span>
             </p>
           </div>

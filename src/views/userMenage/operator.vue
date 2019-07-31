@@ -16,10 +16,12 @@
           :picker-options="pickerOptions"
         ></el-date-picker>
         <el-button type="primary" icon="el-icon-search" size="small" @click="search">搜索</el-button>
+        <el-button type="success" size="mini" @click="beforeExport" icon="iconfont daochu">导出</el-button>
       </div>
     </div>
     <div class="content">
-      <el-table :data="dataList.list" stripe border style="width:100%" v-loading="loading">
+      <el-table :data="dataList.list" stripe border style="width:100%" v-loading="loading" class="need-table">
+        <el-table-column prop="id" label="用户id" align="center"></el-table-column>
         <el-table-column prop label="头像" align="center">
           <template slot-scope="scope">
             <img class="avatar" :src="scope.row.avatar" />
@@ -30,11 +32,11 @@
             slot-scope="scope"
           >{{scope.row.username}}{{scope.row.nickname ?"("+scope.row.nickname+")": ''}}</template>
         </el-table-column>
-        <el-table-column prop="gnum" label="马甲专引师数量" align="center"></el-table-column>
-        <el-table-column prop="reply" label="回复需求数" align="center"></el-table-column>
-        <el-table-column prop="unum" label="马甲消费者数量" align="center"></el-table-column>
         <el-table-column prop="need" label="发布需求数" align="center"></el-table-column>
-        
+        <el-table-column prop="unum" label="马甲消费者数量" align="center"></el-table-column> 
+        <el-table-column prop="reply" label="回复需求数" align="center"></el-table-column>
+        <el-table-column prop="gnum" label="马甲专引师数量" align="center"></el-table-column>
+         
       </el-table>
       <el-pagination
         background
@@ -50,6 +52,8 @@
   </div>
 </template>
 <script>
+import FileSaver from "file-saver";
+import XLSX from "xlsx";
 export default {
   data() {
     return {
@@ -96,6 +100,39 @@ export default {
   watch: {},
   components: {},
   methods: {
+
+    //导出之前
+    beforeExport() {
+      this.$confirm("确定导出当前页数据吗？(选择100条/页试试)")
+        .then(_ => {
+          this.exportExcel();
+        })
+        .catch(_ => {});
+    },
+    //导出
+    exportExcel() {
+      console.log("下载")
+      /* generate workbook object from table */
+      var wb = XLSX.utils.table_to_book(document.querySelector(".need-table"));
+console.log(wb);
+      /* get binary string as output */
+      var wbout = XLSX.write(wb, {
+        bookType: "xlsx",
+        bookSST: true,
+        type: "array"
+      });
+      try {
+        FileSaver.saveAs(
+          new Blob([wbout], { type: "application/octet-stream" }),
+          "statistics.xlsx"
+        );
+      } catch (e) {
+        if (typeof console !== "undefined") console.log(e, wbout);
+      }
+      return wbout;
+    },
+
+
     //获取数据列表
     getDataList() {
       this.loading = true;
