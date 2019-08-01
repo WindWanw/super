@@ -41,7 +41,7 @@
           :label="item.label"
           :name="item.name"
         >
-          <el-table :data="dataList.list" stripe border v-loading="loading">
+          <el-table :data="dataList.list" stripe border v-loading="loading" :height="height">
             <el-table-column type="expand">
               <template slot-scope="props">
                 <div class="expand_wrap">
@@ -154,6 +154,7 @@ export default {
   data() {
     return {
       loading: false,
+      height:false,
       pickerOptions: {
         //快捷键
         shortcuts: [
@@ -259,6 +260,9 @@ export default {
         })
         .then(res => {
           this.dataList = res.data || [];
+          if(res.data.total>=10){
+            this.height=750
+          }
           this.loading = false;
         });
     },

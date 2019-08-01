@@ -27,7 +27,7 @@
       </div>
     </div>
     <div class="content">
-      <el-table :data="tableData" border style="width: 100%">
+      <el-table :data="tableData" border style="width: 100%" :height="height">
         <el-table-column prop="order_sn" label="订单号" width="180"></el-table-column>
         <el-table-column prop="bill_time" label="交易时间" width="180"></el-table-column>
         <el-table-column prop="amount" label="总金额" width="180"></el-table-column>
@@ -58,6 +58,7 @@
 export default {
   data() {
     return {
+      height:false,
       tableData: [],
       page: 1,
       limit: 10,
@@ -77,6 +78,9 @@ export default {
         .then(res => {
           this.tableData = res.data.list || [];
           this.total = res.data.total || 0;
+          if(res.data.total>=10){
+            this.height=800
+          }
           if (res.code) {
             this.$message[res.code ? "warning" : "success"](res.data);
           }

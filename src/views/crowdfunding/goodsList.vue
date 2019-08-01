@@ -35,7 +35,7 @@
       </div>
     </div>
     <div class="content" style="width:100%;">
-      <el-table :data="dataList.list" border style="width: 100%;" v-loading="loading" stripe>
+      <el-table :data="dataList.list" border style="width: 100%;" v-loading="loading" stripe :height="height">
         <el-table-column prop="title" label="商品名称" align="center"></el-table-column>
         <el-table-column prop="goods_avatar" label="商品图片" align="center">
           <template slot-scope="scope">
@@ -347,6 +347,7 @@ export default {
   data() {
     return {
       loading: false,
+      height:false,
       pickerOptions: {
         //快捷键
         shortcuts: [
@@ -499,6 +500,9 @@ export default {
         })
         .then(res => {
           this.dataList = res.data || [];
+          if(res.data.total>=8){
+            this.height=600
+          }
           this.loading = false;
         });
     },

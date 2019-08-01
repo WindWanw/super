@@ -56,7 +56,7 @@
           :label="item.label"
           :name="item.name"
         >
-          <el-table :data="dataList.list" stripe border v-loading="loading" class="order-table">
+          <el-table :data="dataList.list" stripe border v-loading="loading" class="order-table" :height="height">
             <el-table-column prop="order_sn" label="订单编号" align="center"></el-table-column>
             <el-table-column prop="order_type" label="订单类型" align="center">
               <template slot-scope="scope">
@@ -207,6 +207,7 @@ export default {
   data() {
     return {
       loading: false,
+      height:false,
       pickerOptions: {
         //快捷键
         shortcuts: [
@@ -341,6 +342,9 @@ export default {
         })
         .then(res => {
           this.dataList = res.data || [];
+          if(res.data.total>=10){
+            this.height=750
+          }
           this.loading = false;
         });
     },

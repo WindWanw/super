@@ -34,7 +34,7 @@
       </div>
     </div>
     <div class="content">
-      <el-table :data="dataList.list" stripe border style="width:100%" v-loading="loading">
+      <el-table :data="dataList.list" stripe border style="width:100%" v-loading="loading" :height="height">
         <el-table-column prop="title" label="规则名称"></el-table-column>
         <el-table-column prop="price" label="金额"></el-table-column>
         <el-table-column prop="guidename" label="买券人"></el-table-column>
@@ -73,6 +73,7 @@ export default {
   data() {
     return {
       loading:false,
+      height:false,
       pickerOptions: {
         //快捷键
         shortcuts: [
@@ -128,6 +129,9 @@ export default {
         })
         .then(res => {
           this.dataList = res.data || [];
+          if(res.data.total>=10){
+            this.height=600
+          }
           if(res.code){
             this.$message[res.code ? "warning" : "success"](res.data);
          }

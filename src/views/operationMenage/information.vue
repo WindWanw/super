@@ -15,7 +15,7 @@
       </div>
     </div>
     <div class="content">
-      <el-table :data="dataList.list" stripe border v-loading="loading">
+      <el-table :data="dataList.list" stripe border v-loading="loading" :height="height">
         <el-table-column prop="id" label="ID" align="center"></el-table-column>
         <el-table-column prop label="资讯封面" align="center">
           <template slot-scope="scope">
@@ -158,6 +158,7 @@ export default {
       AddEditDialog: false,
       options: [],
       type: "",
+      height:false,
       form: {
         code: "",
         pics: [], //资讯封面图
@@ -197,6 +198,9 @@ export default {
         })
         .then(res => {
           this.dataList = res.data || [];
+          if(res.data.total>=8){
+            this.height=600
+          }
           if (res.code) {
             this.$message[res.code ? "warning" : "success"](res.data);
           }

@@ -25,7 +25,7 @@
           :label="item.label"
           :name="item.name"
         >
-          <el-table :data="dataList.list" stripe border style="width:100%" v-loading="loading">
+          <el-table :data="dataList.list" stripe border style="width:100%" v-loading="loading" :height="height">
             <el-table-column prop="to_name" label="被处罚对象"></el-table-column>
             <el-table-column prop="from_name" label="处罚申请人"></el-table-column>
             <el-table-column prop="types" label="处罚类型">
@@ -107,6 +107,7 @@ export default {
   data() {
     return {
       loading:false,
+      height:false,
       pickerOptions: {//快捷键
             shortcuts: [{
               text: '最近一周',
@@ -182,6 +183,9 @@ export default {
         })
         .then(res => {
           this.dataList = res.data || [];
+          if(res.data.total>=10){
+            this.height=600
+          }
           if(res.code){
             this.$message[res.code ? "warning" : "success"](res.data);
          }

@@ -29,7 +29,7 @@
           :label="item.label"
           :name="item.name"
         >
-          <el-table :data="dataList.list" style="width: 100%">
+          <el-table :data="dataList.list" style="width: 100%" :border="height">
             <el-table-column type="expand">
               <template slot-scope="props">
                 <el-form label-position="left" inline class="demo-table-expand">
@@ -223,6 +223,7 @@ export default {
         { label: "打款失败", name: "4" }
       ],
       loading: false,
+      height:false,
       dataList: [],
       page: 1,
       limit: 10,
@@ -254,6 +255,9 @@ export default {
         })
         .then(res => {
           this.dataList = res.data || [];
+          if(res.data.total>=10){
+            this.height=600
+          }
           if (res.code) {
             this.$message[res.code ? "warning" : "success"](res.data);
           }

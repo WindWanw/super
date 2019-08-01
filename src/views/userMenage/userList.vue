@@ -64,7 +64,7 @@
           :label="item.label"
           :name="item.name"
         >
-          <el-table :data="dataList.list" stripe border v-loading="loading" ref="table">
+          <el-table :data="dataList.list" stripe border v-loading="loading" ref="table" :height="height">
             <el-table-column type="expand">
               <template slot-scope="scope">
                 <el-table :data="scope.row.vestUser" stripe border style="width:100%">
@@ -215,6 +215,7 @@ export default {
   data() {
     return {
       loading: false,
+      height:false,
       pickerOptions: {
         //快捷键
         shortcuts: [
@@ -292,6 +293,9 @@ export default {
         })
         .then(res => {
           this.dataList = res.data || [];
+          if(res.data.total>=10){
+            this.height=750
+          }
           if (res.code) {
             this.$message[res.code ? "warning" : "success"](res.data);
           }

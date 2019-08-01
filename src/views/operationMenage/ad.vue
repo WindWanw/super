@@ -31,7 +31,7 @@
       </div>
     </div>
     <div class="content">
-      <el-table :data="dataList.list" stripe border v-loading="loading">
+      <el-table :data="dataList.list" stripe border v-loading="loading" :height="height">
         <el-table-column prop="city" label="城市" align="center"></el-table-column>
         <el-table-column prop="ads" label="广告图" align="center">
           <template slot-scope="scope">
@@ -160,6 +160,7 @@ export default {
   data() {
     return {
       loading: false,
+      height:false,
       dataList: [], //数据源
       page: 1, //页
       limit: 10, //条
@@ -220,6 +221,9 @@ export default {
         })
         .then(res => {
           this.dataList = res.data || [];
+          if(res.data.total>=10){
+            this.height=600
+          }
           if (res.code) {
             this.$message[res.code ? "warning" : "success"](res.data);
           }

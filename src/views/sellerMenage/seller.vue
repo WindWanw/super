@@ -29,7 +29,7 @@
       </div>
     </div>
     <div class="content">
-      <el-table :data="dataList.list" stripe border v-loading="loading" @cell-click="toGoodlist">
+      <el-table :data="dataList.list" stripe border v-loading="loading" @cell-click="toGoodlist" :height="height">
         <el-table-column type="expand">
           <template slot-scope="props">
             <div class="expand_wrap">
@@ -233,6 +233,7 @@ export default {
   data() {
     return {
       loading:false,
+      height:false,
       rules: {
         username: [
           { required: true, message: "账号不能为空", trigger: "blur" }
@@ -390,6 +391,9 @@ export default {
         .then(res => {
             console.log(res);
           this.dataList = res.data || [];
+          if(res.data.total>=10){
+            this.height=600
+          }
           if(res.code){
             this.$message[res.code ? "warning" : "success"](res.data);
          }
