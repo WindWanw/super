@@ -138,4 +138,10 @@ html,
   border-radius: 3px;
   padding: 3px 6px !important;
 }
+.el-menu-item i {
+    color: #fff;
+}
+.el-submenu__title i {
+    color: #fff;
+}
 </style>

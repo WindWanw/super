@@ -6,10 +6,26 @@
      </div>
      
      <div class="right">
-       <theme-picker></theme-picker>
+       <!-- <theme-picker></theme-picker> -->
        <i class="iconfont zhanghao"></i>
        <span class="username">{{username}}</span>
-       <i class="iconfont dengchu" title="注销登录" @click="loginout"></i>
+       <el-dropdown>
+        <span class="el-dropdown-link">
+          <i class="iconfont dengchu"></i>
+        </span>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item>
+            <span @click="openEditPassword">
+              <i class="iconfont mima"></i>修改密码
+            </span>
+          </el-dropdown-item>
+          <el-dropdown-item>
+            <span @click="loginout">
+              <i class="iconfont daochu1"></i>退出登录
+            </span>
+          </el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
      </div>
    </div>
 </template>
@@ -39,6 +55,9 @@ import ThemePicker from "@/components/themePicker";
           .catch(_ => {
             
           });
+     },
+     openEditPassword(){
+       this.$router.replace('/userSetting');
      }
    }
   }
@@ -81,5 +100,9 @@ import ThemePicker from "@/components/themePicker";
 .iconfont.dengchu{
   font-size: 18px;
   cursor: pointer;
+}
+.dengchu {
+  font-size: 12px;
+  color: #fff;
 }
 </style>
