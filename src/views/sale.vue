@@ -89,7 +89,7 @@
             <el-table-column label="操作" v-if="status=='2' || status=='3'">
               <template slot-scope="scope">
                 <el-button
-                 class="mini-button"
+                  class="mini-button"
                   v-if="status=='2'"
                   type="success"
                   size="mini"
@@ -97,7 +97,7 @@
                   icon="iconfont daichuli"
                 >处理</el-button>
                 <el-button
-                 class="mini-button"
+                  class="mini-button"
                   v-if="status=='3'"
                   type="primary"
                   size="mini"
@@ -154,7 +154,7 @@ export default {
   data() {
     return {
       loading: false,
-      height:false,
+      height: 100,
       pickerOptions: {
         //快捷键
         shortcuts: [
@@ -260,8 +260,12 @@ export default {
         })
         .then(res => {
           this.dataList = res.data || [];
-          if(res.data.total>=10){
-            this.height=750
+          this.height=100;
+          let t = res.data.total;
+          if (t >= 10) {
+            this.height = 750;
+          } else if (t != 0) {
+            this.height = t * 100;
           }
           this.loading = false;
         });
@@ -281,16 +285,16 @@ export default {
 
     //处理
     handle() {
-      if(this.form.status='3'){
-        this.form.result='';
+      if ((this.form.status = "3")) {
+        this.form.result = "";
       }
-      if(this.form.status=='4' && this.form.result==''){
+      if (this.form.status == "4" && this.form.result == "") {
         this.$notify({
-          title: '警告',
-          message: '请填写拒绝原因',
-          type: 'warning'
+          title: "警告",
+          message: "请填写拒绝原因",
+          type: "warning"
         });
-        return ;
+        return;
       }
       this.$api.suProcess(this.form).then(res => {
         this.$message(res.data.message);

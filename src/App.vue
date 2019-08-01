@@ -4,7 +4,25 @@
   </div>
 </template>
 <script>
-export default {};
+export default {
+  methods: {
+    checkLogin() {
+      this.$api.checkLogin().then(res => {
+        if (res.code == 114 || localStorage.getItem("token") == "") {
+          Message.error("您的登录已失效，请重新登录");
+          router.push("/login");
+          localStorage.clear("token");
+          localStorage.clear("userinfo");
+        } else {
+          console.log("欢迎")
+        }
+      });
+    }
+  },
+  created() {
+    this.checkLogin();
+  }
+};
 </script>
 <style>
 * {

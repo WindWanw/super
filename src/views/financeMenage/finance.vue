@@ -29,7 +29,7 @@
           :label="item.label"
           :name="item.name"
         >
-          <el-table :data="dataList.list" style="width: 100%" :border="height">
+          <el-table :data="dataList.list" style="width: 100%" :height="height">
             <el-table-column type="expand">
               <template slot-scope="props">
                 <el-form label-position="left" inline class="demo-table-expand">
@@ -108,6 +108,7 @@
             <el-table-column label="状态" prop="status">
               <template slot-scope="scope">
                 <el-button
+                class="mini-button"
                   :type="scope.row.status | withdrawStatus"
                   size="mini"
                 >{{scope.row.status | withdrawText}}</el-button>
@@ -116,24 +117,28 @@
             <el-table-column label="操作" prop="status">
               <template slot-scope="scope">
                 <el-button
+                class="mini-button"
                   type="primary"
                   @click="centerDialogVisible=true;id=scope.row.id"
                   v-if="scope.row.status == 0"
                   size="mini"
                 >审核通过</el-button>
                 <el-button
+                class="mini-button"
                   type="danger"
                   v-if="scope.row.status == 0"
                   @click="centerDialogVisible2=true;id=scope.row.id"
                   size="mini"
                 >驳回申请</el-button>
                 <el-button
+                class="mini-button"
                   type="success"
                   v-if="scope.row.status == 1"
                   @click="centerDialogVisible3=true;id=scope.row.id"
                   size="mini"
                 >确认打款</el-button>
                 <el-button
+                class="mini-button"
                   type="danger"
                   v-if="scope.row.status == 1"
                   @click="centerDialogVisible4=true;id=scope.row.id"
@@ -223,7 +228,7 @@ export default {
         { label: "打款失败", name: "4" }
       ],
       loading: false,
-      height:false,
+      height:100,
       dataList: [],
       page: 1,
       limit: 10,
@@ -255,9 +260,15 @@ export default {
         })
         .then(res => {
           this.dataList = res.data || [];
-          if(res.data.total>=10){
-            this.height=600
+          this.height=100;
+          let t = res.data.total;
+          console.log("t="+t)
+          if (t >= 10) {
+            this.height = 600;
+          } else if (t != 0) {
+            this.height = t * 90;
           }
+          console.log("height="+this.height)
           if (res.code) {
             this.$message[res.code ? "warning" : "success"](res.data);
           }

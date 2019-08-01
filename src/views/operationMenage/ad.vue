@@ -115,10 +115,10 @@
         <el-form-item label="广告链接">
           <el-input v-model="form.url" placeholder="请输入广告链接"></el-input>
         </el-form-item>
-        <el-form-item label="广告标题" :prop="form.pic?'':'title'">
+        <el-form-item label="广告标题" :prop="form.title?'':'title'">
           <el-input v-model="form.title" placeholder="请输入广告标题"></el-input>
         </el-form-item>
-        <el-form-item label="广告图片" :prop="form.title?'':'pic'">
+        <el-form-item label="广告图片" :prop="form.pic?'':'pic'">
           <el-upload
             :action="`${axios.defaults.baseURL}/common/upload/file/adv_upload_dir`"
             accept="image/jpeg, image/gif, image/png, image/bmp"
@@ -160,7 +160,7 @@ export default {
   data() {
     return {
       loading: false,
-      height:false,
+      height:100,
       dataList: [], //数据源
       page: 1, //页
       limit: 10, //条
@@ -169,7 +169,7 @@ export default {
       selectCity: [], //选择城市
       adsType: [], //广告类型
       type:'',
-      citycode:'',
+      citycode:[],
       keywords:'',
       date:[],
       city: "",
@@ -221,8 +221,12 @@ export default {
         })
         .then(res => {
           this.dataList = res.data || [];
-          if(res.data.total>=10){
-            this.height=600
+          this.height=100;
+          let t = res.data.total;
+          if (t >= 10) {
+            this.height = 750;
+          } else if (t != 0) {
+            this.height = t * 120;
           }
           if (res.code) {
             this.$message[res.code ? "warning" : "success"](res.data);

@@ -6,6 +6,9 @@ export default {
     login(params) {
         return fetchPost('/admin/login', params)
     },
+    checkLogin(params) {
+        return fetchPost('/admin/checkUserLogin', params)
+    },
     getVersions(params) {
         return fetchPost('/common/getVersions', params)
     },

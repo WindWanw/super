@@ -58,7 +58,7 @@
 export default {
   data() {
     return {
-      height:false,
+      height:100,
       tableData: [],
       page: 1,
       limit: 10,
@@ -78,8 +78,12 @@ export default {
         .then(res => {
           this.tableData = res.data.list || [];
           this.total = res.data.total || 0;
-          if(res.data.total>=10){
-            this.height=800
+          this.height=100;
+          let t = res.data.total;
+          if (t >= 10) {
+            this.height = 600;
+          } else if (t != 0) {
+            this.height = t * 70;
           }
           if (res.code) {
             this.$message[res.code ? "warning" : "success"](res.data);

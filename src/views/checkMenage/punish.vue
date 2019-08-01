@@ -107,7 +107,7 @@ export default {
   data() {
     return {
       loading:false,
-      height:false,
+      height:100,
       pickerOptions: {//快捷键
             shortcuts: [{
               text: '最近一周',
@@ -183,8 +183,12 @@ export default {
         })
         .then(res => {
           this.dataList = res.data || [];
-          if(res.data.total>=10){
-            this.height=600
+          this.height=100;
+          let t = res.data.total;
+          if (t >= 10) {
+            this.height = 600;
+          } else if (t != 0) {
+            this.height = t * 70;
           }
           if(res.code){
             this.$message[res.code ? "warning" : "success"](res.data);

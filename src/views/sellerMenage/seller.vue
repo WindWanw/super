@@ -233,7 +233,7 @@ export default {
   data() {
     return {
       loading:false,
-      height:false,
+      height:100,
       rules: {
         username: [
           { required: true, message: "账号不能为空", trigger: "blur" }
@@ -391,8 +391,12 @@ export default {
         .then(res => {
             console.log(res);
           this.dataList = res.data || [];
-          if(res.data.total>=10){
-            this.height=600
+          this.height=100;
+          let t = res.data.total;
+          if (t >= 10) {
+            this.height = 600;
+          } else if (t != 0) {
+            this.height = t * 70;
           }
           if(res.code){
             this.$message[res.code ? "warning" : "success"](res.data);
