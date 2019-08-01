@@ -347,7 +347,7 @@ export default {
           if (t >= 10) {
             this.height = 750;
           } else if (t != 0) {
-            this.height = t * 100;
+            this.height = t * 160;
           }
           this.loading = false;
         });
