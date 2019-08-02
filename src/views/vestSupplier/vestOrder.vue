@@ -56,7 +56,14 @@
           :label="item.label"
           :name="item.name"
         >
-          <el-table :data="dataList.list" stripe border v-loading="loading" class="order-table" :height="height">
+          <el-table
+            :data="dataList.list"
+            stripe
+            border
+            v-loading="loading"
+            class="order-table"
+            :height="height"
+          >
             <el-table-column prop="order_sn" label="订单编号" align="center"></el-table-column>
             <el-table-column prop="order_type" label="订单类型" align="center">
               <template slot-scope="scope">
@@ -169,14 +176,25 @@
     <el-dialog title="发货" :visible.sync="dialog" @close="orderNumber='';orderCompany=''">
       <el-form label-width="100px">
         <el-form-item label="目的地">
-          <el-input v-model="address"></el-input>
+          <el-input v-model="address" readonly></el-input>
+        </el-form-item>
+        <el-form-item label="物流公司">
+          <el-select v-model="orderCompany" placeholder="请选择物流公司" @change="getExpressCompany()">
+            <el-option
+              v-for="item in expressList"
+              :key="item.val"
+              :label="item.label"
+              :value="item.label"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item v-if="QTshow">
+          <el-input v-model="QTCompany" placeholder="请输入物流公司名称"></el-input>
         </el-form-item>
         <el-form-item label="物流单号">
           <el-input v-model="orderNumber" placeholder="请输入物流单号"></el-input>
         </el-form-item>
-        <el-form-item label="物流公司">
-          <el-input v-model="orderCompany" placeholder="请输入物流公司"></el-input>
-        </el-form-item>
+        
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialog = false">取 消</el-button>
@@ -187,13 +205,13 @@
     <el-dialog title="查看物流" :visible.sync="exdialog">
       <el-form label-width="100px">
         <el-form-item label="目的地">
-          <el-input v-model="address"></el-input>
+          <el-input v-model="address" readonly></el-input>
         </el-form-item>
         <el-form-item label="物流单号">
-          <el-input v-model="express_number"></el-input>
+          <el-input v-model="express_number" readonly></el-input>
         </el-form-item>
         <el-form-item label="物流公司">
-          <el-input v-model="express_company"></el-input>
+          <el-input v-model="express_company" readonly></el-input>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -207,7 +225,7 @@ export default {
   data() {
     return {
       loading: false,
-      height:100,
+      height: 150,
       pickerOptions: {
         //快捷键
         shortcuts: [
@@ -263,13 +281,16 @@ export default {
       guideId: "", //专引师id
       orderNumber: "", //物流单号
       orderCompany: "", //物流公司
+      QTCompany: "", //其他物流公司
       express_number: "",
       express_company: "",
       address: "",
       order_num: "", //订单编号
       show: false, //线上返回
       openOrderGoodsDialog: false, //订单商品
-      order_goods: [] //订单商品列表
+      order_goods: [], //订单商品列表
+      expressList: [], //快递公司列表
+      QTshow: false
     };
   },
   mounted: function() {},
@@ -342,7 +363,7 @@ export default {
         })
         .then(res => {
           this.dataList = res.data || [];
-          this.height=100;
+          this.height = 150;
           let t = res.data.total;
           if (t >= 10) {
             this.height = 750;
@@ -379,20 +400,37 @@ export default {
     //确认发货
     sendGoods() {
       if (!this.orderNumber) return this.$message.warning("请输入物流单号");
-      if (!this.orderCompany) return this.$message.warning("请输入物公司");
+      if (!this.orderCompany) return this.$message.warning("请输入物物公司名称");
       this.$api
         .sendGoods({
           id: this.orderId,
           guide_id: this.guideId,
           express_number: this.orderNumber,
-          company: this.orderCompany
+          company: this.orderCompany,
+          qtcompany:this.QTCompany
         })
         .then(res => {
-          this.dialog = res.code ? true : false;
           this.$message[res.code ? "warning" : "success"](res.data.message);
+          
           if (res.code) return;
+          this.dialog = false;
           this.getDataList();
         });
+    },
+    getExpress() {
+      this.$api.getExpress().then(res => {
+        this.expressList = res.data.list || [];
+      });
+    },
+    getExpressCompany() {
+      console.log(this.orderCompany);
+
+      if (this.orderCompany == "其他") {
+        this.QTshow=true;
+      }else{
+        this.QTshow=false;
+        this.QTCompany='';
+      }
     },
     clickitem(e) {
       e === this.is_online ? (this.is_online = "") : (this.is_online = e);
@@ -401,6 +439,7 @@ export default {
   created() {
     this.getVestSu();
     this.getDataList();
+    this.getExpress();
   }
 };
 </script>

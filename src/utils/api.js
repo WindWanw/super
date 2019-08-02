@@ -252,6 +252,9 @@ export default {
     sendGoods(params) {
         return fetchPost('/orders/sh_express_add', params)
     },
+    getExpress(params) {
+        return fetchPost('/orders/getExpress', params)
+    },
 
     /**
      * @售后管理
