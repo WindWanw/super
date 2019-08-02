@@ -62,10 +62,16 @@
       </div>
     </div>
     <!--设置权限 -->
-    <el-dialog title="设置用户权限" width="750px" :visible.sync="openRoutDialog" append-to-body>
+    <el-dialog
+      title="设置用户权限"
+      width="750px"
+      :visible.sync="openRoutDialog"
+      append-to-body
+      @close="closeRoutDialog()"
+    >
       <el-form label-width="120px" :model="rout" ref="rout" :rules="rules">
         <el-form-item label="角色类型" prop="genre">
-          <el-select v-model="rout.genre" placeholder="请选择角色类型">
+          <el-select v-model="rout.genre" placeholder="请选择角色类型" @change="getGenreType()">
             <el-option
               v-for="item in genreList.list"
               :key="item.val"
@@ -81,6 +87,8 @@
             node-key="path"
             ref="tree"
             highlight-current
+            :default-checked-keys="selected"
+            :default-expanded-keys=[]
             :props="defaultProps"
           ></el-tree>
         </el-form-item>
@@ -249,6 +257,7 @@ import citys from "../utils/province.js";
 export default {
   data() {
     return {
+      selected: [], //选中
       tabList: [
         { label: "单个设置", name: "0" },
         { label: "批量设置", name: "1" }
@@ -290,8 +299,8 @@ export default {
         num: "",
         pics: [],
         citycode: [], //选择城市
-        type: "_U" ,//用户类型
-        vtype:'0'
+        type: "_U", //用户类型
+        vtype: "0"
       },
       rout: {
         genre: "",
@@ -356,6 +365,21 @@ export default {
         this.authList = res.data || [];
       });
     },
+
+    getGenreType() {
+      console.log(this.rout.genre);
+      this.$refs.tree.setCheckedKeys([]);
+      this.$api.getUserRouting({ type: this.rout.genre }).then(res => {
+        if (!res.code) this.selected = res.data.list;
+        console.log(this.selected);
+      });
+    },
+
+    closeRoutDialog() {
+      this.rout.genre='';
+      this.$refs.tree.setCheckedKeys([]);
+    },
+
     //修改密码
     openEditPassword(item) {
       this.retrieveDialog = true;
@@ -413,14 +437,12 @@ export default {
         this.$message("请正确填写用户数");
         return;
       }
-      if(this.vest.pics.length==0){
-        this.$message("请上传至少一张头像图")
-        return ;
+      if (this.vest.pics.length == 0) {
+        this.$message("请上传至少一张头像图");
+        return;
       }
 
-      this.$api.setVestUserInfo(
-        this.vest
-      ).then(res => {
+      this.$api.setVestUserInfo(this.vest).then(res => {
         if (res.code) return;
         this.vestuid = res.data.list;
         this.openVestDialog = false;

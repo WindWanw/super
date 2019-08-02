@@ -97,6 +97,8 @@
                     <template slot-scope="scope">{{scope.row.times | formatTimeStamp(1)}}</template>
                   </el-table-column>
                   <el-table-column prop="use" label="使用次数" align="center"></el-table-column>
+                  <el-table-column prop="needs" label="发布需求数" align="center"></el-table-column>
+                  <el-table-column prop="reply" label="回复需求数" align="center"></el-table-column>
                   <el-table-column prop="nickname" label="昵称" align="center"></el-table-column>
                   <el-table-column label="操作" align="center">
                     <template slot-scope="prop">

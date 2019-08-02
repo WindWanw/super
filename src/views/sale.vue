@@ -154,7 +154,7 @@ export default {
   data() {
     return {
       loading: false,
-      height: 100,
+      height: 150,
       pickerOptions: {
         //快捷键
         shortcuts: [
@@ -260,12 +260,12 @@ export default {
         })
         .then(res => {
           this.dataList = res.data || [];
-          this.height=100;
+          this.height=150;
           let t = res.data.total;
           if (t >= 10) {
             this.height = 750;
           } else if (t != 0) {
-            this.height = t * 100;
+            this.height = t * 150;
           }
           this.loading = false;
         });
