@@ -173,7 +173,7 @@
     </el-dialog>
 
     <!-- 发货dialog -->
-    <el-dialog title="发货" :visible.sync="dialog" @close="orderNumber='';orderCompany=''">
+    <el-dialog title="发货" :visible.sync="dialog" @close="orderNumber='';orderCompany='';QTshow=false">
       <el-form label-width="100px">
         <el-form-item label="目的地">
           <el-input v-model="address" readonly></el-input>
