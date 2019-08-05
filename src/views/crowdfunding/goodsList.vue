@@ -45,14 +45,17 @@
         <el-table-column prop="tag" label="所属分类" align="center"></el-table-column>
         <el-table-column prop="price" label="原价(元)" align="center"></el-table-column>
         <el-table-column prop="current_price" label="现价(元)" align="center"></el-table-column>
-        <el-table-column prop="num" label="库存" align="center"></el-table-column>
+        <!-- <el-table-column prop="num" label="库存" align="center"></el-table-column> -->
         <el-table-column prop="times" label="上架日期" align="center">
           <template slot-scope="scope">{{scope.row.times | formatTimeStamp}}</template>
         </el-table-column>
-        <el-table-column prop="active_times" label="活动时间" align="center">
-          <template slot-scope="scope">{{scope.row.active_times | formatTimeStamp(1)}}</template>
+        <el-table-column prop="active_times" label="活动时间" align="center" width="250px">
+          <template slot-scope="scope">
+            <div style="color:#436EEE">开始时间：{{scope.row.active_times[0]}}</div>
+            <div style="color:#CD2626">结束时间：{{scope.row.active_times[1]}}</div>
+          </template>
         </el-table-column>
-        <el-table-column prop="express_times" label="发货时间" align="center">
+        <el-table-column prop="express_times" label="发货时间" align="center" width="180px;">
           <template slot-scope="scope">{{scope.row.express_times | formatTimeStamp(1)}}</template>
         </el-table-column>
         <el-table-column prop="join" label="参与人数" align="center"></el-table-column>
@@ -133,13 +136,23 @@
             <template slot="append">元</template>
           </el-input>
         </el-form-item>
-        <el-form-item prop="num" label="库存">
+        <!-- <el-form-item prop="num" label="库存">
           <el-input v-model="form.num" placeholder="请输入商品库存"></el-input>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item prop="active_times" label="活动时间">
           <div class="block">
-            <el-date-picker v-model="form.active_times" type="datetime" placeholder="选择日期时间"></el-date-picker>
+            <el-date-picker
+              v-model="form.active_times"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              type="datetimerange"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期">
+            </el-date-picker>
           </div>
+          <!-- <div class="block">
+            <el-date-picker v-model="form.active_times" type="datetime" placeholder="选择日期时间"></el-date-picker>
+          </div> -->
         </el-form-item>
         <el-form-item prop="express_times" label="发货时间">
           <div class="block">
@@ -300,11 +313,11 @@
                 ></el-input>
               </template>
             </el-table-column>
-            <el-table-column prop="attr_num" label="库存" align="center">
+            <!-- <el-table-column prop="attr_num" label="库存" align="center">
               <template slot-scope="scope">
                 <el-input v-model="scope.row.attr_num" placeholder="请填写库存" clearable></el-input>
               </template>
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column prop="imgurl" label="商品图片" align="center">
               <template slot-scope="scope">
                 <el-upload
@@ -391,7 +404,7 @@ export default {
         current_price: [
           { required: true, message: "商品现价必须填写", trigger: "blur" }
         ],
-        num: [{ required: true, message: "商品库存不能为空", trigger: "blur" }],
+        // num: [{ required: true, message: "商品库存不能为空", trigger: "blur" }],
         active_times: [
           { required: true, message: "活动时间必须填写", trigger: "blur" }
         ],
@@ -438,8 +451,8 @@ export default {
         title: "",
         price: "", //原价
         current_price: "", //现价
-        num: "",
-        addnum: "", //增加的库存数量
+        // num: "",
+        // addnum: "", //增加的库存数量
         pics: [],
         info: "",
         video: "",
@@ -547,7 +560,6 @@ export default {
           attr_val: [],
           attr_price: "",
           attr_current_price: "",
-          attr_num: "",
           imgurl: ""
         });
       }
@@ -558,7 +570,6 @@ export default {
         attr_val: [],
         attr_price: "",
         attr_current_price: "",
-        attr_num: "",
         imgurl: ""
       });
     },

@@ -18,7 +18,7 @@ export default {
     },
     //获取通知消息
     getMessageList(params) {
-        return fetchPost('/admin/messageAudit', params)
+        return fetchPost('/admin/getNotify', params)
     },
 
     /**

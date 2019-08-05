@@ -23,66 +23,81 @@
       </div>
     </div>
     <div class="content">
-      <el-table :data="dataList.list" stripe border style="width:100%" v-loading="loading" :height="height">
-        <el-table-column type="expand">
-          <template slot-scope="props">
-            <div class="expand_wrap" v-if="props.row.idcard!=''">
-              <!-- <p>
+      <el-tabs type="border-card" v-model="gtype" @tab-click="tabClick">
+        <el-tab-pane
+          v-for="(item,index) in tabList"
+          :key="index"
+          :label="item.label"
+          :name="item.name"
+        >
+          <el-table
+            :data="dataList.list"
+            stripe
+            border
+            style="width:100%"
+            v-loading="loading"
+            :height="height"
+          >
+            <el-table-column type="expand">
+              <template slot-scope="props">
+                <div class="expand_wrap" v-if="props.row.idcard!=''">
+                  <!-- <p>
                 <span>手机号码:</span>
                 {{props.row.tel}}
-              </p> -->
-              <p>
-                <span>身份证号码:</span>
-                {{props.row.idcard}}
-              </p>
-              <p>
-                <span>身份证正反面:</span>
-                <img class="idcard_img" :src="props.row.picOn" />
-                <img class="idcard_img" :src="props.row.picOff" />
-              </p>
-            </div>
-            <div v-else>
-              <span>无实名信息</span>
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column prop="username" label="用户名" align="center"></el-table-column>
-        <el-table-column prop="city" label="专引城市" align="center"></el-table-column>
-        <el-table-column prop="tel" label="联系方式" align="center"></el-table-column>
-        <el-table-column prop="tag" label="标签" align="center">
-          <template slot-scope="scope">
-            <template v-for="(item,index) in scope.row.tag">
-              <el-tag type="mini" v-if="index<3" :key="item">{{item}}</el-tag>
-            </template>
-          </template>
-        </el-table-column>
-        <el-table-column prop="times" label="注册时间" align="center">
-        </el-table-column>
-        <el-table-column prop label="账号状态" align="center">
-          <template slot-scope="scope">
-            <el-button
-              :title="scope.row.status=='1'?'点击禁用':'点击解除禁用'"
-              @click="userStop(scope.row.id)"
-              :type="scope.row.status=='1'?'success':'info'"
-              size="mini"
-               class="mini-button"
-            >{{scope.row.status | userStatus}}</el-button>
-          </template>
-        </el-table-column>
-        <el-table-column prop label="操作">
-          <template slot-scope="scope">
-            <div class="cz_btn">
-              <el-button
-                @click="openPunishDialog(scope.row)"
-                type="warning"
-                size="mini"
-                icon="el-icon-edit-outline"
-                 class="mini-button"
-              >处罚</el-button>
-            </div>
-          </template>
-        </el-table-column>
-      </el-table>
+                  </p>-->
+                  <p>
+                    <span>身份证号码:</span>
+                    {{props.row.idcard}}
+                  </p>
+                  <p>
+                    <span>身份证正反面:</span>
+                    <img class="idcard_img" :src="props.row.picOn" />
+                    <img class="idcard_img" :src="props.row.picOff" />
+                  </p>
+                </div>
+                <div v-else>
+                  <span>无实名信息</span>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column prop="username" label="用户名" align="center"></el-table-column>
+            <el-table-column prop="city" label="专引城市" align="center"></el-table-column>
+            <el-table-column prop="tel" label="联系方式" align="center"></el-table-column>
+            <el-table-column prop="tag" label="标签" align="center">
+              <template slot-scope="scope">
+                <template v-for="(item,index) in scope.row.tag">
+                  <el-tag type="mini" v-if="index<3" :key="item">{{item}}</el-tag>
+                </template>
+              </template>
+            </el-table-column>
+            <el-table-column prop="times" label="注册时间" align="center"></el-table-column>
+            <el-table-column prop label="账号状态" align="center">
+              <template slot-scope="scope">
+                <el-button
+                  :title="scope.row.status=='1'?'点击禁用':'点击解除禁用'"
+                  @click="userStop(scope.row.id)"
+                  :type="scope.row.status=='1'?'success':'info'"
+                  size="mini"
+                  class="mini-button"
+                >{{scope.row.status | userStatus}}</el-button>
+              </template>
+            </el-table-column>
+            <el-table-column prop label="操作">
+              <template slot-scope="scope">
+                <div class="cz_btn">
+                  <el-button
+                    @click="openPunishDialog(scope.row)"
+                    type="warning"
+                    size="mini"
+                    icon="el-icon-edit-outline"
+                    class="mini-button"
+                  >处罚</el-button>
+                </div>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-tab-pane>
+      </el-tabs>
       <el-pagination
         background
         @size-change="handleSizeChange"
@@ -130,7 +145,7 @@ export default {
   data() {
     return {
       loading: false,
-      height:100,
+      height: 100,
       pickerOptions: {
         //快捷键
         shortcuts: [
@@ -163,9 +178,14 @@ export default {
           }
         ]
       },
+      tabList: [
+        { label: "专引师", name: "0" },
+        { label: "马甲专引师", name: "1" }
+      ],
       dataList: [],
       page: 1,
       limit: 10,
+      gtype: "0",
       times: "",
       shopname: "",
       status: 1,
@@ -198,11 +218,12 @@ export default {
           limit: this.limit,
           times: this.times,
           shopname: this.shopname,
-          status: this.status
+          status: this.status,
+          gtype: this.gtype
         })
         .then(res => {
           this.dataList = res.data || [];
-          this.height=100;
+          this.height = 100;
           let t = res.data.total;
           if (t >= 10) {
             this.height = 600;
@@ -274,6 +295,11 @@ export default {
           this.$message[res.code ? "warning" : "success"](res.data.message);
           this.punishDialog = res.code ? true : false;
         });
+    },
+    tabClick(val) {
+      this.utype = val.name;
+      this.page = 1;
+      this.getDataList();
     }
   },
   created() {

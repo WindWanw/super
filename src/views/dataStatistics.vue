@@ -85,8 +85,14 @@
           <b>￥{{total.cards.total}}</b>
         </div>
         <div class="countTable">
-           <span>交易额统计</span> 
-          <el-select size="mini" style="width:100px;" @change="selectTable" v-model="value" placeholder="7天">
+          <span>交易额统计</span>
+          <el-select
+            size="mini"
+            style="width:100px;"
+            @change="selectTable"
+            v-model="value"
+            placeholder="7天"
+          >
             <el-option
               v-for="item in options"
               :key="item.value"
@@ -186,9 +192,26 @@ export default {
     //获取通知消息
     getMessageList() {
       this.$api.getMessageList().then(res => {
-        this.messageList = res.data || [];
+        if (!res.code) {
+          this.$notify({
+            title: "注意",
+            message: res.data.message,
+            iconClass: "iconfont ic_wait",
+            onClick:this.toVestOrder(),
+            onClose:this.toVestOrder(),
+            duration: 0
+          });
+          this.$notify.close();
+          this.toVestOrder()
+        }
       });
     },
+
+    toVestOrder() {
+      console.log(12)
+      // this.$router.push({ path: "/vestOrder" });
+    },
+
     toCitySupplier() {
       this.$router.push({ path: "/citySupplier" });
     },
@@ -302,7 +325,7 @@ export default {
 .progress-box .time {
   width: 100px;
 }
-.countTable{
+.countTable {
   display: flex;
   justify-content: space-between;
 }
