@@ -42,7 +42,7 @@ export default {
 
     checkLogin() {
       this.$api.checkLogin().then(res => {
-        if (res.code == 114 || localStorage.getItem("token") == "") {
+        if (res.code == 114) {
           Message.error("您的登录已失效，请重新登录");
           router.push("/login");
           localStorage.clear("token");
