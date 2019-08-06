@@ -58,8 +58,8 @@ import ThemePicker from "@/components/themePicker";
      },
      openEditPassword(){
        this.$router.replace('/userSetting');
-     }
-   }
+     },
+   },
   }
 </script>
 

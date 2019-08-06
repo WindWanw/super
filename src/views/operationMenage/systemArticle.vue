@@ -8,7 +8,13 @@
         @click="openAddEditDialog('add')"
       >添加文章</el-button>
       <div class="searchText">
-        <el-select clearable v-model="type" placeholder="请选择文章类型搜索默认全部" size="small">
+        <el-select
+          clearable
+          v-model="type"
+          placeholder="请选择文章类型搜索默认全部"
+          size="small"
+          @keyup.enter.native="search"
+        >
           <el-option v-for="item in options" :key="item.val" :label="item.label" :value="item.val"></el-option>
         </el-select>
         <el-button type="primary" icon="el-icon-search" size="small" @click="search">搜索</el-button>
@@ -154,7 +160,7 @@ export default {
         })
         .then(res => {
           this.dataList = res.data || [];
-          this.height=100;
+          this.height = 100;
           let t = res.data.total;
           if (t >= 10) {
             this.height = 600;

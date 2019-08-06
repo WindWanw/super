@@ -191,25 +191,18 @@ export default {
     },
     //获取通知消息
     getMessageList() {
-      this.$api.getMessageList().then(res => {
+      let _this = this;
+      _this.$api.getNotify().then(res => {
         if (!res.code) {
-          this.$notify({
-            title: "注意",
+          _this.$notify({
+            title: "新的订单",
             message: res.data.message,
             iconClass: "iconfont ic_wait",
-            onClick:this.toVestOrder(),
-            onClose:this.toVestOrder(),
-            duration: 0
+            offset: 50,
+            duration: 10000
           });
-          this.$notify.close();
-          this.toVestOrder()
         }
       });
-    },
-
-    toVestOrder() {
-      console.log(12)
-      // this.$router.push({ path: "/vestOrder" });
     },
 
     toCitySupplier() {
@@ -228,8 +221,8 @@ export default {
   },
   created() {
     this.getTotal();
-    this.getMessageList();
     this.countDatas();
+    this.getMessageList();
   }
 };
 </script>

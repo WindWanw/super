@@ -16,6 +16,7 @@
           placeholder="请输入持卡人姓名"
           size="small"
           style="width:200px;margin:0 10px"
+           @keyup.enter.native="search"
         ></el-input>
         <el-button type="primary" size="small" @click="search" icon="el-icon-search">搜索</el-button>
       </div>

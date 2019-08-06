@@ -16,6 +16,7 @@
           placeholder="请输入订单编号"
           size="small"
           style="width:200px"
+          @keyup.enter.native="search"
         ></el-input>申请时间：
         <el-date-picker
           style="margin:0 10px"
@@ -260,7 +261,7 @@ export default {
         })
         .then(res => {
           this.dataList = res.data || [];
-          this.height=150;
+          this.height = 150;
           let t = res.data.total;
           if (t >= 10) {
             this.height = 750;

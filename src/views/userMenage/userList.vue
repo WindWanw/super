@@ -12,6 +12,7 @@
           placeholder="请输入用户名"
           size="small"
           style="width:200px"
+          @keyup.enter.native="search"
         ></el-input>
         <el-input
           clearable
@@ -19,8 +20,9 @@
           placeholder="请输入城市名称"
           size="small"
           style="width:200px;margin:0 10px"
+          @keyup.enter.native="search"
         ></el-input>
-        <el-select clearable v-model="sex" placeholder="请选择用户性别" size="small" style="margin:0 10px">
+        <el-select clearable v-model="sex" placeholder="请选择用户性别" size="small" style="margin:0 10px" @keyup.enter.native="search">
           <el-option label="男" :value="1"></el-option>
           <el-option label="女" :value="0"></el-option>
         </el-select>
@@ -30,6 +32,7 @@
           placeholder="请选择用户类型"
           size="small"
           style="margin:0 10px"
+          @keyup.enter.native="search"
         >
           <el-option label="正常" :value="1"></el-option>
           <el-option label="禁用" :value="-1"></el-option>

@@ -8,8 +8,8 @@
         @click="openAddEditDialog('add')"
       >添加商户</el-button> -->
       <div class="search_wrap">
-        <el-input clearable v-model="name" placeholder="按姓名搜索" size="small" style="width:200px"></el-input>
-        <el-select clearable v-model="status" placeholder="请选择用户类型" size="small" style="margin:0 10px">
+        <el-input clearable v-model="name" placeholder="按姓名搜索" size="small" style="width:200px" @keyup.enter.native="search"></el-input>
+        <el-select clearable v-model="status" placeholder="请选择用户类型" size="small" style="margin:0 10px" @keyup.enter.native="search">
           <el-option label="正常" :value="1"></el-option>
           <el-option label="禁用" :value="-1"></el-option>
         </el-select>

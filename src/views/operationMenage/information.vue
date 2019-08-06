@@ -8,7 +8,13 @@
         @click="openAddEditDialog('add')"
       >添加资讯</el-button>
       <div class="searchText">
-        <el-select clearable v-model="type" placeholder="请选择资讯类型搜索" size="small">
+        <el-select
+          clearable
+          v-model="type"
+          placeholder="请选择资讯类型搜索"
+          size="small"
+          @keyup.enter.native="search"
+        >
           <el-option v-for="item in options" :key="item.val" :label="item.label" :value="item.val"></el-option>
         </el-select>
         <el-button type="primary" icon="el-icon-search" size="small" @click="search">搜索</el-button>
@@ -28,7 +34,7 @@
         <el-table-column prop="body" label="资讯内容" align="center">
           <template slot-scope="scope">
             <el-button
-             class="mini-button"
+              class="mini-button"
               size="mini"
               type="success"
               @click="form.body=scope.row.body;previewDialog=true"
@@ -43,14 +49,14 @@
           <template slot-scope="scope">
             <div class="cz_btn">
               <el-button
-               class="mini-button"
+                class="mini-button"
                 @click="openAddEditDialog('edit',scope.row)"
                 type="primary"
                 size="mini"
                 icon="el-icon-edit"
               >编辑</el-button>
               <el-button
-               class="mini-button"
+                class="mini-button"
                 @click="del(scope.row.id)"
                 type="danger"
                 size="mini"
@@ -158,7 +164,7 @@ export default {
       AddEditDialog: false,
       options: [],
       type: "",
-      height:100,
+      height: 100,
       form: {
         code: "",
         pics: [], //资讯封面图
@@ -166,7 +172,7 @@ export default {
         body: "",
         id: "",
         sort: "",
-        times:'',
+        times: ""
       },
       previewDialog: false, //预览资讯内容
       upLoading: false
@@ -198,7 +204,7 @@ export default {
         })
         .then(res => {
           this.dataList = res.data || [];
-          this.height=100;
+          this.height = 100;
           let t = res.data.total;
           if (t >= 10) {
             this.height = 750;

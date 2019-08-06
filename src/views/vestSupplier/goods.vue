@@ -10,8 +10,21 @@
       >返回</el-button>
       <span v-if="!show"></span>
       <div class="search_wrap">
-        <el-input clearable v-model="goodsname" placeholder="请输入商品名称" size="small" style="width:200px"></el-input>
-        <el-select v-model="su_id" clearable placeholder="请选择商户" size="small">
+        <el-input
+          clearable
+          v-model="goodsname"
+          placeholder="请输入商品名称"
+          size="small"
+          style="width:200px"
+          @keyup.enter.native="search"
+        ></el-input>
+        <el-select
+          v-model="su_id"
+          clearable
+          placeholder="请选择商户"
+          size="small"
+          @keyup.enter.native="search"
+        >
           <el-option
             v-for="item in suList"
             :key="item.supplier_id"
@@ -31,7 +44,7 @@
           end-placeholder="终止时间"
           :picker-options="pickerOptions"
         ></el-date-picker>
-        <el-radio-group v-model="status" size="mini" style="margin:0 10px">
+        <el-radio-group v-model="status" size="mini" style="margin:0 10px" @keyup.enter.native="search">
           <el-radio :label="1" @click.native.prevent="clickitem(1)">上架</el-radio>
           <el-radio :label="2" @click.native.prevent="clickitem(2)">下架</el-radio>
         </el-radio-group>
@@ -39,7 +52,14 @@
       </div>
     </div>
     <div class="content" style="width:100%;">
-      <el-table :data="dataList.list" border style="width: 100%;" v-loading="loading" stripe :height="height">
+      <el-table
+        :data="dataList.list"
+        border
+        style="width: 100%;"
+        v-loading="loading"
+        stripe
+        :height="height"
+      >
         <el-table-column prop="gid" label="ID" align="center"></el-table-column>
         <el-table-column prop label="商品图片" align="center">
           <template slot-scope="scope">
@@ -88,7 +108,7 @@ export default {
   data() {
     return {
       loading: false,
-      height:100,
+      height: 100,
       pickerOptions: {
         //快捷键
         shortcuts: [
@@ -124,7 +144,7 @@ export default {
       page: 1,
       limit: 10,
       su_id: "", //商户id
-      goodsname:"",//商品名称
+      goodsname: "", //商品名称
       date: [], //时间
       status: "", //上下架状态查询
       dataList: [],
@@ -148,19 +168,11 @@ export default {
     getBack() {
       this.loading = true;
       this.show = false;
-      this.$api
-        .getVestGoods({
-          page: 1,
-          limit: 10
-        })
-        .then(res => {
-          this.dataList = res.data || [];
-          this.loading = false;
-          this.su_id = "";
-          this.date = [];
-          this.status = "";
-          this.goodsname="";
-        });
+      this.su_id = "";
+      this.date = [];
+      this.status = "";
+      this.goodsname = "";
+      this.getDataList();
     },
     getVestSu() {
       this.$api.getVestSu().then(res => {
@@ -178,16 +190,16 @@ export default {
           su_id: this.su_id,
           date: this.date,
           status: this.status,
-          goodsname:this.goodsname,
+          goodsname: this.goodsname
         })
         .then(res => {
           this.dataList = res.data || [];
-          this.height=100;
+          this.height = 100;
           let t = res.data.total;
           if (t >= 10) {
             this.height = 750;
           } else if (t != 0) {
-            this.height = t * 100;
+            this.height = t * 130;
           }
           this.loading = false;
         });

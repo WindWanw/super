@@ -11,13 +11,21 @@
 
       <span v-if="!show"></span>
       <div class="search_wrap">
-        <el-input clearable v-model="name" placeholder="请输入招商者姓名" size="mini" style="width:200px"></el-input>
+        <el-input
+          clearable
+          v-model="name"
+          placeholder="请输入招商者姓名"
+          size="mini"
+          style="width:200px"
+          @keyup.enter.native="search"
+        ></el-input>
         <el-cascader
           size="mini"
           :options="cityData"
           v-model="citycode"
           change-on-select
           placeholder="请选择城市搜索"
+          @keyup.enter.native="search"
         ></el-cascader>
         <el-date-picker
           style="margin:0 10px"
@@ -37,7 +45,14 @@
       </div>
     </div>
     <div class="content" style="width:100%">
-      <el-table :data="dataList.list" stripe border v-loading="loading" class="order-table" :height="height">
+      <el-table
+        :data="dataList.list"
+        stripe
+        border
+        v-loading="loading"
+        class="order-table"
+        :height="height"
+      >
         <el-table-column prop="name" label="招商者姓名" align="center"></el-table-column>
 
         <el-table-column prop="tel" label="联系电话" align="center"></el-table-column>
@@ -53,7 +68,7 @@
           <template slot-scope="scope">
             <div class="cz_btn">
               <el-button
-               class="mini-button"
+                class="mini-button"
                 @click="del(scope.row.id)"
                 type="danger"
                 size="mini"
@@ -85,7 +100,7 @@ export default {
   data() {
     return {
       loading: false,
-      height:100,
+      height: 100,
       pickerOptions: {
         //快捷键
         shortcuts: [
@@ -193,7 +208,7 @@ export default {
         })
         .then(res => {
           this.dataList = res.data || [];
-          this.height=100;
+          this.height = 100;
           let t = res.data.total;
           if (t >= 10) {
             this.height = 600;

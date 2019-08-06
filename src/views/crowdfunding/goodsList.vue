@@ -11,8 +11,22 @@
       <span v-if="!show"></span>
       <div class="search_wrap">
         <el-button type="primary" icon="el-icon-plus" size="mini" @click="addEditCrowd('add')">添加</el-button>
-        <el-input clearable v-model="name" placeholder="请输入关键字" size="mini" style="width:200px"></el-input>
-        <el-select v-model="cate" clearable placeholder="请选择所属分类" size="mini" style="margin:0 10px">
+        <el-input
+          clearable
+          v-model="name"
+          placeholder="请输入关键字"
+          size="mini"
+          style="width:200px"
+          @keyup.enter.native="search"
+        ></el-input>
+        <el-select
+          v-model="cate"
+          clearable
+          placeholder="请选择所属分类"
+          size="mini"
+          style="margin:0 10px"
+          @keyup.enter.native="search"
+        >
           <el-option v-for="item in goodsCate" :key="item.id" :label="item.tag" :value="item.tag"></el-option>
         </el-select>上架时间：
         <el-date-picker
@@ -27,7 +41,12 @@
           end-placeholder="终止时间"
           :picker-options="pickerOptions"
         ></el-date-picker>
-        <el-radio-group v-model="status" size="mini" style="margin:0 10px">
+        <el-radio-group
+          v-model="status"
+          size="mini"
+          style="margin:0 10px"
+          @keyup.enter.native="search"
+        >
           <el-radio :label="1" @click.native.prevent="clickitem(1)">上架</el-radio>
           <el-radio :label="2" @click.native.prevent="clickitem(2)">下架</el-radio>
         </el-radio-group>
@@ -35,7 +54,14 @@
       </div>
     </div>
     <div class="content" style="width:100%;">
-      <el-table :data="dataList.list" border style="width: 100%;" v-loading="loading" stripe :height="height">
+      <el-table
+        :data="dataList.list"
+        border
+        style="width: 100%;"
+        v-loading="loading"
+        stripe
+        :height="height"
+      >
         <el-table-column prop="title" label="商品名称" align="center"></el-table-column>
         <el-table-column prop="goods_avatar" label="商品图片" align="center">
           <template slot-scope="scope">
@@ -138,7 +164,7 @@
         </el-form-item>
         <!-- <el-form-item prop="num" label="库存">
           <el-input v-model="form.num" placeholder="请输入商品库存"></el-input>
-        </el-form-item> -->
+        </el-form-item>-->
         <el-form-item prop="active_times" label="活动时间">
           <div class="block">
             <el-date-picker
@@ -147,12 +173,12 @@
               type="datetimerange"
               range-separator="至"
               start-placeholder="开始日期"
-              end-placeholder="结束日期">
-            </el-date-picker>
+              end-placeholder="结束日期"
+            ></el-date-picker>
           </div>
           <!-- <div class="block">
             <el-date-picker v-model="form.active_times" type="datetime" placeholder="选择日期时间"></el-date-picker>
-          </div> -->
+          </div>-->
         </el-form-item>
         <el-form-item prop="express_times" label="发货时间">
           <div class="block">
@@ -317,7 +343,7 @@
               <template slot-scope="scope">
                 <el-input v-model="scope.row.attr_num" placeholder="请填写库存" clearable></el-input>
               </template>
-            </el-table-column> -->
+            </el-table-column>-->
             <el-table-column prop="imgurl" label="商品图片" align="center">
               <template slot-scope="scope">
                 <el-upload
@@ -360,7 +386,7 @@ export default {
   data() {
     return {
       loading: false,
-      height:100,
+      height: 100,
       pickerOptions: {
         //快捷键
         shortcuts: [
@@ -513,12 +539,12 @@ export default {
         })
         .then(res => {
           this.dataList = res.data || [];
-          this.height=100;
+          this.height = 100;
           let t = res.data.total;
           if (t >= 10) {
             this.height = 750;
           } else if (t != 0) {
-            this.height = t * 100;
+            this.height = t * 120;
           }
           this.loading = false;
         });

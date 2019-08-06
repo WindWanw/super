@@ -2,7 +2,7 @@
   <div class="teacher">
     <div class="table_title">
       <div class="search_wrap">
-        <el-select clearable v-model="status" placeholder="请选择用户类型" size="small">
+        <el-select clearable v-model="status" placeholder="请选择用户类型" size="small" @keyup.enter.native="search">
           <el-option label="正常" :value="1"></el-option>
           <el-option label="禁用" :value="-1"></el-option>
         </el-select>

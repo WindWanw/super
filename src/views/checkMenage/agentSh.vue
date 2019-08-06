@@ -2,7 +2,7 @@
   <div class="agentSh">
     <div class="table_title">
       <div class="search_wrap">
-        <el-input clearable v-model="username" placeholder="请输入账号" size="small" style="width:200px"></el-input>
+        <el-input clearable v-model="username" placeholder="请输入账号" size="small" style="width:200px" @keyup.enter.native="search"></el-input>
         <el-date-picker
           style="margin:0 10px"
           value-format="timestamp"

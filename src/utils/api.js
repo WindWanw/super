@@ -17,7 +17,7 @@ export default {
         return fetchPost('/admin/adminCount', params)
     },
     //获取通知消息
-    getMessageList(params) {
+    getNotify(params) {
         return fetchPost('/admin/getNotify', params)
     },
 

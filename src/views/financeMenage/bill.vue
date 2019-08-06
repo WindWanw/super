@@ -9,6 +9,7 @@
             placeholder="请输入订单号"
             size="small"
             style="width:200px;margin:0 10px"
+            @keyup.enter.native="search"
           ></el-input>
           <el-button type="primary" size="small" @click="search" icon="el-icon-search">搜索</el-button>
         </div>
@@ -22,7 +23,13 @@
             value-format="timestamp"
             end-placeholder="结束日期"
           ></el-date-picker>
-          <el-button type="primary" size="small" style="margin-left:10px;" @click="daochu" icon="el-icon-search">导出</el-button>
+          <el-button
+            type="primary"
+            size="small"
+            style="margin-left:10px;"
+            @click="daochu"
+            icon="el-icon-search"
+          >导出</el-button>
         </div>
       </div>
     </div>
@@ -58,7 +65,7 @@
 export default {
   data() {
     return {
-      height:100,
+      height: 100,
       tableData: [],
       page: 1,
       limit: 10,
@@ -78,7 +85,7 @@ export default {
         .then(res => {
           this.tableData = res.data.list || [];
           this.total = res.data.total || 0;
-          this.height=100;
+          this.height = 100;
           let t = res.data.total;
           if (t >= 10) {
             this.height = 600;
@@ -129,10 +136,9 @@ export default {
 .el-button + .el-button {
   margin-left: 0;
 }
-.search_wrap{
+.search_wrap {
   display: flex;
   justify-content: space-between;
   width: 100%;
 }
-
 </style>

@@ -2,7 +2,14 @@
   <div class="order">
     <div class="table_title">
       <div class="search_wrap">
-        <el-select v-model="is_online" class="selectOrder" clearable placeholder="请选择订单类型">
+        <el-select
+          v-model="is_online"
+          size="mini"
+          class="selectOrder"
+          clearable
+          placeholder="请选择订单类型"
+          @keyup.enter.native="search"
+        >
           <el-option
             v-for="item in order_typeList"
             :key="item.value"
@@ -10,7 +17,14 @@
             :value="item.val"
           ></el-option>
         </el-select>
-        <el-input clearable v-model="name" placeholder="请输入订单" size="small" style="width:200px"></el-input>
+        <el-input
+          clearable
+          v-model="name"
+          placeholder="请输入订单"
+          size="mini"
+          style="width:200px"
+          @keyup.enter.native="search"
+        ></el-input>
         <el-date-picker
           style="margin:0 10px"
           value-format="timestamp"
@@ -84,7 +98,7 @@ export default {
   data() {
     return {
       loading: false,
-      height:100,
+      height: 100,
       pickerOptions: {
         //快捷键
         shortcuts: [
@@ -164,7 +178,7 @@ export default {
         })
         .then(res => {
           this.dataList = res.data || [];
-          this.height=100;
+          this.height = 100;
           let t = res.data.total;
           if (t >= 10) {
             this.height = 750;
