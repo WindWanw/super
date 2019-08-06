@@ -1,18 +1,22 @@
 <template>
   <div class="agent">
     <div class="table_title">
-      <el-button
-        type="primary"
-        size="small"
-        icon="el-icon-plus"
-        @click="openAddEditDialog('add')"
-      >添加代理商</el-button>
+      <div>
+        <el-button
+          v-if="isShow"
+          type="primary"
+          size="mini"
+          class="el-icon-d-arrow-left"
+          @click="back()"
+        >返回</el-button>
+      </div>
       <div class="search_wrap">
+        
         <el-input
           clearable
           v-model="username"
           placeholder="请输入账号"
-          size="small"
+          size="mini"
           style="width:200px"
           @keyup.enter.native="search"
         ></el-input>
@@ -20,7 +24,7 @@
           clearable
           v-model="status"
           placeholder="请选择用户类型"
-          size="small"
+          size="mini"
           style="margin: 0 10px"
           @keyup.enter.native="search"
         >
@@ -29,7 +33,7 @@
         </el-select>
         <el-date-picker
           value-format="timestamp"
-          size="small"
+          size="mini"
           v-model="date"
           type="daterange"
           align="right"
@@ -42,10 +46,16 @@
         <el-button
           type="primary"
           icon="el-icon-search"
-          size="small"
+          size="mini"
           @click="search"
           style="margin-left:10px"
         >搜索</el-button>
+        <el-button
+          type="primary"
+          size="mini"
+          icon="el-icon-plus"
+          @click="openAddEditDialog('add')"
+        >添加代理商</el-button>
       </div>
     </div>
     <div class="content" style="width:100%">
@@ -208,6 +218,7 @@ export default {
   data() {
     return {
       loading: false,
+      isShow:false,
       height: 100,
       pickerOptions: {
         //快捷键
@@ -341,6 +352,17 @@ export default {
     search() {
       this.page = 1;
       this.getDataList();
+      this.isShow=true;
+    },
+
+    back(){
+      this.page=1;
+      this.limit=10;
+      this.date="";
+      this.status="";
+      this.username="";
+      this.getDataList();
+      this.isShow=false;
     },
     // 打开添加或修改
     openAddEditDialog(type, item) {

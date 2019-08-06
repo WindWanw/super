@@ -14,14 +14,14 @@
           clearable
           v-model="order_sn"
           placeholder="请输入订单编号"
-          size="small"
+          size="mini"
           style="width:200px"
           @keyup.enter.native="search"
         ></el-input>申请时间：
         <el-date-picker
           style="margin:0 10px"
           value-format="timestamp"
-          size="small"
+          size="mini"
           v-model="date"
           type="daterange"
           align="right"
@@ -31,7 +31,7 @@
           end-placeholder="终止时间"
           :picker-options="pickerOptions"
         ></el-date-picker>
-        <el-button type="primary" icon="el-icon-search" size="small" @click="search">搜索</el-button>
+        <el-button type="primary" icon="el-icon-search" size="mini" @click="search">搜索</el-button>
       </div>
     </div>
     <div class="content" style="width:100%">

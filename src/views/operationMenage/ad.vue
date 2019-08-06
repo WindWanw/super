@@ -1,12 +1,18 @@
 <template>
   <div class="ad">
     <div class="table_title">
-      <div>
-        <el-button type="primary" size="small" @click="goBack">返回</el-button>
-      </div>
+        <div>
+          <el-button
+            v-if="isShow"
+            type="primary"
+            size="mini"
+            class="el-icon-d-arrow-left"
+            @click="back()"
+          >返回</el-button>
+        </div>
       <div class="search_wrap">
         <el-select
-          size="small"
+          size="mini"
           v-model="type"
           class="selectOrder"
           clearable
@@ -21,7 +27,7 @@
           ></el-option>
         </el-select>
         <el-cascader
-          size="small"
+          size="mini"
           :options="cityData"
           v-model="citycode"
           change-on-select
@@ -33,12 +39,12 @@
           style="margin:0 10px"
           type="primary"
           icon="el-icon-search"
-          size="small"
+          size="mini"
           @click="search"
         >搜索</el-button>
         <el-button
           type="primary"
-          size="small"
+          size="mini"
           icon="el-icon-plus"
           @click="openAddEditDialog('add')"
         >添加广告</el-button>
@@ -174,6 +180,7 @@ export default {
   data() {
     return {
       loading: false,
+      isShow: false,
       height: 100,
       dataList: [], //数据源
       page: 1, //页
@@ -344,12 +351,14 @@ export default {
     search() {
       this.page = 1;
       this.getDataList();
+      this.isShow = true;
     },
-    goBack() {
+    back() {
       this.keywords = "";
       this.type = "";
       this.citycode = [];
       this.getDataList();
+      this.isShow = false;
     }
   },
 

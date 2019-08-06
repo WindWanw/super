@@ -190,9 +190,10 @@ export default {
     getBack() {
       this.loading = true;
       this.name = "";
-      this.times = "";
-      this.citycode = "";
+      this.date = [];
+      this.citycode = [];
       this.getDataList();
+      this.show=false;
     },
 
     //获取数据

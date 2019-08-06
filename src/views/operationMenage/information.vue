@@ -1,23 +1,39 @@
 <template>
   <div class="systemArticle">
     <div class="table_title">
-      <el-button
-        type="primary"
-        size="small"
-        icon="el-icon-plus"
-        @click="openAddEditDialog('add')"
-      >添加资讯</el-button>
+      <div>
+        <el-button
+          v-if="isShow"
+          type="primary"
+          size="mini"
+          class="el-icon-d-arrow-left"
+          @click="back()"
+        >返回</el-button>
+      </div>
       <div class="searchText">
         <el-select
           clearable
           v-model="type"
           placeholder="请选择资讯类型搜索"
-          size="small"
+          size="mini"
           @keyup.enter.native="search"
         >
           <el-option v-for="item in options" :key="item.val" :label="item.label" :value="item.val"></el-option>
         </el-select>
-        <el-button type="primary" icon="el-icon-search" size="small" @click="search">搜索</el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-search"
+          size="mini"
+          @click="search"
+          style="margin : 0 0 0 5px;"
+        >搜索</el-button>
+        <el-button
+          type="primary"
+          size="mini"
+          icon="el-icon-plus"
+          @click="openAddEditDialog('add')"
+          style="margin : 0 0 0 5px;"
+        >添加资讯</el-button>
       </div>
     </div>
     <div class="content">
@@ -156,6 +172,7 @@ export default {
   data() {
     return {
       loading: false,
+      isShow: false,
       test: "",
       isClear: false,
       dataList: [], //数据源
@@ -276,6 +293,14 @@ export default {
     search() {
       this.page = 1;
       this.getDataList();
+      this.isShow = true;
+    },
+    back() {
+      this.page = 1;
+      this.limit = 10;
+      this.type = "";
+      this.getDataList();
+      this.isShow = false;
     },
     //上次图片前
     beforeUp1(file) {

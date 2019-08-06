@@ -1,10 +1,13 @@
 <template>
   <div class="teacherSh">
     <div class="table_title">
+      <div>
+        <el-button v-if="isShow" type="primary" size="mini" class="el-icon-d-arrow-left" @click="back()">返回</el-button>
+      </div>
       <div class="search_wrap">
         <el-date-picker
           value-format="timestamp"
-          size="small"
+          size="mini"
           v-model="times"
           type="daterange"
           align="right"
@@ -17,7 +20,7 @@
         <el-button
           type="primary"
           icon="el-icon-search"
-          size="small"
+          size="mini"
           @click="search"
           style="margin-left:10px"
         >搜索</el-button>
@@ -113,6 +116,7 @@ export default {
   data() {
     return {
       loading: false,
+      isShow:false,
       height:100,
       pickerOptions: {
         //快捷键
@@ -212,6 +216,16 @@ export default {
     search() {
       this.page = 1;
       this.getDataList();
+      this.isShow=true;
+    },
+
+    back(){
+      this.page=1;
+      this.limit=10;
+      this.status=0;
+      this.times="";
+      this.getDataList();
+      this.isShow=false;
     },
     //审核通过驳回
 

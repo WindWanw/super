@@ -1,37 +1,41 @@
 <template>
   <div class="bill">
     <div class="table_title">
+      <div>
+        <el-button
+          v-if="isShow"
+          type="primary"
+          size="mini"
+          class="el-icon-d-arrow-left"
+          @click="back()"
+        >返回</el-button>
+      </div>
       <div class="search_wrap">
-        <div>
           <el-input
             clearable
             v-model="order_sn"
             placeholder="请输入订单号"
-            size="small"
-            style="width:200px;margin:0 10px"
+            size="mini"
+            style="width:200px"
             @keyup.enter.native="search"
           ></el-input>
-          <el-button type="primary" size="small" @click="search" icon="el-icon-search">搜索</el-button>
-        </div>
-        <div>
           <el-date-picker
             v-model="times"
-            size="small"
+            size="mini"
             type="datetimerange"
             range-separator="至"
             start-placeholder="开始日期"
             value-format="timestamp"
             end-placeholder="结束日期"
           ></el-date-picker>
+          <el-button type="primary" size="mini" @click="search" icon="el-icon-search" style="margin:0 5px 0 5px;">搜索</el-button>
           <el-button
-            type="primary"
-            size="small"
-            style="margin-left:10px;"
+            type="success"
+            size="mini"
             @click="daochu"
-            icon="el-icon-search"
+            icon="iconfont daochu"
           >导出</el-button>
         </div>
-      </div>
     </div>
     <div class="content">
       <el-table :data="tableData" border style="width: 100%" :height="height">
@@ -65,13 +69,14 @@
 export default {
   data() {
     return {
-      height: 100,
+      height: 150,
       tableData: [],
       page: 1,
       limit: 10,
       order_sn: "",
       total: 0,
-      times: ""
+      times: "",
+      isShow:false,
     };
   },
   methods: {
@@ -85,12 +90,12 @@ export default {
         .then(res => {
           this.tableData = res.data.list || [];
           this.total = res.data.total || 0;
-          this.height = 100;
+          this.height = 150;
           let t = res.data.total;
           if (t >= 10) {
             this.height = 600;
           } else if (t != 0) {
-            this.height = t * 70;
+            this.height = t * 120;
           }
           if (res.code) {
             this.$message[res.code ? "warning" : "success"](res.data);
@@ -108,7 +113,16 @@ export default {
       this.bill();
     },
     search() {
+      this.page=1;
       this.bill();
+      this.isShow=true;
+    },
+    back(){
+      this.page=1;
+      this.limit=10;
+      this.order_sn="";
+      this.bill();
+      this.isShow=false;
     },
     daochu() {
       window.location.href =
@@ -136,9 +150,5 @@ export default {
 .el-button + .el-button {
   margin-left: 0;
 }
-.search_wrap {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-}
+
 </style>

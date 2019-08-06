@@ -10,7 +10,6 @@
       >返回</el-button>
       <span v-if="!show"></span>
       <div class="search_wrap">
-        <el-button type="primary" icon="el-icon-plus" size="mini" @click="addEditCrowd('add')">添加</el-button>
         <el-input
           clearable
           v-model="name"
@@ -51,6 +50,13 @@
           <el-radio :label="2" @click.native.prevent="clickitem(2)">下架</el-radio>
         </el-radio-group>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="search">搜索</el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-plus"
+          size="mini"
+          @click="addEditCrowd('add')"
+          style="margin:0 0 0 5px;"
+        >添加</el-button>
       </div>
     </div>
     <div class="content" style="width:100%;">
@@ -560,15 +566,21 @@ export default {
     },
     //商品上下架
     upDown(id, status) {
-      this.$api
-        .goodUpDown({
-          id,
-          status: status == 1 ? 2 : 1
+      this.$confirm(status == 1 ? "确定要下架吗?" : "确定要上架吗?")
+        .then(_ => {
+          this.$api
+            .goodUpDown({
+              id,
+              status: status == 1 ? 2 : 1
+            })
+            .then(res => {
+              this.$message[res.code ? "warning" : "success"](res.data.message);
+              if (res.code) return;
+              this.getDataList();
+            });
         })
-        .then(res => {
-          this.$message[res.code ? "warning" : "success"](res.data.message);
-          if (res.code) return;
-          this.getDataList();
+        .catch(_ => {
+          this.$message("取消操作");
         });
     },
 

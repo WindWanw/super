@@ -7,6 +7,15 @@
         icon="el-icon-plus"
         @click="openAddEditDialog('add')"
       >添加代金券</el-button>-->
+      <div>
+        <el-button
+          v-if="isShow"
+          type="primary"
+          size="mini"
+          class="el-icon-d-arrow-left"
+          @click="back()"
+        >返回</el-button>
+      </div>
       <div class="search_wrap">
         <!-- <el-input clearable v-model="username" placeholder="" size="small" style="width:200px"></el-input> -->
         <el-select
@@ -46,7 +55,7 @@
         <el-button
           type="primary"
           icon="el-icon-search"
-          size="small"
+          size="mini"
           @click="search"
           style="margin-left:10px"
         >搜索</el-button>
@@ -101,6 +110,7 @@ export default {
   data() {
     return {
       loading: false,
+      isShow:false,
       height: 100,
       pickerOptions: {
         //快捷键
@@ -184,7 +194,17 @@ export default {
     search() {
       this.page = 1;
       this.getDataList();
-    }
+      this.isShow=true;
+    },
+    back(){
+      this.page=1;
+      this.limit=10;
+      this.type="";
+      this.times="";
+      this.used_time="";
+      this.getDataList();
+      this.isShow=false;
+    },
   },
   created() {
     this.getDataList();

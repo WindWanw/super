@@ -1,6 +1,9 @@
 <template>
   <div class="agentSh">
     <div class="table_title">
+      <div>
+        <el-button v-if="isShow" type="primary" size="mini" class="el-icon-d-arrow-left" @click="back()">返回</el-button>
+      </div>
       <div class="search_wrap">
         <el-input clearable v-model="username" placeholder="请输入账号" size="small" style="width:200px" @keyup.enter.native="search"></el-input>
         <el-date-picker
@@ -103,6 +106,7 @@ export default {
   data() {
     return {
       loading: false,
+      isShow:false,
       height:100,
       pickerOptions: {
         //快捷键
@@ -204,9 +208,20 @@ export default {
     search() {
       this.page = 1;
       this.getDataList();
+      this.isShow=true;
     },
-    //审核通过驳回
 
+    back(){
+      this.page=1;
+      this.limit=10;
+      this.status=2;
+      this.times="";
+      this.username="";
+      this.getDataList();
+      this.isShow=false;
+    },
+
+    //审核通过驳回
     sure() {
       if (this.pass === "") {
         this.$message.warning("请选择通过或者驳回");

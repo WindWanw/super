@@ -1,20 +1,43 @@
 <template>
   <div class="sellerList">
     <div class="table_title">
+      <div>
+        <el-button
+          v-if="isShow"
+          type="primary"
+          size="mini"
+          class="el-icon-d-arrow-left"
+          @click="back()"
+        >返回</el-button>
+      </div>
       <!-- <el-button
         type="primary"
         size="small"
         icon="el-icon-plus"
         @click="openAddEditDialog('add')"
-      >添加商户</el-button> -->
+      >添加商户</el-button>-->
       <div class="search_wrap">
-        <el-input clearable v-model="name" placeholder="按姓名搜索" size="small" style="width:200px" @keyup.enter.native="search"></el-input>
-        <el-select clearable v-model="status" placeholder="请选择用户类型" size="small" style="margin:0 10px" @keyup.enter.native="search">
+        <el-input
+          clearable
+          v-model="name"
+          placeholder="按姓名搜索"
+          size="mini"
+          style="width:200px"
+          @keyup.enter.native="search"
+        ></el-input>
+        <el-select
+          clearable
+          v-model="status"
+          placeholder="请选择用户类型"
+          size="mini"
+          style="margin:0 10px"
+          @keyup.enter.native="search"
+        >
           <el-option label="正常" :value="1"></el-option>
           <el-option label="禁用" :value="-1"></el-option>
         </el-select>
         <el-date-picker
-          size="small"
+          size="mini"
           v-model="date"
           type="daterange"
           align="right"
@@ -25,17 +48,40 @@
           end-placeholder="结束日期"
           :picker-options="pickerOptions"
         ></el-date-picker>
-        <el-button @click="search" type="primary" icon="el-icon-search" size="small" style="margin-left:10px">搜索</el-button>
+        <el-button
+          @click="search"
+          type="primary"
+          icon="el-icon-search"
+          size="mini"
+          style="margin-left:10px"
+        >搜索</el-button>
       </div>
     </div>
     <div class="content">
-      <el-table :data="dataList.list" stripe border v-loading="loading" @cell-click="toGoodlist" :height="height">
+      <el-table
+        :data="dataList.list"
+        stripe
+        border
+        v-loading="loading"
+        @cell-click="toGoodlist"
+        :height="height"
+      >
         <el-table-column type="expand">
           <template slot-scope="props">
             <div class="expand_wrap">
-                <p><span>身份证号码:</span>{{props.row.idcard}}</p>
-                <p><span>身份证正反面:</span><img class="idcard_img" :src="props.row.picOn"><img class="idcard_img" :src="props.row.picOff"></p>
-                <p><span>营业执照:</span><img class="license_img" :src="props.row.license"></p>
+              <p>
+                <span>身份证号码:</span>
+                {{props.row.idcard}}
+              </p>
+              <p>
+                <span>身份证正反面:</span>
+                <img class="idcard_img" :src="props.row.picOn" />
+                <img class="idcard_img" :src="props.row.picOff" />
+              </p>
+              <p>
+                <span>营业执照:</span>
+                <img class="license_img" :src="props.row.license" />
+              </p>
             </div>
           </template>
         </el-table-column>
@@ -48,7 +94,7 @@
            <template slot-scope="scope">
               <el-button size="mini" type="success" @click="form.shop_info=scope.row.shop_info;previewDialog=true">预览</el-button>
             </template>
-        </el-table-column> -->
+        </el-table-column>-->
         <el-table-column prop="tel" label="手机号码"></el-table-column>
         <!-- <el-table-column prop="good_num" label="商品数量" ></el-table-column> -->
         <el-table-column prop="guide_num" label="专引师数量"></el-table-column>
@@ -58,10 +104,10 @@
         </el-table-column>
         <el-table-column prop label="账号状态">
           <template slot-scope="scope">
-             <!-- :title="scope.row.status=='1'?'点击禁用':'点击解除禁用'"
-              @click="userStop(scope.row.id)" -->
+            <!-- :title="scope.row.status=='1'?'点击禁用':'点击解除禁用'"
+            @click="userStop(scope.row.id)"-->
             <el-button
-             class="mini-button"
+              class="mini-button"
               size="mini"
               :type="scope.row.status=='1'?'success':'info'"
             >{{scope.row.status | userStatus}}</el-button>
@@ -70,8 +116,20 @@
 
         <el-table-column prop label="操作" width="300px">
           <template slot-scope="scope">
-            <el-button class="mini-button" @click="openPunishDialog(scope.row)" type="warning" size="mini" icon="el-icon-edit-outline">处罚</el-button>
-            <el-button class="mini-button" @click="openAddEditDialog('edit',scope.row)" type="primary" size="mini" icon="el-icon-edit">编辑</el-button>
+            <el-button
+              class="mini-button"
+              @click="openPunishDialog(scope.row)"
+              type="warning"
+              size="mini"
+              icon="el-icon-edit-outline"
+            >处罚</el-button>
+            <el-button
+              class="mini-button"
+              @click="openAddEditDialog('edit',scope.row)"
+              type="primary"
+              size="mini"
+              icon="el-icon-edit"
+            >编辑</el-button>
             <!-- <el-button @click="del(scope.row.id)" type="danger" size="mini" icon="el-icon-delete">删除</el-button> -->
           </template>
         </el-table-column>
@@ -98,14 +156,24 @@
     >
       <el-form status-icon :model="form" :rules="rules" ref="ruleForm" label-width="120px">
         <el-form-item label="城市">
-          <el-cascader :options="cityData" @change="currentCity" v-model="selectCity" change-on-select :placeholder="form.id?'如需修改请选择':'请选择城市'"></el-cascader>
+          <el-cascader
+            :options="cityData"
+            @change="currentCity"
+            v-model="selectCity"
+            change-on-select
+            :placeholder="form.id?'如需修改请选择':'请选择城市'"
+          ></el-cascader>
           <span v-if="form.id" style="margin-left:20px">当前城市:{{city}}</span>
         </el-form-item>
         <el-form-item v-if="!form.id" label="账号" :prop="form.id?'':'username'">
           <el-input type="username" v-model="form.username" placeholder="请输入账号"></el-input>
         </el-form-item>
         <el-form-item label="密码" :prop="form.id?'':'password'">
-          <el-input type="password" v-model="form.password" :placeholder="form.id?'不填默认不修改':'请输入密码'"></el-input>
+          <el-input
+            type="password"
+            v-model="form.password"
+            :placeholder="form.id?'不填默认不修改':'请输入密码'"
+          ></el-input>
         </el-form-item>
         <el-form-item label="手机号码" prop="tel">
           <el-input v-model="form.tel" placeholder="请输入手机号码"></el-input>
@@ -113,7 +181,7 @@
         <el-form-item label="姓名" prop="name">
           <el-input v-model="form.name" placeholder="请输入姓名"></el-input>
         </el-form-item>
-         <el-form-item label="店铺名" prop="shopname">
+        <el-form-item label="店铺名" prop="shopname">
           <el-input v-model="form.shopname" placeholder="请输入店铺名"></el-input>
         </el-form-item>
         <el-form-item label="商户类型" prop="shop_type">
@@ -126,7 +194,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-         <el-form-item label="谈判比例类型">
+        <el-form-item label="谈判比例类型">
           <template>
             <el-radio v-model="form.commission" label="1" @change="explanation">平台托管</el-radio>
             <el-radio v-model="form.commission" label="2" @change="explanation">自定义</el-radio>
@@ -147,11 +215,17 @@
         <el-form-item label="营业时间" prop="open_times">
           <el-input v-model="form.open_times" placeholder="请输入营业时间"></el-input>
         </el-form-item>
-           <el-form-item label="店铺头像" prop="shop_avatar">
-          <el-upload :action="`${axios.defaults.baseURL}/common/upload/file/upload_dir`" accept="image/jpeg,image/gif,image/png,image/bmp" :before-upload="beforeUp5" :show-file-list="false" :on-success="upSuc5">
+        <el-form-item label="店铺头像" prop="shop_avatar">
+          <el-upload
+            :action="`${axios.defaults.baseURL}/common/upload/file/upload_dir`"
+            accept="image/jpeg, image/gif, image/png, image/bmp"
+            :before-upload="beforeUp5"
+            :show-file-list="false"
+            :on-success="upSuc5"
+          >
             <el-button size="small" type="primary">点击上传</el-button>
           </el-upload>
-          <img v-if="form.shop_avatar" class="license_img" :src="form.shop_avatar">
+          <img v-if="form.shop_avatar" class="license_img" :src="form.shop_avatar" />
         </el-form-item>
         <el-form-item label="身份证号码" prop="idcard">
           <el-input v-model="form.idcard" placeholder="请输入身份证号码"></el-input>
@@ -166,25 +240,43 @@
           >
             <el-button size="small" type="primary">点击上传</el-button>
           </el-upload>
-            <img v-if="form.picOn" class="idcard_img" :src="form.picOn">
+          <img v-if="form.picOn" class="idcard_img" :src="form.picOn" />
         </el-form-item>
         <el-form-item label="身份证反面" prop="picOff">
-          <el-upload :action="`${axios.defaults.baseURL}/common/upload/file/sfz_upload_dir`" accept="image/jpeg,image/gif,image/png,image/bmp" :before-upload="beforeUp2" :show-file-list="false" :on-success="upSuc2">
+          <el-upload
+            :action="`${axios.defaults.baseURL}/common/upload/file/sfz_upload_dir`"
+            accept="image/jpeg, image/gif, image/png, image/bmp"
+            :before-upload="beforeUp2"
+            :show-file-list="false"
+            :on-success="upSuc2"
+          >
             <el-button size="small" type="primary">点击上传</el-button>
           </el-upload>
-          <img v-if="form.picOff" class="idcard_img" :src="form.picOff">
+          <img v-if="form.picOff" class="idcard_img" :src="form.picOff" />
         </el-form-item>
         <el-form-item label="营业执照" prop="license">
-          <el-upload :action="`${axios.defaults.baseURL}/common/upload/file/license_upload_dir`" accept="image/jpeg,image/gif,image/png,image/bmp" :before-upload="beforeUp3" :show-file-list="false" :on-success="upSuc3">
+          <el-upload
+            :action="`${axios.defaults.baseURL}/common/upload/file/license_upload_dir`"
+            accept="image/jpeg, image/gif, image/png, image/bmp"
+            :before-upload="beforeUp3"
+            :show-file-list="false"
+            :on-success="upSuc3"
+          >
             <el-button size="small" type="primary">点击上传</el-button>
           </el-upload>
-          <img v-if="form.license" class="license_img" :src="form.license">
+          <img v-if="form.license" class="license_img" :src="form.license" />
         </el-form-item>
-         <el-form-item label="其他证明材料" prop="other">
-          <el-upload :action="`${axios.defaults.baseURL}/common/upload/file/upload_dir`" accept="image/jpeg,image/gif,image/png,image/bmp" :before-upload="beforeUp4" :show-file-list="false" :on-success="upSuc4">
+        <el-form-item label="其他证明材料" prop="other">
+          <el-upload
+            :action="`${axios.defaults.baseURL}/common/upload/file/upload_dir`"
+            accept="image/jpeg, image/gif, image/png, image/bmp"
+            :before-upload="beforeUp4"
+            :show-file-list="false"
+            :on-success="upSuc4"
+          >
             <el-button size="small" type="primary">点击上传</el-button>
           </el-upload>
-          <img v-if="form.other" class="license_img" :src="form.other">
+          <img v-if="form.other" class="license_img" :src="form.other" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -194,20 +286,26 @@
     </el-dialog>
 
     <!-- 惩罚dialog -->
-    <el-dialog
-      title="惩罚"
-      :visible.sync="punishDialog"
-      label-width="120px"
-      width="30%">
+    <el-dialog title="惩罚" :visible.sync="punishDialog" label-width="120px" width="30%">
       <el-form :model="form">
         <el-form-item label="处罚类型">
           <el-select v-model="punishType" clearable placeholder="请选择处罚类型">
-            <el-option v-for="item in punishList" :key="item.value" :label="item.title" :value="item.val"></el-option>
+            <el-option
+              v-for="item in punishList"
+              :key="item.value"
+              :label="item.title"
+              :value="item.val"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="处罚内容" v-if="punishType">
           <el-select v-model="punishContent" clearable placeholder="请选择处罚内容">
-            <el-option v-for="item in punishContentList" :key="item.value" :label="item.label" :value="item"></el-option>
+            <el-option
+              v-for="item in punishContentList"
+              :key="item.value"
+              :label="item.label"
+              :value="item"
+            ></el-option>
           </el-select>
         </el-form-item>
       </el-form>
@@ -216,24 +314,25 @@
         <el-button type="primary" @click="punishSure">确 定</el-button>
       </span>
     </el-dialog>
-       <!-- 预览dialog -->
-        <el-dialog title="店铺详情" :visible.sync="previewDialog" width="800px" top="20px">
-          <div v-html="form.shop_info"></div>
-          <div slot="footer" class="dialog-footer">
-            <el-button @click="previewDialog = false">关闭</el-button>
-          </div>
-        </el-dialog>
+    <!-- 预览dialog -->
+    <el-dialog title="店铺详情" :visible.sync="previewDialog" width="800px" top="20px">
+      <div v-html="form.shop_info"></div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="previewDialog = false">关闭</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import citys from '../../utils/city.js';
-import { constants } from 'crypto';
+import citys from "../../utils/city.js";
+import { constants } from "crypto";
 export default {
   data() {
     return {
-      loading:false,
-      height:100,
+      loading: false,
+      isShow: false,
+      height: 100,
       rules: {
         username: [
           { required: true, message: "账号不能为空", trigger: "blur" }
@@ -260,8 +359,8 @@ export default {
         shopname: [
           { required: true, message: "店铺名不能为空", trigger: "blur" }
         ],
-        open_times:[
-           { required: true, message: "营业时间不能为空", trigger: "blur" }
+        open_times: [
+          { required: true, message: "营业时间不能为空", trigger: "blur" }
         ],
         license: [
           { required: true, message: "营业执照不能为空", trigger: "blur" }
@@ -300,65 +399,69 @@ export default {
         ]
       },
       username: "", //名称
-      name:"",
+      name: "",
       status: "", //用户状态
       date: "", //日期
       dataList: [], //数据源
       page: 1, //页
       limit: 10, //条
       AddEditDialog: false,
-      previewDialog:false,//预览文章内容
-      cityData:citys,//城市数据
-      selectCity:[],//选择城市
-      city:'',
+      previewDialog: false, //预览文章内容
+      cityData: citys, //城市数据
+      selectCity: [], //选择城市
+      city: "",
       form: {
-        username: '',
+        username: "",
         password: "",
         name: "",
-        shop_info: "",//商铺描述
-        shop_type:"", //商铺类型
-        commission:"",//分成比例  1为托管  2为自定义
-        discount:"",//折扣分成
+        shop_info: "", //商铺描述
+        shop_type: "", //商铺类型
+        commission: "", //分成比例  1为托管  2为自定义
+        discount: "", //折扣分成
         address: "",
         tel: "",
         idcard: "",
         picOn: "",
         picOff: "",
         license: "",
-        other:"",
-        shop_avatar:"",
-        shopname:"",
-        open_times:""
+        other: "",
+        shop_avatar: "",
+        shopname: "",
+        open_times: ""
       },
-      autoChecke: {//用户自动审核的相关信息
+      autoChecke: {
+        //用户自动审核的相关信息
         name: "",
         idcard: "",
         picOn: "",
         picOff: "",
         license: ""
       },
-      punishDialog:false,//处罚dialog
-      punishList:'',
-      punishContentList:'',
-      punishId:'',//处罚id
-      punishType:'',
-      punishContent:'',
-      types: [{ label: "线上非实体店", value: 1 }, { label: "线下实体店", value: 2 }],//商铺类型
+      punishDialog: false, //处罚dialog
+      punishList: "",
+      punishContentList: "",
+      punishId: "", //处罚id
+      punishType: "",
+      punishContent: "",
+      types: [
+        { label: "线上非实体店", value: 1 },
+        { label: "线下实体店", value: 2 }
+      ] //商铺类型
     };
   },
-  watch:{
-    punishType(newVal,oldVal){
+  watch: {
+    punishType(newVal, oldVal) {
       console.log(newVal);
-      this.punishList.forEach(item=>{
-        if(newVal==item.val){
-          this.punishContentList=item.type
+      this.punishList.forEach(item => {
+        if (newVal == item.val) {
+          this.punishContentList = item.type;
         }
-      })
-    },
+      });
+    }
   },
   components: {},
   methods: {
-      explanation() {
+    explanation() {
       this.$message({
         showClose: true,
         dangerouslyUseHTMLString: true,
@@ -371,7 +474,7 @@ export default {
     handleSizeChange(val) {
       this.limit = val;
       this.getDataList();
-    }, 
+    },
     //  切换page
     handleCurrentChange(val) {
       this.page = val;
@@ -379,7 +482,7 @@ export default {
     },
     //获取列表
     getDataList() {
-      this.loading=true;
+      this.loading = true;
       this.$api
         .getSellerList({
           page: this.page,
@@ -389,29 +492,40 @@ export default {
           name: this.name
         })
         .then(res => {
-            console.log(res);
+          console.log(res);
           this.dataList = res.data || [];
-          this.height=100;
+          this.height = 100;
           let t = res.data.total;
           if (t >= 10) {
             this.height = 600;
           } else if (t != 0) {
-            this.height = t * 70;
+            this.height = t * 120;
           }
-          if(res.code){
+          if (res.code) {
             this.$message[res.code ? "warning" : "success"](res.data);
-         }
-          this.loading=false;
+          }
+          this.loading = false;
         });
     },
-    currentCity(e){
-      console.log(e)
+    currentCity(e) {
+      console.log(e);
     },
 
     //查询用户
     search() {
       this.page = 1;
       this.getDataList();
+      this.isShow = true;
+    },
+
+    back() {
+      this.page = 1;
+      this.limit = 10;
+      this.status = "";
+      this.date = "";
+      this.name = "";
+      this.getDataList();
+      this.isShow = false;
     },
     // 停用
     userStop(id) {
@@ -435,13 +549,13 @@ export default {
     openAddEditDialog(type, item) {
       if (type == "add") {
         for (let i in this.form) {
-            this.form[i] = "";
+          this.form[i] = "";
         }
-        this.selectCity=[];
+        this.selectCity = [];
       } else {
         this.form.username = item.username;
-        this.form.password = item.password || '';
-        this.city=item.city;
+        this.form.password = item.password || "";
+        this.city = item.city;
         this.selectCity = [];
         this.form.name = item.name;
         this.form.tel = item.tel;
@@ -451,23 +565,23 @@ export default {
         this.form.picOn = item.picOn;
         this.form.picOff = item.picOff;
         this.form.license = item.license;
-        this.form.shop_info=item.shop_info;
-        this.form.shop_type=item.shop_type;
-        this.form.commission=item.commission;
-        this.form.discount=item.discount;
-        this.form.shopname=item.shopname;
-        this.form.shop_avatar=item.shop_avatar;
-        this.form.other=item.other;
-        this.form.open_times=item.open_times|| '';
+        this.form.shop_info = item.shop_info;
+        this.form.shop_type = item.shop_type;
+        this.form.commission = item.commission;
+        this.form.discount = item.discount;
+        this.form.shopname = item.shopname;
+        this.form.shop_avatar = item.shop_avatar;
+        this.form.other = item.other;
+        this.form.open_times = item.open_times || "";
       }
       this.AddEditDialog = true;
     },
     //上次图片前
     beforeUp1(file) {
-      if (file.size > 1024*2 * 1024) {
+      if (file.size > 1024 * 2 * 1024) {
         // 超出2m  取消上传
-        this.$message.warning('图片不能超过2MB')
-        return false
+        this.$message.warning("图片不能超过2MB");
+        return false;
       }
     },
     //上传成功后
@@ -501,7 +615,7 @@ export default {
         this.form.license = res.data.host + res.data.name;
       }
     },
-      //上次图片前
+    //上次图片前
     beforeUp4(file) {},
     //上传成功后
     upSuc4(res, file, fileList) {
@@ -512,7 +626,7 @@ export default {
         this.form.other = res.data.host + res.data.name;
       }
     },
-     beforeUp5(file) {},
+    beforeUp5(file) {},
     //上传成功后
     upSuc5(res, file, fileList) {
       console.log(res);
@@ -524,9 +638,10 @@ export default {
     },
     //确认添加/修改
     addEdit() {
-      let that=this;
-      if(!this.form.id){
-        if(!that.selectCity || !that.selectCity.length)return this.$message.warning('请选择城市');
+      let that = this;
+      if (!this.form.id) {
+        if (!that.selectCity || !that.selectCity.length)
+          return this.$message.warning("请选择城市");
       }
       this.autoChecke.name = this.form.name;
       this.autoChecke.idcard = this.form.idcard;
@@ -540,18 +655,18 @@ export default {
             password: that.form.password,
             tel: that.form.tel,
             citycode: that.selectCity,
-            id: that.form.id || '',
-            shop_type:that.form.shop_type,
-            discount:that.form.discount,
-            commission:that.form.commission,
-            shopname:that.form.shopname,
-            shop_info:that.form.shop_info,
-            address:that.form.address,
-            shop_avatar:that.form.shop_avatar||"",
-            autoChecke:that.autoChecke,
+            id: that.form.id || "",
+            shop_type: that.form.shop_type,
+            discount: that.form.discount,
+            commission: that.form.commission,
+            shopname: that.form.shopname,
+            shop_info: that.form.shop_info,
+            address: that.form.address,
+            shop_avatar: that.form.shop_avatar || "",
+            autoChecke: that.autoChecke,
             name: that.form.name,
-            open_times:that.form.open_times||"",
-            material:{
+            open_times: that.form.open_times || "",
+            material: {
               name: that.form.name,
               address: that.form.address,
               idcard: that.form.idcard,
@@ -559,8 +674,7 @@ export default {
               picOff: that.form.picOff,
               license: that.form.license,
               other: that.form.other
-            },
-            
+            }
           }).then(res => {
             that.$message[res.code ? "error" : "success"](res.data.message);
             if (!that.form.id) {
@@ -578,57 +692,61 @@ export default {
     del(id) {
       this.$confirm("确认删除该项吗?", "提示", { type: "warning" })
         .then(() => {
-          this.$api.delSeller({
-            id:id
-          })
-          .then(res=>{
-            this.$message[res.code?'error':'success'](res.data.message);
-            this.page=this.$options.filters.pagination(this.page,this.limit,this.dataList.total);
-            this.getDataList();
-          })
+          this.$api
+            .delSeller({
+              id: id
+            })
+            .then(res => {
+              this.$message[res.code ? "error" : "success"](res.data.message);
+              this.page = this.$options.filters.pagination(
+                this.page,
+                this.limit,
+                this.dataList.total
+              );
+              this.getDataList();
+            });
         })
         .catch(() => {
           this.$message.info("已取消删除");
         });
     },
-    
+
     //获取处罚类型
-    getPunishType(){
-      this.$api.getPunishType()
-      .then(res=>{
-        this.punishList=res.data;
-      })
+    getPunishType() {
+      this.$api.getPunishType().then(res => {
+        this.punishList = res.data;
+      });
     },
     //打开处罚dialoig
-    openPunishDialog(item){
+    openPunishDialog(item) {
       this.getPunishType();
-      this.punishId=item.id;
-      this.punishDialog=true;
-    },
-    
-    //确认处罚
-    punishSure(){
-      if(!this.punishType || !this.punishContent) return this.$message.warning('请处罚类型和处罚内容');
-      this.$api.addPunish({
-        to_uid:this.punishId,
-        types:this.punishType,
-        values:JSON.stringify(this.punishContent)
-      })
-      .then(res=>{
-        this.$message[res.code?'warning':'success'](res.data.message);
-        this.punishDialog=res.code?true:false;
-      })
-    },
-    toGoodlist(row,column,cell,event)
-    {
-      if(column.label=='商品数量'){
-        this.$router.push({path: '/goodList',query:{id:row.id}})
-      }
-      if(column.label=='专引师数量'){
-        this.$router.push({path: '/guidesList',query:{id:row.id}})
-      }
+      this.punishId = item.id;
+      this.punishDialog = true;
     },
 
+    //确认处罚
+    punishSure() {
+      if (!this.punishType || !this.punishContent)
+        return this.$message.warning("请处罚类型和处罚内容");
+      this.$api
+        .addPunish({
+          to_uid: this.punishId,
+          types: this.punishType,
+          values: JSON.stringify(this.punishContent)
+        })
+        .then(res => {
+          this.$message[res.code ? "warning" : "success"](res.data.message);
+          this.punishDialog = res.code ? true : false;
+        });
+    },
+    toGoodlist(row, column, cell, event) {
+      if (column.label == "商品数量") {
+        this.$router.push({ path: "/goodList", query: { id: row.id } });
+      }
+      if (column.label == "专引师数量") {
+        this.$router.push({ path: "/guidesList", query: { id: row.id } });
+      }
+    }
   },
   created() {
     this.getDataList();
