@@ -12,7 +12,7 @@
       <span v-if="!show"></span>
       <div class="search_wrap">
         <!-- <el-input clearable v-model="name" placeholder="请输入关键字" size="small" style="width:200px"></el-input> -->
-        <el-radio-group v-model="is_online" style="margin:0 10px">
+        <el-radio-group v-model="is_online" style="margin:0 10px" @keyup.enter.native="search">
           <el-radio label="1">线上订单</el-radio>
           <el-radio label="2">线下订单</el-radio>
         </el-radio-group>
@@ -22,8 +22,15 @@
           placeholder="请输入订单编号进行核销"
           size="small"
           style="width:200px"
+          @keyup.enter.native="search"
         ></el-input>
-        <el-select v-model="title" clearable placeholder="请选择商户" size="small">
+        <el-select
+          v-model="title"
+          clearable
+          placeholder="请选择商户"
+          size="small"
+          @keyup.enter.native="search"
+        >
           <el-option
             v-for="item in suList"
             :key="item.supplier_id"
@@ -173,7 +180,11 @@
     </el-dialog>
 
     <!-- 发货dialog -->
-    <el-dialog title="发货" :visible.sync="dialog" @close="orderNumber='';orderCompany='';QTshow=false">
+    <el-dialog
+      title="发货"
+      :visible.sync="dialog"
+      @close="orderNumber='';orderCompany='';QTshow=false"
+    >
       <el-form label-width="100px">
         <el-form-item label="目的地">
           <el-input v-model="address" readonly></el-input>
@@ -194,7 +205,6 @@
         <el-form-item label="物流单号">
           <el-input v-model="orderNumber" placeholder="请输入物流单号"></el-input>
         </el-form-item>
-        
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialog = false">取 消</el-button>
@@ -400,18 +410,19 @@ export default {
     //确认发货
     sendGoods() {
       if (!this.orderNumber) return this.$message.warning("请输入物流单号");
-      if (!this.orderCompany) return this.$message.warning("请输入物物公司名称");
+      if (!this.orderCompany)
+        return this.$message.warning("请输入物物公司名称");
       this.$api
         .sendGoods({
           id: this.orderId,
           guide_id: this.guideId,
           express_number: this.orderNumber,
           company: this.orderCompany,
-          qtcompany:this.QTCompany
+          qtcompany: this.QTCompany
         })
         .then(res => {
           this.$message[res.code ? "warning" : "success"](res.data.message);
-          
+
           if (res.code) return;
           this.dialog = false;
           this.getDataList();
@@ -426,10 +437,10 @@ export default {
       console.log(this.orderCompany);
 
       if (this.orderCompany == "其他") {
-        this.QTshow=true;
-      }else{
-        this.QTshow=false;
-        this.QTCompany='';
+        this.QTshow = true;
+      } else {
+        this.QTshow = false;
+        this.QTCompany = "";
       }
     },
     clickitem(e) {

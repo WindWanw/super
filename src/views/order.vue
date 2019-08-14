@@ -1,8 +1,24 @@
 <template>
   <div class="order">
     <div class="table_title">
+      <div>
+        <el-button
+          v-if="isShow"
+          type="primary"
+          size="mini"
+          class="el-icon-d-arrow-left"
+          @click="back()"
+        >返回</el-button>
+      </div>
       <div class="search_wrap">
-        <el-select v-model="is_online" class="selectOrder" clearable placeholder="请选择订单类型">
+        <el-select
+          v-model="is_online"
+          size="mini"
+          class="selectOrder"
+          clearable
+          placeholder="请选择订单类型"
+          @keyup.enter.native="search"
+        >
           <el-option
             v-for="item in order_typeList"
             :key="item.value"
@@ -10,11 +26,18 @@
             :value="item.val"
           ></el-option>
         </el-select>
-        <el-input clearable v-model="name" placeholder="请输入订单" size="small" style="width:200px"></el-input>
+        <el-input
+          clearable
+          v-model="name"
+          placeholder="请输入订单"
+          size="mini"
+          style="width:200px"
+          @keyup.enter.native="search"
+        ></el-input>
         <el-date-picker
           style="margin:0 10px"
           value-format="timestamp"
-          size="small"
+          size="mini"
           v-model="date"
           type="daterange"
           align="right"
@@ -24,7 +47,7 @@
           end-placeholder="结束日期"
           :picker-options="pickerOptions"
         ></el-date-picker>
-        <el-button type="primary" icon="el-icon-search" size="small" @click="search">搜索</el-button>
+        <el-button type="primary" icon="el-icon-search" size="mini" @click="search">搜索</el-button>
       </div>
     </div>
     <div class="content" style="width:100%">
@@ -84,7 +107,8 @@ export default {
   data() {
     return {
       loading: false,
-      height:100,
+      isShow:false,
+      height: 100,
       pickerOptions: {
         //快捷键
         shortcuts: [
@@ -164,7 +188,7 @@ export default {
         })
         .then(res => {
           this.dataList = res.data || [];
-          this.height=100;
+          this.height = 100;
           let t = res.data.total;
           if (t >= 10) {
             this.height = 750;
@@ -187,6 +211,17 @@ export default {
     search() {
       this.page = 1;
       this.getDataList();
+      this.isShow=true;
+    },
+    back(){
+      this.page=1;
+      this.limit=10;
+      this.status="0";
+      this.date=[];
+      this.name="";
+      this.is_online="";
+      this.getDataList();
+      this.isShow=false;
     },
     //订单类型查询
     searchTypeList(val) {

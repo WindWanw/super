@@ -1,6 +1,15 @@
 <template>
   <div class="finance">
     <div class="table_title">
+      <div>
+        <el-button
+          v-if="isShow"
+          type="primary"
+          size="mini"
+          class="el-icon-d-arrow-left"
+          @click="back()"
+        >返回</el-button>
+      </div>
       <div class="search_wrap">
         <!-- <el-select style="margin:0 10px" v-model="status" size="small" filterable placeholder="类型">
           <el-option
@@ -16,6 +25,7 @@
           placeholder="请输入持卡人姓名"
           size="small"
           style="width:200px;margin:0 10px"
+          @keyup.enter.native="search"
         ></el-input>
         <el-button type="primary" size="small" @click="search" icon="el-icon-search">搜索</el-button>
       </div>
@@ -108,7 +118,7 @@
             <el-table-column label="状态" prop="status">
               <template slot-scope="scope">
                 <el-button
-                class="mini-button"
+                  class="mini-button"
                   :type="scope.row.status | withdrawStatus"
                   size="mini"
                 >{{scope.row.status | withdrawText}}</el-button>
@@ -117,28 +127,28 @@
             <el-table-column label="操作" prop="status">
               <template slot-scope="scope">
                 <el-button
-                class="mini-button"
+                  class="mini-button"
                   type="primary"
                   @click="centerDialogVisible=true;id=scope.row.id"
                   v-if="scope.row.status == 0"
                   size="mini"
                 >审核通过</el-button>
                 <el-button
-                class="mini-button"
+                  class="mini-button"
                   type="danger"
                   v-if="scope.row.status == 0"
                   @click="centerDialogVisible2=true;id=scope.row.id"
                   size="mini"
                 >驳回申请</el-button>
                 <el-button
-                class="mini-button"
+                  class="mini-button"
                   type="success"
                   v-if="scope.row.status == 1"
                   @click="centerDialogVisible3=true;id=scope.row.id"
                   size="mini"
                 >确认打款</el-button>
                 <el-button
-                class="mini-button"
+                  class="mini-button"
                   type="danger"
                   v-if="scope.row.status == 1"
                   @click="centerDialogVisible4=true;id=scope.row.id"
@@ -228,11 +238,12 @@ export default {
         { label: "打款失败", name: "4" }
       ],
       loading: false,
-      height:100,
+      isShow: false,
+      height: 100,
       dataList: [],
       page: 1,
       limit: 10,
-      status: 0,
+      status: "0",
       name: "",
       tax: "",
       info: "",
@@ -260,15 +271,15 @@ export default {
         })
         .then(res => {
           this.dataList = res.data || [];
-          this.height=100;
+          this.height = 100;
           let t = res.data.total;
-          console.log("t="+t)
+          console.log("t=" + t);
           if (t >= 10) {
             this.height = 600;
           } else if (t != 0) {
             this.height = t * 90;
           }
-          console.log("height="+this.height)
+          console.log("height=" + this.height);
           if (res.code) {
             this.$message[res.code ? "warning" : "success"](res.data);
           }
@@ -289,6 +300,15 @@ export default {
     search() {
       this.page = 1;
       this.getDataList();
+      this.isShow = true;
+    },
+    back() {
+      this.page = 1;
+      this.limit = 10;
+      this.status = "0";
+      this.name = "";
+      this.getDataList();
+      this.isShow = false;
     },
     tabClick(val) {
       this.status = val.name;

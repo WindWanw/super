@@ -1,11 +1,24 @@
 <template>
   <div class="ad">
     <div class="table_title">
-      <div>
-         <el-button type="primary" size="small" @click="goBack">返回</el-button>
-      </div>
+        <div>
+          <el-button
+            v-if="isShow"
+            type="primary"
+            size="mini"
+            class="el-icon-d-arrow-left"
+            @click="back()"
+          >返回</el-button>
+        </div>
       <div class="search_wrap">
-        <el-select size="small" v-model="type" class="selectOrder" clearable placeholder="请选择广告所属页面">
+        <el-select
+          size="mini"
+          v-model="type"
+          class="selectOrder"
+          clearable
+          placeholder="请选择广告所属页面"
+          @keyup.enter.native="search"
+        >
           <el-option
             v-for="item in adsType.list"
             :key="item.page"
@@ -14,17 +27,24 @@
           ></el-option>
         </el-select>
         <el-cascader
-        size="small"
+          size="mini"
           :options="cityData"
           v-model="citycode"
           change-on-select
           placeholder="请选择城市搜索"
+          @keyup.enter.native="search"
         ></el-cascader>
         <!-- <el-input clearable v-model="keywords" placeholder="请输入关键字" size="small" style="width:200px"></el-input> -->
-        <el-button style="margin:0 10px" type="primary" icon="el-icon-search" size="small" @click="search">搜索</el-button>
+        <el-button
+          style="margin:0 10px"
+          type="primary"
+          icon="el-icon-search"
+          size="mini"
+          @click="search"
+        >搜索</el-button>
         <el-button
           type="primary"
-          size="small"
+          size="mini"
           icon="el-icon-plus"
           @click="openAddEditDialog('add')"
         >添加广告</el-button>
@@ -54,14 +74,14 @@
           <template slot-scope="scope">
             <div class="cz_btn">
               <el-button
-               class="mini-button"
+                class="mini-button"
                 @click="openAddEditDialog('edit',scope.row)"
                 type="primary"
                 size="mini"
                 icon="el-icon-edit"
               >编辑</el-button>
               <el-button
-               class="mini-button"
+                class="mini-button"
                 @click="del(scope.row.id)"
                 type="danger"
                 size="mini"
@@ -160,7 +180,8 @@ export default {
   data() {
     return {
       loading: false,
-      height:100,
+      isShow: false,
+      height: 100,
       dataList: [], //数据源
       page: 1, //页
       limit: 10, //条
@@ -168,10 +189,10 @@ export default {
       cityData: citys, //城市数据
       selectCity: [], //选择城市
       adsType: [], //广告类型
-      type:'',
-      citycode:[],
-      keywords:'',
-      date:[],
+      type: "",
+      citycode: [],
+      keywords: "",
+      date: [],
       city: "",
       form: {
         page: "",
@@ -215,18 +236,18 @@ export default {
         .getAdList({
           page: this.page,
           limit: this.limit,
-          type:this.type,
-          keywords:this.keywords,
-          citycode:this.citycode,
+          type: this.type,
+          keywords: this.keywords,
+          citycode: this.citycode
         })
         .then(res => {
           this.dataList = res.data || [];
-          this.height=100;
+          this.height = 100;
           let t = res.data.total;
           if (t >= 10) {
             this.height = 750;
           } else if (t != 0) {
-            this.height = t * 120;
+            this.height = t * 150;
           }
           if (res.code) {
             this.$message[res.code ? "warning" : "success"](res.data);
@@ -330,12 +351,14 @@ export default {
     search() {
       this.page = 1;
       this.getDataList();
+      this.isShow = true;
     },
-    goBack(){
-      this.keywords='';
-      this.type='';
-      this.citycode=[];
+    back() {
+      this.keywords = "";
+      this.type = "";
+      this.citycode = [];
       this.getDataList();
+      this.isShow = false;
     }
   },
 

@@ -1,8 +1,11 @@
 <template>
   <div class="teacher">
     <div class="table_title">
+      <div>
+        <el-button v-if="isShow" type="primary" size="mini" class="el-icon-d-arrow-left" @click="back()">返回</el-button>
+      </div>
       <div class="search_wrap">
-        <el-select clearable v-model="status" placeholder="请选择用户类型" size="small">
+        <el-select clearable v-model="status" placeholder="请选择用户类型" size="small" @keyup.enter.native="search">
           <el-option label="正常" :value="1"></el-option>
           <el-option label="禁用" :value="-1"></el-option>
         </el-select>
@@ -145,6 +148,7 @@ export default {
   data() {
     return {
       loading: false,
+      isShow:false,
       height: 100,
       pickerOptions: {
         //快捷键
@@ -250,7 +254,21 @@ export default {
     search() {
       this.page = 1;
       this.getDataList();
+      this.isShow=true;
     },
+
+    back(){
+      this.page=1;
+      this.limit=10;
+      this.times='';
+      this.shopname='';
+      this.status=1;
+      this.gtype="0";
+      this.getDataList();
+      this.isShow=false;
+    },
+
+
     //禁用
     userStop(id) {
       this.$confirm("确认进行该项操作吗?", "提示", { type: "warning" })

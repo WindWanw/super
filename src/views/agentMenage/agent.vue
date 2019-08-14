@@ -1,27 +1,39 @@
 <template>
   <div class="agent">
     <div class="table_title">
-      <el-button
-        type="primary"
-        size="small"
-        icon="el-icon-plus"
-        @click="openAddEditDialog('add')"
-      >添加代理商</el-button>
+      <div>
+        <el-button
+          v-if="isShow"
+          type="primary"
+          size="mini"
+          class="el-icon-d-arrow-left"
+          @click="back()"
+        >返回</el-button>
+      </div>
       <div class="search_wrap">
-        <el-input clearable v-model="username" placeholder="请输入账号" size="small" style="width:200px"></el-input>
+        
+        <el-input
+          clearable
+          v-model="username"
+          placeholder="请输入账号"
+          size="mini"
+          style="width:200px"
+          @keyup.enter.native="search"
+        ></el-input>
         <el-select
           clearable
           v-model="status"
           placeholder="请选择用户类型"
-          size="small"
+          size="mini"
           style="margin: 0 10px"
+          @keyup.enter.native="search"
         >
           <el-option label="正常" :value="1"></el-option>
           <el-option label="禁用" :value="-1"></el-option>
         </el-select>
         <el-date-picker
           value-format="timestamp"
-          size="small"
+          size="mini"
           v-model="date"
           type="daterange"
           align="right"
@@ -34,14 +46,27 @@
         <el-button
           type="primary"
           icon="el-icon-search"
-          size="small"
+          size="mini"
           @click="search"
           style="margin-left:10px"
         >搜索</el-button>
+        <el-button
+          type="primary"
+          size="mini"
+          icon="el-icon-plus"
+          @click="openAddEditDialog('add')"
+        >添加代理商</el-button>
       </div>
     </div>
     <div class="content" style="width:100%">
-      <el-table :data="dataList.list" stripe border style="width:100%" v-loading="loading" :height="height">
+      <el-table
+        :data="dataList.list"
+        stripe
+        border
+        style="width:100%"
+        v-loading="loading"
+        :height="height"
+      >
         <el-table-column type="expand">
           <template slot-scope="props">
             <div class="expand_wrap">
@@ -51,8 +76,16 @@
               </p>
               <p>
                 <span>身份证正反面:</span>
-                <img class="idcard_img viewBig" :src="props.row.picOn" @click="viewBigImg(props.row.picOn)">
-                <img class="idcard_img viewBig" :src="props.row.picOff" @click="viewBigImg(props.row.picOff)">
+                <img
+                  class="idcard_img viewBig"
+                  :src="props.row.picOn"
+                  @click="viewBigImg(props.row.picOn)"
+                />
+                <img
+                  class="idcard_img viewBig"
+                  :src="props.row.picOff"
+                  @click="viewBigImg(props.row.picOff)"
+                />
               </p>
             </div>
           </template>
@@ -67,7 +100,7 @@
         <el-table-column prop label="账号状态">
           <template slot-scope="scope">
             <el-button
-             class="mini-button"
+              class="mini-button"
               size="mini"
               :title="scope.row.status=='1'?'点击禁用':'点击解除禁用'"
               @click="userStop(scope.row.id)"
@@ -82,7 +115,7 @@
           <template slot-scope="scope">
             <div class="cz_btn">
               <el-button
-               class="mini-button"
+                class="mini-button"
                 @click="openAddEditDialog('edit',scope.row)"
                 type="primary"
                 size="mini"
@@ -105,7 +138,7 @@
     </div>
 
     <el-dialog class="big-img" top="50px" title="查看大图" :visible.sync="viewImg" width="800px">
-      <img style="width:100%;height:100%" :src="viewBigImage">
+      <img style="width:100%;height:100%" :src="viewBigImage" />
     </el-dialog>
     <!-- 添加dialog -->
     <el-dialog
@@ -155,7 +188,7 @@
           >
             <el-button size="small" type="primary">点击上传</el-button>
           </el-upload>
-          <img v-if="form.picOn" class="idcard_img" :src="form.picOn">
+          <img v-if="form.picOn" class="idcard_img" :src="form.picOn" />
         </el-form-item>
         <el-form-item label="身份证反面" prop="picOff">
           <el-upload
@@ -167,7 +200,7 @@
           >
             <el-button size="small" type="primary">点击上传</el-button>
           </el-upload>
-          <img v-if="form.picOff" class="idcard_img" :src="form.picOff">
+          <img v-if="form.picOff" class="idcard_img" :src="form.picOff" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -185,7 +218,8 @@ export default {
   data() {
     return {
       loading: false,
-      height:100,
+      isShow:false,
+      height: 100,
       pickerOptions: {
         //快捷键
         shortcuts: [
@@ -229,8 +263,8 @@ export default {
       cityData: citys, //城市数据
       selectCity: [], //选择城市
       city: "",
-      viewImg:false,//查看大图dialog
-      viewBigImage:'',//查看大图
+      viewImg: false, //查看大图dialog
+      viewBigImage: "", //查看大图
       form: {
         username: "",
         password: "",
@@ -273,10 +307,9 @@ export default {
     };
   },
   methods: {
-
-    viewBigImg(img){
-      this.viewImg=true;
-      this.viewBigImage=img;
+    viewBigImg(img) {
+      this.viewImg = true;
+      this.viewBigImage = img;
     },
 
     // 切换limit
@@ -302,12 +335,12 @@ export default {
         })
         .then(res => {
           this.dataList = res.data || [];
-          this.height=100;
+          this.height = 100;
           let t = res.data.total;
           if (t >= 10) {
             this.height = 600;
           } else if (t != 0) {
-            this.height = t * 70;
+            this.height = t * 100;
           }
           if (res.code) {
             this.$message[res.code ? "warning" : "success"](res.data);
@@ -319,6 +352,17 @@ export default {
     search() {
       this.page = 1;
       this.getDataList();
+      this.isShow=true;
+    },
+
+    back(){
+      this.page=1;
+      this.limit=10;
+      this.date="";
+      this.status="";
+      this.username="";
+      this.getDataList();
+      this.isShow=false;
     },
     // 打开添加或修改
     openAddEditDialog(type, item) {
@@ -437,7 +481,7 @@ export default {
   margin-right: 10px;
   margin-top: 10px;
 }
-.viewBig{
+.viewBig {
   cursor: pointer;
 }
 </style>

@@ -4,21 +4,64 @@
   </div>
 </template>
 <script>
+import { setTimeout } from "timers";
 export default {
+  data() {
+    return {
+      // num: 0,
+      // new_num: 0,
+      // token: localStorage.getItem("token")
+    };
+  },
   methods: {
+    // getOrderNotify() {
+    //   let that = this;
+    //   this.$api.getNotify().then(res => {
+    //     if (res.data.num > that.num) {
+    //       that.new_num = res.data.num - that.num;
+    //       that.setNotify(); //弹窗提醒
+    //     }
+    //     that.num = res.data.num;
+    //   });
+
+    //   setTimeout(res => {
+    //     that.getOrderNotify();
+    //   }, 2000);
+    // },
+
+    // setNotify() {
+    //   let that = this;
+    //   that.$notify({
+    //     title: "新的订单",
+    //     message: "您有" + that.new_num + "条订单等待处理，请注意查收",
+    //     iconClass: "iconfont ic_wait",
+    //     offset: 50,
+    //     duration: 10000
+    //   });
+    // },
+
     checkLogin() {
       this.$api.checkLogin().then(res => {
-        if (res.code == 114 || localStorage.getItem("token") == "") {
+        if (res.code == 114) {
           Message.error("您的登录已失效，请重新登录");
           router.push("/login");
           localStorage.clear("token");
           localStorage.clear("userinfo");
         } else {
-          console.log("欢迎")
+          console.log("欢迎");
         }
       });
     }
   },
+  // mounted() {
+  //   if (this.token != null) {
+  //     this.$api.getNotify().then(res => {
+  //       this.num = res.data.num;
+  //     });
+      
+  //   }
+  //   this.getOrderNotify();
+  // },
   created() {
     this.checkLogin();
   }
@@ -139,9 +182,9 @@ html,
   padding: 3px 6px !important;
 }
 .el-menu-item i {
-    color: #fff;
+  color: #fff;
 }
 .el-submenu__title i {
-    color: #fff;
+  color: #fff;
 }
 </style>

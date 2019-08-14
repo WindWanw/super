@@ -1,7 +1,7 @@
 <template>
   <div class="card">
     <div class="table_title">
-      <el-button type="primary" size="small" icon="el-icon-plus" @click="openAddEditDialog()">添加角色</el-button>
+      <el-button type="primary" size="mini" icon="el-icon-plus" @click="openAddEditDialog()">添加角色</el-button>
     </div>
     <div class="content">
       <el-table :data="authList.list" style="width: 100%">

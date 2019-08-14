@@ -1,6 +1,9 @@
 <template>
   <div class="teacher">
     <div class="table_title">
+      <div>
+        <el-button v-if="isShow" type="primary" size="mini" class="el-icon-d-arrow-left" @click="back()">返回</el-button>
+      </div>
       <div class="search_wrap">
         <el-date-picker
           style="margin:0 10px"
@@ -71,6 +74,7 @@ export default {
   data() {
     return {
       loading: false,
+      isShow:false,
       height:200,
       pickerOptions: {
         //快捷键
@@ -185,7 +189,18 @@ export default {
     search() {
       this.page = 1;
       this.getDataList();
+      this.isShow=true;
     },
+
+    back(){
+      this.page=1;
+      this.limit=10;
+      this.times="";
+      this.day="today";
+      this.getDataList();
+      this.isShow=false;
+    },
+
     getVestJobs(){
       this.page = 1;
       this.times='';

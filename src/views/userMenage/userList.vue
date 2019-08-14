@@ -3,24 +3,26 @@
     <!-- 头部（搜索条件） -->
     <div class="table_title">
       <div>
-        <el-button size="mini" class="el-icon-d-arrow-left" @click="returnHome()">返回</el-button>
+        <el-button v-if="isShow" type="primary" size="mini" class="el-icon-d-arrow-left" @click="returnHome()">返回</el-button>
       </div>
       <div class="search_wrap">
         <el-input
           clearable
           v-model="username"
           placeholder="请输入用户名"
-          size="small"
+          size="mini"
           style="width:200px"
+          @keyup.enter.native="search"
         ></el-input>
         <el-input
           clearable
           v-model="city"
           placeholder="请输入城市名称"
-          size="small"
+          size="mini"
           style="width:200px;margin:0 10px"
+          @keyup.enter.native="search"
         ></el-input>
-        <el-select clearable v-model="sex" placeholder="请选择用户性别" size="small" style="margin:0 10px">
+        <el-select clearable v-model="sex" placeholder="请选择用户性别" size="mini" style="margin:0 10px" @keyup.enter.native="search">
           <el-option label="男" :value="1"></el-option>
           <el-option label="女" :value="0"></el-option>
         </el-select>
@@ -28,14 +30,15 @@
           clearable
           v-model="status"
           placeholder="请选择用户类型"
-          size="small"
+          size="mini"
           style="margin:0 10px"
+          @keyup.enter.native="search"
         >
           <el-option label="正常" :value="1"></el-option>
           <el-option label="禁用" :value="-1"></el-option>
         </el-select>
         <el-date-picker
-          size="small"
+          size="mini"
           v-model="date"
           type="daterange"
           align="right"
@@ -50,7 +53,7 @@
           @click="search"
           type="primary"
           icon="el-icon-search"
-          size="small"
+          size="mini"
           style="margin-left:10px"
         >搜索</el-button>
       </div>
@@ -217,6 +220,7 @@ export default {
   data() {
     return {
       loading: false,
+      isShow:false,
       height:100,
       pickerOptions: {
         //快捷键
@@ -312,6 +316,7 @@ export default {
     search() {
       this.page = 1;
       this.getDataList();
+      this.isShow=true;
     },
     //展开行
     toogleExpand(row) {
@@ -406,6 +411,7 @@ export default {
       this.city = "";
       this.gender = "";
       this.getDataList();
+      this.isShow=false;
     }
   },
 

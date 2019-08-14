@@ -1,8 +1,11 @@
 <template>
   <div class="sellerSh">
     <div class="table_title">
+      <div>
+        <el-button v-if="isShow" type="primary" size="mini" class="el-icon-d-arrow-left" @click="back()">返回</el-button>
+      </div>
       <div class="search_wrap">
-        <el-input clearable v-model="username" placeholder="请输入账号" size="small" style="width:200px"></el-input>
+        <el-input clearable v-model="username" placeholder="请输入账号" size="small" style="width:200px" @keyup.enter.native="search"></el-input>
         <el-date-picker
           style="margin:0 10px"
           value-format="timestamp"
@@ -115,6 +118,7 @@ export default {
   data() {
     return {
       loading: false,
+      isShow:false,
       height:100,
       pickerOptions: {
         //快捷键
@@ -206,7 +210,7 @@ export default {
           if (t >= 10) {
             this.height = 600;
           } else if (t != 0) {
-            this.height = t * 70;
+            this.height = t * 120;
           }
           if (res.code) {
             this.$message[res.code ? "warning" : "success"](res.data);
@@ -228,7 +232,19 @@ export default {
     search() {
       this.page = 1;
       this.getDataList();
+      this.isShow=true;
     },
+
+    back(){
+      this.page=1;
+      this.limit=10;
+      this.check=1;
+      this.times="";
+      this.username="";
+      this.getDataList();
+      this.isShow=false;
+    },
+
     //审核
     sure() {
       if (this.check.result === "") {

@@ -1,17 +1,33 @@
 <template>
   <div class="systemArticle">
     <div class="table_title">
-      <el-button
-        type="primary"
-        size="small"
-        icon="el-icon-plus"
-        @click="openAddEditDialog('add')"
-      >添加文章</el-button>
+      <div>
+        <el-button
+          v-if="isShow"
+          type="primary"
+          size="mini"
+          class="el-icon-d-arrow-left"
+          @click="back()"
+        >返回</el-button>
+      </div>
       <div class="searchText">
-        <el-select clearable v-model="type" placeholder="请选择文章类型搜索默认全部" size="small">
+        <el-select
+          clearable
+          v-model="type"
+          placeholder="请选择文章类型搜索默认全部"
+          size="mini"
+          @keyup.enter.native="search"
+        >
           <el-option v-for="item in options" :key="item.val" :label="item.label" :value="item.val"></el-option>
         </el-select>
-        <el-button type="primary" icon="el-icon-search" size="small" @click="search">搜索</el-button>
+        <el-button type="primary" icon="el-icon-search" size="mini" @click="search" style="margin: 0 0 0 5px;">搜索</el-button>
+        <el-button
+          type="primary"
+          size="mini"
+          icon="el-icon-plus"
+          @click="openAddEditDialog('add')"
+          style="margin: 0 0 0 5px;"
+        >添加文章</el-button>
       </div>
     </div>
     <div class="content">
@@ -109,6 +125,7 @@ export default {
   data() {
     return {
       loading: false,
+      isShow: false,
       test: "",
       isClear: false,
       height: 100,
@@ -154,7 +171,7 @@ export default {
         })
         .then(res => {
           this.dataList = res.data || [];
-          this.height=100;
+          this.height = 100;
           let t = res.data.total;
           if (t >= 10) {
             this.height = 600;
@@ -225,6 +242,14 @@ export default {
     search() {
       this.page = 1;
       this.getDataList();
+      this.isShow = true;
+    },
+    back() {
+      this.page = 1;
+      this.limit = 10;
+      this.type = "";
+      this.getDataList();
+      this.isShow = false;
     }
   },
 
