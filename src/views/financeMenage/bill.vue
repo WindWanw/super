@@ -125,8 +125,9 @@ export default {
       this.isShow=false;
     },
     daochu() {
+      
       window.location.href =
-        "http://dev.admin.api.zhengyi100.cn/getorders/exportAdmin?times=" +
+        "https://admin.api.zhengyi100.cn/getorders/exportAdmin?times=" +
         this.times[0] / 1000 +
         "," +
         this.times[1] / 1000;
