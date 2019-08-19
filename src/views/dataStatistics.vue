@@ -222,7 +222,7 @@ export default {
   created() {
     this.getTotal();
     this.countDatas();
-    this.getMessageList();
+    // this.getMessageList();
   }
 };
 </script>
