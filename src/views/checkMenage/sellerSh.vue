@@ -51,7 +51,7 @@
         <!-- <el-table-column prop="info" label="商户描述"></el-table-column> -->
         <el-table-column prop="tel" label="手机号码"></el-table-column>
         <el-table-column prop="times" label="入驻时间">
-          <template slot-scope="scope">{{scope.row.times | formatTimeStamp}}</template>
+          <!-- <template slot-scope="scope">{{scope.row.times | formatTimeStamp}}</template> -->
         </el-table-column>
         <el-table-column prop label="账号状态">
           <el-button class="mini-button" type="warning" size="mini">待审核</el-button>
