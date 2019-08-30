@@ -50,7 +50,7 @@ export default {
 
       setTimeout(res => {
         that.getOrderNotify();
-      }, 30000);
+      }, 600000);
     },
     setNotify() {
       let that = this;
