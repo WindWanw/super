@@ -316,16 +316,16 @@ export default {
         return fetchPost('/ticket/Ticket_Type', params)
     },
     getPunishList(params) {
-        return fetchPost('/ticket/TicketList', params)
+        return fetchPost('/punish/getPunishList', params)
     },
     delPunish(params) {
         return fetchPost('/ticket/TicketDelete', params)
     },
     addPunish(params) {
-        return fetchPost('/ticket/TicketAdd', params)
+        return fetchPost('/punish/addPunish', params)
     },
     editPunish(params) {
-        return fetchPost('/ticket/TicketEdit', params)
+        return fetchPost('/punish/checkPunish', params)
     },
 
     /**

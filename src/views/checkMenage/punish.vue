@@ -31,17 +31,9 @@
           <el-table :data="dataList.list" stripe border style="width:100%" v-loading="loading" :height="height">
             <el-table-column prop="to_name" label="被处罚对象"></el-table-column>
             <el-table-column prop="from_name" label="处罚申请人"></el-table-column>
-            <el-table-column prop="types" label="处罚类型">
-              <template slot-scope="scope">
-                {{scope.row.types | punishTypes}}
-              </template>
-            </el-table-column>
-            <el-table-column prop="values.label" label="处罚内容"></el-table-column>
-            <el-table-column prop="times" label="处罚时间">
-              <!-- <template slot-scope="scope">
-                {{scope.row.times | formatTimeStamp}}
-              </template> -->
-            </el-table-column>
+            <el-table-column prop="type" label="处罚类型"></el-table-column>
+            <el-table-column prop="info" label="处罚内容"></el-table-column>
+            <el-table-column prop="times" label="处罚时间"></el-table-column>
             <el-table-column prop="status" label="处罚状态">
               <template slot-scope="scope">
                 <el-tag class="mini-button" type="warning" v-if="scope.row.status=='0'">审核中</el-tag>
@@ -192,7 +184,7 @@ export default {
           if (t >= 10) {
             this.height = 600;
           } else if (t != 0) {
-            this.height = t * 70;
+            this.height = t * 120;
           }
           if(res.code){
             this.$message[res.code ? "warning" : "success"](res.data);
@@ -265,9 +257,9 @@ export default {
         })
         .then(res=>{
           this.loading=false;
-            this.dialogVisible=res.code?true:false;
             this.$message[res.code?'warning':'success'](res.data.message);
             this.page=this.$options.filters.pagination(this.page,this.limit,this.dataList.total);
+            this.dialogVisible=false;
             this.getDataList();
         })
       }
