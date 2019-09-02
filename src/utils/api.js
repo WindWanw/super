@@ -313,7 +313,7 @@ export default {
      * 审核
      */
     getPunishType(params) {
-        return fetchPost('/ticket/Ticket_Type', params)
+        return fetchPost('/punish/punishType', params)
     },
     getPunishList(params) {
         return fetchPost('/punish/getPunishList', params)

@@ -113,7 +113,7 @@
       ></el-pagination>
     </div>
     <!-- 惩罚dialog -->
-    <el-dialog title="惩罚" :visible.sync="punishDialog" @close="1" label-width="120px" width="30%">
+    <el-dialog title="惩罚" :visible.sync="punishDialog" label-width="120px" width="30%">
       <el-form>
         <el-form-item label="处罚类型">
           <el-select v-model="punishType" clearable placeholder="请选择处罚类型">
@@ -131,7 +131,7 @@
               v-for="item in punishContentList"
               :key="item.value"
               :label="item.label"
-              :value="item"
+              :value="item.ps"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -307,7 +307,7 @@ export default {
         .addPunish({
           to_uid: this.punishId,
           types: this.punishType,
-          values: JSON.stringify(this.punishContent)
+          values: this.punishContent
         })
         .then(res => {
           this.$message[res.code ? "warning" : "success"](res.data.message);
