@@ -60,7 +60,10 @@ export default {
         message: "您有" + that.new_num + "条订单等待处理，请注意查收",
         iconClass: "iconfont ic_wait",
         offset: 50,
-        duration: 5000
+        duration: 5000,
+        onClick: function() {
+          that.$router.replace("/order?status=2");
+        }
       });
     },
     getAudio(str) {
