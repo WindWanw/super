@@ -83,6 +83,17 @@
                 >{{scope.row.status | orderStatus}}</el-button>
               </template>
             </el-table-column>
+            <el-table-column label="操作" width="100px" v-if="['2','3','5'].indexOf(status) !==-1">
+              <template slot-scope="scope">
+                <el-button
+                  @click="refund(scope.row.id)"
+                  type="danger"
+                  size="mini"
+                  icon="iconfont qian"
+                  class="mini-button"
+                >退款</el-button>
+              </template>
+            </el-table-column>
           </el-table>
         </el-tab-pane>
       </el-tabs>
@@ -107,7 +118,7 @@ export default {
   data() {
     return {
       loading: false,
-      isShow:false,
+      isShow: false,
       height: 100,
       pickerOptions: {
         //快捷键
@@ -188,12 +199,12 @@ export default {
         })
         .then(res => {
           this.dataList = res.data || [];
-          this.height = 100;
+          this.height = 120;
           let t = res.data.total;
           if (t >= 10) {
             this.height = 750;
           } else if (t != 0) {
-            this.height = t * 100;
+            this.height = t * 120;
           }
           if (res.code) {
             this.$message[res.code ? "warning" : "success"](res.data);
@@ -211,21 +222,30 @@ export default {
     search() {
       this.page = 1;
       this.getDataList();
-      this.isShow=true;
+      this.isShow = true;
     },
-    back(){
-      this.page=1;
-      this.limit=10;
-      this.status="0";
-      this.date=[];
-      this.name="";
-      this.is_online="";
+    back() {
+      this.page = 1;
+      this.limit = 10;
+      this.status = "0";
+      this.date = [];
+      this.name = "";
+      this.is_online = "";
       this.getDataList();
-      this.isShow=false;
+      this.isShow = false;
     },
     //订单类型查询
     searchTypeList(val) {
       console.log(val);
+    },
+    refund(val) {
+      this.$confirm("确定要给该用户退款吗？")
+        .then(_ => {
+          this.$api.setRefund({ order_id: val,type:"GOODS" }).then(res => {
+            this.message[res.code ? "warning" : "success"](res.data.message);
+          });
+        })
+        .catch(_ => {});
     }
   },
   created() {

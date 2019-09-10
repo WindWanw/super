@@ -144,6 +144,14 @@
                   @click="address=scope.row.address;express_number=scope.row.express_number;express_company=scope.row.company;exdialog=true"
                   icon="el-icon-goods"
                 >查看物流</el-button>
+                <el-button
+                  v-if="['2','3','5'].indexOf(status) !==-1"
+                  @click="refund(scope.row.id)"
+                  type="danger"
+                  size="mini"
+                  icon="iconfont qian"
+                  class="mini-button"
+                >退款</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -445,6 +453,17 @@ export default {
     },
     clickitem(e) {
       e === this.is_online ? (this.is_online = "") : (this.is_online = e);
+    },
+
+    //退款
+    refund(val) {
+      this.$confirm("确定要给该用户退款吗？")
+        .then(_ => {
+          this.$api.setRefund({ order_id: val,type:"VEST" }).then(res => {
+            this.message[res.code ? "warning" : "success"](res.data.message);
+          });
+        })
+        .catch(_ => {});
     }
   },
   created() {

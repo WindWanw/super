@@ -427,4 +427,12 @@ export default {
         return fetchPost('/admin/getVersion', params)
     },
 
+
+    /** 
+     * 专引师退款
+     */
+    setRefund(params) {
+        return fetchPost('/refund/setRefund', params)
+    },
+
 }
