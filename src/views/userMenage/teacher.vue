@@ -365,6 +365,9 @@ export default {
           "无法给该专引师退款，order_id为空，不存在专引师支付订单"
         );
       }
+      if(JSON.parse(localStorage.getItem("userinfo")).id!=1){
+        return this.$message.error("当前登录用户没有权限退款");
+      }
       this.$confirm("确定要给该用户退款吗？")
         .then(_ => {
           this.$api.setRefund({ order_id: val,type:"GUIDE" }).then(res => {

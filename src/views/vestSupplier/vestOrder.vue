@@ -457,6 +457,9 @@ export default {
 
     //退款
     refund(val) {
+      if(JSON.parse(localStorage.getItem("userinfo")).id!=1){
+        return this.$message.error("当前登录用户没有权限退款");
+      }
       this.$confirm("确定要给该用户退款吗？")
         .then(_ => {
           this.$api.setRefund({ order_id: val,type:"VEST" }).then(res => {
