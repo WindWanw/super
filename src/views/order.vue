@@ -246,7 +246,7 @@ export default {
       this.$confirm("确定要给该用户退款吗？")
         .then(_ => {
           this.$api.setRefund({ order_id: val,type:"GOODS" }).then(res => {
-            this.message[res.code ? "warning" : "success"](res.data.message);
+            this.$message[res.code ? "warning" : "success"](res.data.message);
           });
         })
         .catch(_ => {});
