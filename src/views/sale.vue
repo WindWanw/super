@@ -87,22 +87,22 @@
             <!-- <el-table-column prop="explain" label="售后说明" align="center"></el-table-column> -->
             <el-table-column prop="create_times" label="申请时间" align="center" v-if="status != '5'"></el-table-column>
             <el-table-column prop="times" label="退款时间" align="center" v-if="status=='5'"></el-table-column>
-            <el-table-column label="操作" v-if="status=='2' || status=='3'">
+            <el-table-column label="操作" v-if="['0','1','2','3'].indexOf(status) !=-1">
               <template slot-scope="scope">
                 <el-button
                   class="mini-button"
                   v-if="status=='2'"
                   type="success"
                   size="mini"
-                  @click="handleDialog=true;form.id=scope.row.id"
+                  @click="openHandleDialog(scope.row)"
                   icon="iconfont daichuli"
                 >处理</el-button>
                 <el-button
                   class="mini-button"
-                  v-if="status=='3'"
+                  v-if="['0','1','2','3'].indexOf(status) !=-1"
                   type="primary"
                   size="mini"
-                  @click="handle"
+                  @click="refund(scope.row)"
                   icon="iconfont qian"
                 >退款处理</el-button>
               </template>
@@ -127,7 +127,7 @@
     <el-dialog title="处理售后" :visible.sync="handleDialog" @close="form.status=''">
       <el-form ref="form" :model="form" label-width="80px">
         <el-form-item label="售后处理">
-          <el-radio-group v-model="form.status">
+          <el-radio-group v-model="form.status" @change="clear">
             <el-radio label="3">同意</el-radio>
             <el-radio label="4">拒绝</el-radio>
           </el-radio-group>
@@ -137,7 +137,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="handle">确定</el-button>
+        <el-button type="primary" @click="handle()">确定</el-button>
         <el-button @click="handleDialog=false">取消</el-button>
       </div>
     </el-dialog>
@@ -208,6 +208,7 @@ export default {
       image: "",
       form: {
         id: "",
+        order_id: "",
         status: "",
         result: ""
       }
@@ -283,12 +284,23 @@ export default {
       this.page = 1;
       this.getDataList();
     },
+    openHandleDialog(item) {
+      this.form.id = item.id;
+      this.form.order_id = item.order_id;
+      this.clear();
+      this.handleDialog = true;
+    },
+    clear() {
+      this.form.result = "";
+      console.log(this.form);
+    },
 
     //处理
     handle() {
-      if ((this.form.status = "3")) {
+      if (this.form.status == "3") {
         this.form.result = "";
       }
+      console.log(this.form);
       if (this.form.status == "4" && this.form.result == "") {
         this.$notify({
           title: "警告",
@@ -297,8 +309,19 @@ export default {
         });
         return;
       }
+
       this.$api.suProcess(this.form).then(res => {
-        this.$message(res.data.message);
+        this.$message[res.code ? "warning" : "success"](res.data.message);
+        this.handleDialog = false;
+        this.getDataList();
+      });
+    },
+    refund(item) {
+      this.form.id = item.id;
+      this.form.order_id = item.order_id;
+      this.form.status = 5;
+      this.$api.suProcess(this.form).then(res => {
+        this.$message[res.code ? "warning" : "success"](res.data.message);
         this.handleDialog = false;
         this.getDataList();
       });
@@ -334,5 +357,9 @@ export default {
 .view-img img {
   width: 100%;
   height: 100%;
+}
+.el-button+.el-button {
+    margin-left: 0;
+    margin-top:5px; 
 }
 </style>
