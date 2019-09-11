@@ -145,7 +145,7 @@
                   icon="el-icon-goods"
                 >查看物流</el-button>
                 <el-button
-                  v-if="['2','3','5'].indexOf(status) !==-1"
+                  v-if="['2','3','5'].indexOf(status) !==-1 && uid==1"
                   @click="refund(scope.row.id)"
                   type="danger"
                   size="mini"
@@ -308,7 +308,8 @@ export default {
       openOrderGoodsDialog: false, //订单商品
       order_goods: [], //订单商品列表
       expressList: [], //快递公司列表
-      QTshow: false
+      QTshow: false,
+      uid:JSON.parse(localStorage.getItem("userinfo")).id
     };
   },
   mounted: function() {},

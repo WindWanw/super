@@ -83,7 +83,7 @@
                 >{{scope.row.status | orderStatus}}</el-button>
               </template>
             </el-table-column>
-            <el-table-column label="操作" width="100px" v-if="['2','3','5'].indexOf(status) !==-1">
+            <el-table-column label="操作" width="100px" v-if="['2','3','5'].indexOf(status) !==-1 && uid==1">
               <template slot-scope="scope">
                 <el-button
                   @click="refund(scope.row.id)"
@@ -171,7 +171,8 @@ export default {
         { label: "线上订单", val: 1 },
         { label: "线下订单", val: 2 },
         { label: "技术服务费", val: 3 }
-      ]
+      ],
+      uid:JSON.parse(localStorage.getItem("userinfo")).id
     };
   },
   methods: {

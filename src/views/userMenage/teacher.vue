@@ -124,6 +124,7 @@
                     class="mini-button"
                   >处罚</el-button>
                   <el-button
+                  v-if="uid==1"
                     @click="refund(scope.row.order_id)"
                     type="danger"
                     size="mini"
@@ -235,7 +236,8 @@ export default {
       punishContentList: "",
       punishId: "", //处罚id
       punishType: "",
-      punishContent: ""
+      punishContent: "",
+      uid:JSON.parse(localStorage.getItem("userinfo")).id
     };
   },
   watch: {
