@@ -247,6 +247,7 @@ export default {
         .then(_ => {
           this.$api.setRefund({ order_id: val,type:"GOODS" }).then(res => {
             this.$message[res.code ? "warning" : "success"](res.data.message);
+            this.getDataList();
           });
         })
         .catch(_ => {});
