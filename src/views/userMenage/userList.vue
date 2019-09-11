@@ -334,7 +334,7 @@ export default {
           if (t >= 10) {
             this.height = 750;
           } else if (t != 0) {
-            this.height = t * 130;
+            this.height = t * 160;
           }
           if (res.code) {
             this.$message[res.code ? "warning" : "success"](res.data);
