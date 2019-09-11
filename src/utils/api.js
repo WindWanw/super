@@ -28,6 +28,7 @@ export default {
      * 停用，启用
      * 设置马甲用户
      * 解除马甲用户的使用限制
+     * 转换用户的openid
      */
     getUserlist(params) {
         return fetchPost('/Client/userList', params)
@@ -40,6 +41,9 @@ export default {
     },
     vestUserDel(params) {
         return fetchPost('/Client/vestUserDel', params)
+    },
+    setOpenId(params) {
+        return fetchPost('/Client/setOpenId', params)
     },
 
     //审核商户

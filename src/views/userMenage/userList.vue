@@ -3,7 +3,13 @@
     <!-- 头部（搜索条件） -->
     <div class="table_title">
       <div>
-        <el-button v-if="isShow" type="primary" size="mini" class="el-icon-d-arrow-left" @click="returnHome()">返回</el-button>
+        <el-button
+          v-if="isShow"
+          type="primary"
+          size="mini"
+          class="el-icon-d-arrow-left"
+          @click="returnHome()"
+        >返回</el-button>
       </div>
       <div class="search_wrap">
         <el-input
@@ -22,7 +28,14 @@
           style="width:200px;margin:0 10px"
           @keyup.enter.native="search"
         ></el-input>
-        <el-select clearable v-model="sex" placeholder="请选择用户性别" size="mini" style="margin:0 10px" @keyup.enter.native="search">
+        <el-select
+          clearable
+          v-model="sex"
+          placeholder="请选择用户性别"
+          size="mini"
+          style="margin:0 10px"
+          @keyup.enter.native="search"
+        >
           <el-option label="男" :value="1"></el-option>
           <el-option label="女" :value="0"></el-option>
         </el-select>
@@ -67,7 +80,14 @@
           :label="item.label"
           :name="item.name"
         >
-          <el-table :data="dataList.list" stripe border v-loading="loading" ref="table" :height="height">
+          <el-table
+            :data="dataList.list"
+            stripe
+            border
+            v-loading="loading"
+            ref="table"
+            :height="height"
+          >
             <el-table-column type="expand">
               <template slot-scope="scope">
                 <el-table :data="scope.row.vestUser" stripe border style="width:100%">
@@ -121,7 +141,7 @@
               <template slot-scope="scope">
                 {{scope.row.username}}
                 <div>{{scope.row.isVest | vestStatus}}</div>
-                </template>
+              </template>
             </el-table-column>
             <el-table-column prop label="头像" align="center">
               <template slot-scope="scope">
@@ -167,6 +187,15 @@
                   class="mini-button"
                   style="margin : 10px 0 0 0;"
                 >查看马甲</el-button>
+                <el-button
+                  v-if="uid==1"
+                  :title="scope.row.is_openid ? '还原OpenID' : '转换OpenID'"
+                  @click="setOpenId(scope.row)"
+                  :type="scope.row.is_openid ? 'primary' : 'danger'"
+                  size="mini"
+                  class="mini-button"
+                  style="margin : 10px 0 0 0;"
+                >{{scope.row.is_openid ? '还原OpenID' : '转换OpenID'}}</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -220,8 +249,8 @@ export default {
   data() {
     return {
       loading: false,
-      isShow:false,
-      height:100,
+      isShow: false,
+      height: 100,
       pickerOptions: {
         //快捷键
         shortcuts: [
@@ -269,7 +298,8 @@ export default {
       form: {
         id: "",
         uids: ""
-      }
+      },
+      uid: JSON.parse(localStorage.getItem("userinfo")).id
     };
   },
   methods: {
@@ -299,7 +329,7 @@ export default {
         })
         .then(res => {
           this.dataList = res.data || [];
-          this.height=100;
+          this.height = 100;
           let t = res.data.total;
           if (t >= 10) {
             this.height = 750;
@@ -316,7 +346,7 @@ export default {
     search() {
       this.page = 1;
       this.getDataList();
-      this.isShow=true;
+      this.isShow = true;
     },
     //展开行
     toogleExpand(row) {
@@ -388,14 +418,16 @@ export default {
     },
 
     //解除马甲商户的使用限制
-    vestUserDel(id,status){
-      this.$api.vestUserDel({
-        id:id,
-        status:status,
-      }).then(res=>{
-        this.$message[res.code ? 'warning' : 'success'](res.data.message)
-        this.search();
-      })
+    vestUserDel(id, status) {
+      this.$api
+        .vestUserDel({
+          id: id,
+          status: status
+        })
+        .then(res => {
+          this.$message[res.code ? "warning" : "success"](res.data.message);
+          this.search();
+        });
     },
     tabClick(val) {
       this.utype = val.name;
@@ -411,7 +443,19 @@ export default {
       this.city = "";
       this.gender = "";
       this.getDataList();
-      this.isShow=false;
+      this.isShow = false;
+    },
+    setOpenId(item) {
+      this.$confirm("确定要转换该用户的openid吗？")
+        .then(_res => {
+          this.$api
+            .setOpenId({ uid: item.id, type: item.is_openid })
+            .then(res => {
+              this.$message[res.code ? "warning" : "success"](res.data.message);
+              if (!res.code) this.getDataList();
+            });
+        })
+        .catch(_res => {});
     }
   },
 
