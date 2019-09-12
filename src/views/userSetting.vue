@@ -61,6 +61,47 @@
         <el-button class="mini-button" type="primary" size="mini" @click="setVersion">点击保存</el-button>
       </div>
     </div>
+    <div class="diy-content" v-if="admin==1">
+      <div>
+        <span>5.设置可修改银行卡日期（号）</span>
+        <span class="iconfont BAI-heirenwenhao" @click="explanation()" style="cursor:pointer"></span>
+      </div>
+      <el-select
+        v-model="card.start"
+        placeholder="请选择允许修改的开始日期"
+        @change="changeCardOne()"
+        size="mini"
+      >
+        <el-option
+          v-for="item in dateCardOne"
+          :key="item.value"
+          :label="item.value"
+          :value="item.value"
+        ></el-option>
+      </el-select>
+      <span>至</span>
+      <el-select v-model="card.end" placeholder="请选择允许修改的结束日期" size="mini">
+        <el-option
+          v-for="item in dateCardTwo"
+          :key="item.value"
+          :label="item.value"
+          :value="item.value"
+          :disabled="item.disabled"
+        ></el-option>
+      </el-select>
+      <div>
+        <el-button class="mini-button" type="primary" size="mini" @click="setModifyCardDate">点击保存</el-button>
+      </div>
+    </div>
+    <div class="diy-content" v-if="admin==1">
+      <div>
+        <span>6.清除已领取礼包状态</span>
+      </div>
+      <div>
+        <!-- <el-button class="mini-button" type="primary" size="small" @click="delGuideGift">设置用户</el-button> -->
+        <el-button class="mini-button" type="primary" size="small" @click="delAllGidft">一键清除</el-button>
+      </div>
+    </div>
     <!--设置权限 -->
     <el-dialog
       title="设置用户权限"
@@ -88,7 +129,7 @@
             ref="tree"
             highlight-current
             :default-checked-keys="selected"
-            :default-expanded-keys=[]
+            :default-expanded-keys="[]"
             :props="defaultProps"
           ></el-tree>
         </el-form-item>
@@ -257,6 +298,9 @@ import citys from "../utils/province.js";
 export default {
   data() {
     return {
+      dateCard: [],
+      dateCardOne: [],
+      dateCardTwo: [],
       selected: [], //选中
       tabList: [
         { label: "单个设置", name: "0" },
@@ -283,6 +327,10 @@ export default {
       },
       genreList: [],
       version: "", //版本
+      card: {
+        start: "",
+        end: ""
+      },
       retrieve: {
         id: "",
         tel: "",
@@ -376,7 +424,7 @@ export default {
     },
 
     closeRoutDialog() {
-      this.rout.genre='';
+      this.rout.genre = "";
       this.$refs.tree.setCheckedKeys([]);
     },
 
@@ -515,6 +563,62 @@ export default {
       this.$api.getVersion().then(res => {
         if (!res.code) this.version = res.data.version;
       });
+    },
+
+    getCardDate() {
+      this.$api.getCardDate().then(res => {
+        if (res.data.list != null) {
+          this.card.start = res.data.list.start;
+          this.card.end = res.data.list.end;
+        }
+      });
+    },
+
+    setModifyCardDate() {
+      this.$api.setCardDate(this.card).then(res => {
+        this.$message[res.code ? "warning" : "success"](res.data.message);
+        this.getCardDate();
+      });
+    },
+
+    //开始日期改变事件
+    changeCardOne() {
+      this.getTwoDateDay();
+    },
+    //获取开始日期
+    getOneDateDay() {
+      for (let i = 1; i <= 31; i++) {
+        this.dateCardOne.push({ value: i });
+      }
+    },
+    //获取结束日期
+    getTwoDateDay() {
+      let one = this.card.start;
+      if (one != "" || one != undefined) {
+        this.dateCardOne.forEach(item => {
+          if (one >= item.value) {
+            this.dateCardTwo.push({ value: item.value, disabled: true });
+          } else {
+            this.dateCardTwo.push({ value: item.value, disabled: false });
+          }
+        });
+      }
+    },
+    explanation() {
+      this.$message.info("设置用户修改银行卡的日期，每月的日期范围");
+    },
+    //清除个别
+    delGuideGift(){},
+
+//一键清除所有已领取大礼包的专引师记录
+    delAllGidft() {
+      this.$confirm("确定要清除吗？")
+        .then(_ => {
+          this.$api.setClear().then(res => {
+            this.$message[res.code ? "warning" : "success"](res.data.message);
+          });
+        })
+        .catch(_ => {});
     }
   },
   created() {
@@ -522,6 +626,8 @@ export default {
     this.getRouting();
     this.getAuthGenre();
     this.getVersion();
+    this.getCardDate();
+    this.getOneDateDay();
   }
 };
 </script>

@@ -393,6 +393,9 @@ export default {
      * 获取角色路由权限
      * 设置版本
      * 获取版本
+     * 设置允许用户在每月几号之间能修改银行卡信息
+     * 获取允许用户在每月几号之间能修改银行卡信息
+     * 设置清除已领取大礼包的专引师
      */
     getAdminInfo(params) {
         return fetchPost('/admin/getAdminInfo', params)
@@ -429,6 +432,15 @@ export default {
     },
     getVersion(params) {
         return fetchPost('/admin/getVersion', params)
+    },
+    setCardDate(params) {
+        return fetchPost('/admin/setCardDate', params)
+    },
+    getCardDate(params) {
+        return fetchPost('/admin/getCardDate', params)
+    },
+    setClear(params) {
+        return fetchPost('/admin/clearGiftGuide', params)
     },
 
 

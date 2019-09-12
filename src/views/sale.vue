@@ -212,7 +212,7 @@ export default {
         status: "",
         result: ""
       },
-      uid:JSON.parse(localStorage.getItem("userinfo")).id
+      uid: JSON.parse(localStorage.getItem("userinfo")).id
     };
   },
   mounted: function() {},
@@ -310,22 +310,29 @@ export default {
         });
         return;
       }
-
-      this.$api.suProcess(this.form).then(res => {
-        this.$message[res.code ? "warning" : "success"](res.data.message);
-        this.handleDialog = false;
-        this.getDataList();
-      });
+      this.$confirm("确定要退款吗？")
+        .then(_ => {
+          this.$api.suProcess(this.form).then(res => {
+            this.$message[res.code ? "warning" : "success"](res.data.message);
+            this.handleDialog = false;
+            this.getDataList();
+          });
+        })
+        .catch(_ => {});
     },
     refund(item) {
       this.form.id = item.id;
       this.form.order_id = item.order_id;
       this.form.status = 5;
-      this.$api.suProcess(this.form).then(res => {
-        this.$message[res.code ? "warning" : "success"](res.data.message);
-        this.handleDialog = false;
-        this.getDataList();
-      });
+      this.$confirm("确定要退款吗？")
+        .then(_ => {
+          this.$api.suProcess(this.form).then(res => {
+            this.$message[res.code ? "warning" : "success"](res.data.message);
+            this.handleDialog = false;
+            this.getDataList();
+          });
+        })
+        .catch(_ => {});
     }
   },
   created() {
@@ -359,8 +366,8 @@ export default {
   width: 100%;
   height: 100%;
 }
-.el-button+.el-button {
-    margin-left: 0;
-    margin-top:5px; 
+.el-button + .el-button {
+  margin-left: 0;
+  margin-top: 5px;
 }
 </style>
