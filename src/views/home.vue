@@ -62,7 +62,7 @@ export default {
         offset: 50,
         duration: 5000,
         onClick: function() {
-          that.$router.replace("/order?status=2");
+          that.$router.replace("/vestSupplier/vestOrder?status=2");
         }
       });
     },

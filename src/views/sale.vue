@@ -99,7 +99,7 @@
                 >处理</el-button>
                 <el-button
                   class="mini-button"
-                  v-if="['0','1','2','3'].indexOf(status) !=-1"
+                  v-if="['0','1','2','3'].indexOf(status) !=-1 && uid==1"
                   type="primary"
                   size="mini"
                   @click="refund(scope.row)"
@@ -211,7 +211,8 @@ export default {
         order_id: "",
         status: "",
         result: ""
-      }
+      },
+      uid:JSON.parse(localStorage.getItem("userinfo")).id
     };
   },
   mounted: function() {},

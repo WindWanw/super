@@ -471,6 +471,11 @@ export default {
     }
   },
   created() {
+    var param = this.$route.query;
+    console.log(param);
+    if (JSON.stringify(param) != "{}") {
+      this.status = param.status;
+    }
     this.getVestSu();
     this.getDataList();
     this.getExpress();
