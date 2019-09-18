@@ -26,6 +26,8 @@ const finance = () =>
     import ( /* webpackChunkName: "finance" */ './views/financeMenage/finance.vue')
 const bill = () =>
     import ( /* webpackChunkName: "bill" */ './views/financeMenage/bill.vue')
+const refund = () =>
+    import ( /* webpackChunkName: "refund" */ './views/financeMenage/refund.vue')
 
 const agentMenage = () =>
     import ( /* webpackChunkName: "agentMenage" */ './views/agentMenage')
@@ -358,6 +360,16 @@ export const asyRouter = [{
                 meta: {
                     name: '账单流水',
                     iconfont: 'iconfont icon-test',
+                    needLogin: true, //需要登录
+                }
+            },
+            {
+                path: '/refund',
+                name: 'refund',
+                component: refund,
+                meta: {
+                    name: '售后退款',
+                    iconfont: 'iconfont shouru1',
                     needLogin: true, //需要登录
                 }
             },

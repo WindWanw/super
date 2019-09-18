@@ -351,6 +351,10 @@ export default {
     unquaWithdraw(params) {
         return fetchPost('/finance/unquaWithdraw', params)
     },
+    //财务处理售后退款
+    financeRefund(params) {
+        return fetchPost('/refund/financeRefund', params)
+    },
 
     /**
      * @权限管理

@@ -243,7 +243,6 @@ export default {
   data() {
     return {
       loading: false,
-      height: 150,
       pickerOptions: {
         //快捷键
         shortcuts: [
@@ -382,13 +381,6 @@ export default {
         })
         .then(res => {
           this.dataList = res.data || [];
-          this.height = 150;
-          let t = res.data.total;
-          if (t >= 10) {
-            this.height = 750;
-          } else if (t != 0) {
-            this.height = t * 160;
-          }
           this.loading = false;
         });
     },
@@ -465,6 +457,7 @@ export default {
         .then(_ => {
           this.$api.setRefund({ order_id: val,type:"VEST" }).then(res => {
             this.$message[res.code ? "warning" : "success"](res.data.message);
+            this.getDataList();
           });
         })
         .catch(_ => {});
