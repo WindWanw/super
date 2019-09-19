@@ -58,7 +58,7 @@
           :label="item.label"
           :name="item.name"
         >
-          <el-table :data="dataList.list" stripe border v-loading="loading" :height="height">
+          <el-table :data="dataList.list" stripe border v-loading="loading">
             <el-table-column prop="order_sn" label="订单编号"></el-table-column>
             <el-table-column prop="user_name" label="用户名"></el-table-column>
             <!-- <el-table-column prop="tel" label="联系方式"></el-table-column> -->
@@ -200,13 +200,6 @@ export default {
         })
         .then(res => {
           this.dataList = res.data || [];
-          this.height = 120;
-          let t = res.data.total;
-          if (t >= 10) {
-            this.height = 750;
-          } else if (t != 0) {
-            this.height = t * 120;
-          }
           if (res.code) {
             this.$message[res.code ? "warning" : "success"](res.data);
           }
