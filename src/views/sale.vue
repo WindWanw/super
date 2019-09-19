@@ -42,7 +42,7 @@
           :label="item.label"
           :name="item.name"
         >
-          <el-table :data="dataList.list" stripe border v-loading="loading">
+          <el-table :data="dataList.list" stripe border v-loading="loading" :key="Math.random()">
             <el-table-column type="expand">
               <template slot-scope="props">
                 <div class="expand_wrap">
@@ -216,7 +216,7 @@ export default {
         { label: "等待退款", name: "7" },
         { label: "完成售后", name: "5" }
       ],
-      
+
       date: [],
       status: "2",
       dataList: [],

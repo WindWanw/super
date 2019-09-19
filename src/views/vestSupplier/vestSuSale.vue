@@ -42,7 +42,7 @@
           :label="item.label"
           :name="item.name"
         >
-          <el-table :data="dataList.list" stripe border v-loading="loading">
+          <el-table :data="dataList.list" stripe border v-loading="loading" :key="Math.random()">
             <el-table-column type="expand">
               <template slot-scope="props">
                 <div class="expand_wrap">
@@ -80,7 +80,7 @@
             <el-table-column prop="status" label="退货物流" align="center" v-if="status=='1'">
               <template slot-scope="scope">
                 <el-button
-                  v-if="['2','6'].indexOf(scope.row.status) !=-1"
+                  v-if="['2','5'].indexOf(scope.row.status) !=-1"
                   size="mini"
                   type="primary"
                   @click="openExpressDialog(scope.row)"

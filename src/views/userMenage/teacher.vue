@@ -91,6 +91,7 @@
                 </div>
               </template>
             </el-table-column>
+            <el-table-column prop="id" label="UID" align="center"></el-table-column>
             <el-table-column prop="username" label="用户名" align="center"></el-table-column>
             <el-table-column prop="city" label="专引城市" align="center"></el-table-column>
             <el-table-column prop="tel" label="联系方式" align="center"></el-table-column>
@@ -102,6 +103,7 @@
               </template>
             </el-table-column>
             <el-table-column prop="times" label="注册时间" align="center"></el-table-column>
+            <el-table-column prop="timeout" label="到期时间" align="center"></el-table-column>
             <el-table-column prop label="账号状态" align="center">
               <template slot-scope="scope">
                 <el-button
