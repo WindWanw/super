@@ -155,6 +155,7 @@
             <el-table-column prop="tel" label="手机号" align="center"></el-table-column>
             <el-table-column prop="coin" label="积分" align="center"></el-table-column>
             <el-table-column prop="exp" label="经验" align="center"></el-table-column>
+            <el-table-column prop="card_price" label="卡卷金额（元）" align="center"></el-table-column>
             <el-table-column prop label="账号状态" align="center">
               <template slot-scope="scope">
                 <el-button
