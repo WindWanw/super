@@ -52,8 +52,11 @@
                   </p>
                   <p>商品名称：{{props.row.goods_name}}</p>
                   <p>产品型号：{{props.row.attr_val ? props.row.attr_val:'无'}}</p>
+                  <p>申请时间：{{props.row.create_times}}</p>
                   <p>售后原因：{{props.row.reason}}</p>
                   <p>售后说明：{{props.row.explain}}</p>
+                  <p>售后状态：{{props.row.text}}</p>
+                  <p>处理人：{{props.row.handler}}</p>
                   <p v-if="props.row.certificate.length">
                     <span
                       v-for="(item,index) in props.row.certificate"
@@ -70,6 +73,7 @@
             <el-table-column prop="order_sn" label="订单编号" align="center"></el-table-column>
             <el-table-column prop="username" label="申请人" align="center"></el-table-column>
             <el-table-column prop="amount" label="售后金额(元)" align="center"></el-table-column>
+            <el-table-column prop="card_num" label="退还卡卷量" align="center"></el-table-column>
             <el-table-column prop="types" label="售后类型" align="center">
               <template slot-scope="scope">
                 <span
@@ -209,9 +213,9 @@ export default {
       },
       tabList: [
         { label: "等待处理", name: "2" },
-        { label: "已同意", name: "3" },
+        { label: "申请退款", name: "3" },
         { label: "申请售后", name: "0" },
-        { label: "商户同意", name: "1" },
+        { label: "商户申请退款", name: "1" },
         { label: "平台拒绝", name: "4" },
         { label: "等待退款", name: "7" },
         { label: "完成售后", name: "5" }
