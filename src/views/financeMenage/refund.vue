@@ -41,7 +41,9 @@
         <el-table-column prop="username" label="申请人" align="center"></el-table-column>
         <el-table-column prop="goods_name" label="售后商品" align="center"></el-table-column>
         <el-table-column prop="amount" label="售后金额(元)" align="center"></el-table-column>
+        <el-table-column prop="pay_amount" label="支付金额(元)" align="center"></el-table-column>
         <el-table-column prop="card_num" label="退还卡卷量" align="center"></el-table-column>
+        <el-table-column prop="outlet" label="抵扣金额(元)" align="center"></el-table-column>
         <el-table-column prop="supplier" label="所属商户" align="center"></el-table-column>
         <el-table-column prop="types" label="售后类型" align="center">
           <template slot-scope="scope">
