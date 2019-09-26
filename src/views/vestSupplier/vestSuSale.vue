@@ -46,15 +46,13 @@
             <el-table-column type="expand">
               <template slot-scope="props">
                 <div class="expand_wrap">
-                  <p>
-                    商品图片：
-                    <img style="width:75px;height:75px;" :src="props.row.goods_img" />
-                  </p>
-                  <p>商品名称：{{props.row.goods_name}}</p>
-                  <p>产品型号：{{props.row.attr_val ? props.row.attr_val:'无'}}</p>
+                  <p>申请时间：{{props.row.create_times}}</p>
                   <p>售后原因：{{props.row.reason}}</p>
                   <p>售后说明：{{props.row.explain}}</p>
+                  <p>售后状态：{{props.row.text}}</p>
+                  <p>处理人：{{props.row.handler}}</p>
                   <p v-if="props.row.certificate.length">
+                    售后凭证：
                     <span
                       v-for="(item,index) in props.row.certificate"
                       :key="index"
@@ -70,6 +68,21 @@
             <el-table-column prop="order_sn" label="订单编号" align="center"></el-table-column>
             <el-table-column prop="username" label="申请人" align="center"></el-table-column>
             <el-table-column prop="amount" label="售后金额(元)" align="center"></el-table-column>
+            <el-table-column prop="pay_amount" label="支付金额(元)" align="center"></el-table-column>
+            <el-table-column prop="card_num" label="退还卡卷量" align="center"></el-table-column>
+            <el-table-column prop="outlet" label="抵扣金额(元)" align="center"></el-table-column>
+            <el-table-column label="售后商品" align="center">
+              <template slot-scope="scope">
+                <el-button @click="viewGoods(scope.row.goods)" type="success" size="mini" icon="el-icon-view">查看</el-button>
+              </template>
+            </el-table-column>
+            <el-table-column prop="good_status" label="商品状态" align="center">
+              <template slot-scope="scope">
+                <span
+                  :style="scope.row.good_status=='1' ? 'color:red' : ''"
+                >{{scope.row.good_status=='1' ? '到货':'未到货'}}</span>
+              </template>
+            </el-table-column>
             <el-table-column prop="types" label="售后类型" align="center">
               <template slot-scope="scope">
                 <span
@@ -80,7 +93,7 @@
             <el-table-column prop="status" label="退货物流" align="center" v-if="status=='1'">
               <template slot-scope="scope">
                 <el-button
-                  v-if="['2','5'].indexOf(scope.row.status) !=-1"
+                  v-if="['2','6'].indexOf(scope.row.status) !=-1"
                   size="mini"
                   type="primary"
                   @click="openExpressDialog(scope.row)"
@@ -88,7 +101,7 @@
                 <span
                   v-else
                   :style="scope.row.types !='2' ? '' : scope.row.status !='6' ? 'color:red' : ''"
-                >{{scope.row.types !='2' ? '不存在物流信息' : scope.row.status !='6' ? '未填写退货物流' : ''}}</span>
+                >{{scope.row.types !='2' ? '不存在物流信息' : scope.row.status !='6' ? '等待用户填写物流信息' : ''}}</span>
               </template>
             </el-table-column>
             <el-table-column prop="create_times" label="申请时间" align="center" v-if="status != '5'"></el-table-column>
@@ -128,6 +141,23 @@
         :total="dataList.total"
       ></el-pagination>
     </div>
+
+    <!-- 订单商品 -->
+    <el-dialog title="订单商品" :visible.sync="openOrderGoodsDialog">
+      <el-table :data="order_goods" stripe border v-loading="loading">
+        <el-table-column prop="title" label="商品名称" align="center"></el-table-column>
+        <el-table-column prop label="商品图片" align="center">
+          <template slot-scope="scope">
+            <img class="avatar" :src="scope.row.pics" />
+          </template>
+        </el-table-column>
+        <el-table-column prop="attr" label="商品属性" align="center">
+          <template slot-scope="scope">
+            <span>{{scope.row.goods_attr.attr_val}}</span>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-dialog>
 
     <el-dialog title="退货物流信息" :visible.sync="expressDialog">
       <el-form label-width="80px">
@@ -206,7 +236,7 @@ export default {
       },
       tabList: [
         { label: "等待处理", name: "0" },
-        { label: "已同意", name: "1" },
+        { label: "申请退款", name: "1" },
         { label: "平台介入", name: "2" },
         { label: "平台同意", name: "3" },
         { label: "平台拒绝", name: "4" },
@@ -232,7 +262,9 @@ export default {
       express_company: "",
       express_num: "",
       express_time: "",
-      expressDialog: false
+      expressDialog: false,
+      order_goods:[],
+      openOrderGoodsDialog: false, //订单商品
     };
   },
   mounted: function() {},
@@ -250,6 +282,11 @@ export default {
     handleCurrentChange(val) {
       this.page = val;
       this.getDataList();
+    },
+    //订单商品
+    viewGoods(item) {
+      this.openOrderGoodsDialog = true;
+      this.order_goods = item;
     },
 
     getBack() {
@@ -279,8 +316,7 @@ export default {
           limit: this.limit,
           status: this.status,
           times: this.date,
-          order_sn: this.order_sn,
-          vest:true,
+          order_sn: this.order_sn
         })
         .then(res => {
           this.dataList = res.data || [];
@@ -369,5 +405,9 @@ export default {
 .el-button + .el-button {
   margin-left: 0;
   margin-top: 5px;
+}
+.avatar {
+  width: 50px;
+  height: 50px;
 }
 </style>

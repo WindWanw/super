@@ -46,12 +46,6 @@
             <el-table-column type="expand">
               <template slot-scope="props">
                 <div class="expand_wrap">
-                  <p>
-                    商品图片：
-                    <img style="width:75px;height:75px;" :src="props.row.goods_img" />
-                  </p>
-                  <p>商品名称：{{props.row.goods_name}}</p>
-                  <p>产品型号：{{props.row.attr_val ? props.row.attr_val:'无'}}</p>
                   <p>申请时间：{{props.row.create_times}}</p>
                   <p>售后原因：{{props.row.reason}}</p>
                   <p>售后说明：{{props.row.explain}}</p>
@@ -76,6 +70,16 @@
             <el-table-column prop="pay_amount" label="支付金额(元)" align="center"></el-table-column>
             <el-table-column prop="card_num" label="退还卡卷量" align="center"></el-table-column>
             <el-table-column prop="outlet" label="抵扣金额(元)" align="center"></el-table-column>
+            <el-table-column label="售后商品" align="center">
+              <template slot-scope="scope">
+                <el-button
+                  @click="viewGoods(scope.row.goods)"
+                  type="success"
+                  size="mini"
+                  icon="el-icon-view"
+                >查看</el-button>
+              </template>
+            </el-table-column>
             <el-table-column prop="types" label="售后类型" align="center">
               <template slot-scope="scope">
                 <span
@@ -134,6 +138,23 @@
         :total="dataList.total"
       ></el-pagination>
     </div>
+
+    <!-- 订单商品 -->
+    <el-dialog title="订单商品" :visible.sync="openOrderGoodsDialog">
+      <el-table :data="order_goods" stripe border v-loading="loading">
+        <el-table-column prop="title" label="商品名称" align="center"></el-table-column>
+        <el-table-column prop label="商品图片" align="center">
+          <template slot-scope="scope">
+            <img class="avatar" :src="scope.row.pics" />
+          </template>
+        </el-table-column>
+        <el-table-column prop="attr" label="商品属性" align="center">
+          <template slot-scope="scope">
+            <span>{{scope.row.goods_attr.attr_val}}</span>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-dialog>
 
     <el-dialog title="退货物流信息" :visible.sync="expressDialog">
       <el-form label-width="80px">
@@ -242,7 +263,9 @@ export default {
       express_company: "",
       express_num: "",
       express_time: "",
-      expressDialog: false
+      expressDialog: false,
+      order_goods: [],
+      openOrderGoodsDialog: false //订单商品
     };
   },
   mounted: function() {},
@@ -262,6 +285,11 @@ export default {
       this.getDataList();
     },
 
+    //订单商品
+    viewGoods(item) {
+      this.openOrderGoodsDialog = true;
+      this.order_goods = item;
+    },
     getBack() {
       this.loading = true;
       this.$api
@@ -378,5 +406,9 @@ export default {
 .el-button + .el-button {
   margin-left: 0;
   margin-top: 5px;
+}
+.avatar {
+  width: 50px;
+  height: 50px;
 }
 </style>

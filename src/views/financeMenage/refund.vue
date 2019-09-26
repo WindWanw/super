@@ -39,7 +39,16 @@
         <el-table-column prop="order_sn" label="订单编号" align="center"></el-table-column>
         <el-table-column prop="create_times" label="申请时间" align="center"></el-table-column>
         <el-table-column prop="username" label="申请人" align="center"></el-table-column>
-        <el-table-column prop="goods_name" label="售后商品" align="center"></el-table-column>
+        <el-table-column label="售后商品" align="center">
+          <template slot-scope="scope">
+            <el-button
+              @click="viewGoods(scope.row.goods)"
+              type="success"
+              size="mini"
+              icon="el-icon-view"
+            >查看</el-button>
+          </template>
+        </el-table-column>
         <el-table-column prop="amount" label="售后金额(元)" align="center"></el-table-column>
         <el-table-column prop="pay_amount" label="支付金额(元)" align="center"></el-table-column>
         <el-table-column prop="card_num" label="退还卡卷量" align="center"></el-table-column>
@@ -84,6 +93,23 @@
         :total="dataList.total"
       ></el-pagination>
     </div>
+
+    <!-- 订单商品 -->
+    <el-dialog title="订单商品" :visible.sync="openOrderGoodsDialog">
+      <el-table :data="order_goods" stripe border v-loading="loading">
+        <el-table-column prop="title" label="商品名称" align="center"></el-table-column>
+        <el-table-column prop label="商品图片" align="center">
+          <template slot-scope="scope">
+            <img class="avatar" :src="scope.row.pics" />
+          </template>
+        </el-table-column>
+        <el-table-column prop="attr" label="商品属性" align="center">
+          <template slot-scope="scope">
+            <span>{{scope.row.goods_attr.attr_val}}</span>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-dialog>
   </div>
 </template>
 
@@ -130,7 +156,9 @@ export default {
       page: 1,
       limit: 10,
       order_sn: "", //订单编号
-      show: false //线上返回
+      show: false, //线上返回
+      order_goods: [],
+      openOrderGoodsDialog: false //订单商品
     };
   },
   mounted: function() {},
@@ -144,6 +172,11 @@ export default {
     handleCurrentChange(val) {
       this.page = val;
       this.getDataList();
+    },
+    //订单商品
+    viewGoods(item) {
+      this.openOrderGoodsDialog = true;
+      this.order_goods = item;
     },
 
     getBack() {
@@ -230,5 +263,9 @@ export default {
 .view-img img {
   width: 100%;
   height: 100%;
+}
+.avatar {
+  width: 50px;
+  height: 50px;
 }
 </style>
