@@ -59,22 +59,22 @@
           :name="item.name"
         >
           <el-table :data="dataList.list" stripe border v-loading="loading">
-            <el-table-column prop="order_sn" label="订单编号"></el-table-column>
-            <el-table-column prop="user_name" label="用户名"></el-table-column>
+            <el-table-column prop="order_sn" label="订单编号" align="center"></el-table-column>
+            <el-table-column prop="user_name" label="用户名" align="center"></el-table-column>
             <!-- <el-table-column prop="tel" label="联系方式"></el-table-column> -->
-            <el-table-column prop="amount" label="订单金额(元)" width="120px"></el-table-column>
-            <el-table-column prop="admin_commission" label="平台获得(元)" width="120px"></el-table-column>
-            <el-table-column prop="ag_commission" label="代理商获得(元)" width="120px"></el-table-column>
-            <el-table-column prop="su_commission" label="商户获得(元)" width="120px"></el-table-column>
-            <el-table-column prop="gu_commission" label="专引师获得(元)" width="120px"></el-table-column>
+            <el-table-column prop="amount" label="订单金额(元)" width="60px" align="center"></el-table-column>
+            <el-table-column prop="admin_commission" label="平台获得(元)" width="60px" align="center"></el-table-column>
+            <el-table-column prop="ag_commission" label="代理商获得(元)" width="60px" align="center"></el-table-column>
+            <el-table-column prop="su_commission" label="商户获得(元)" width="60px" align="center"></el-table-column>
+            <el-table-column prop="gu_commission" label="专引师获得(元)" width="60px" align="center"></el-table-column>
             <!-- <el-table-column prop="admin_commission" label="佣金(元)" width="120px"></el-table-column> -->
-            <el-table-column prop="outlet" label="折扣减免金额"></el-table-column>
-            <el-table-column prop="card_id" label="卡券编号"></el-table-column>
-            <el-table-column prop="guide_name" label="所属专引师"></el-table-column>
-            <el-table-column prop="times" label="下单时间" width="100px">
+            <el-table-column prop="outlet" label="折扣减免金额" width="60px" align="center"></el-table-column>
+            <el-table-column prop="card_id" label="卡券编号" width="60px" align="center"></el-table-column>
+            <el-table-column prop="guide_name" label="所属专引师" align="center"></el-table-column>
+            <el-table-column prop="times" label="下单时间" width="100px" align="center">
               <template slot-scope="scope">{{scope.row.times | formatTimeStamp}}</template>
             </el-table-column>
-            <el-table-column prop="status" label="订单状态" width="100px">
+            <el-table-column prop="status" label="订单状态" align="center">
               <template slot-scope="scope">
                 <el-button
                   class="mini-button"
@@ -83,7 +83,7 @@
                 >{{scope.row.status | orderStatus}}</el-button>
               </template>
             </el-table-column>
-            <el-table-column label="操作" width="100px" v-if="['2','3','5'].indexOf(status) !==-1 && uid==1">
+            <el-table-column label="操作" v-if="['2','3','5'].indexOf(status) !==-1 && uid==1" align="center">
               <template slot-scope="scope">
                 <el-button
                   @click="refund(scope.row.id)"

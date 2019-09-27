@@ -455,4 +455,12 @@ export default {
         return fetchPost('/refund/setRefund', params)
     },
 
+    /**
+     * 投诉单列表
+     * @param  params 
+     */
+    getReportsList(params) {
+        return fetchPost('/report/getReportsList', params)
+    },
+
 }

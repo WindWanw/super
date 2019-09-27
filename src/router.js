@@ -49,6 +49,8 @@ const punish = () =>
     import ( /* webpackChunkName: "punish" */ './views/checkMenage/punish.vue')
 const teacherSh = () =>
     import ( /* webpackChunkName: "teacherSh" */ './views/checkMenage/teacherSh.vue')
+const reports = () =>
+    import ( /* webpackChunkName: "reports" */ './views/checkMenage/reports.vue')
 
 const order = () =>
     import ( /* webpackChunkName: "order" */ './views/order.vue')
@@ -211,6 +213,16 @@ export const asyRouter = [{
                 component: punish,
                 meta: {
                     name: '处罚单',
+                    iconfont: 'iconfont shenhe',
+                    needLogin: true, //需要登录
+                }
+            },
+            {
+                path: '/checkMenage/reports',
+                name: 'reports',
+                component: reports,
+                meta: {
+                    name: '投诉单',
                     iconfont: 'iconfont shenhe',
                     needLogin: true, //需要登录
                 }
