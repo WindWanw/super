@@ -462,5 +462,8 @@ export default {
     getReportsList(params) {
         return fetchPost('/report/getReportsList', params)
     },
-
+    //个人流水
+    userLiuShui(params) {
+        return fetchPost('/admin/userLiuShui', params)
+    },
 }
