@@ -1,2 +1,0 @@
-(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["crowdfunding"],{6396:function(n,e,t){"use strict";t.r(e);var r=function(){var n=this,e=n.$createElement,t=n._self._c||e;return t("div",{},[t("router-view")],1)},o=[],u={data:function(){return{}},components:{}},c=u,i=t("2877"),a=Object(i["a"])(c,r,o,!1,null,"11076556",null);e["default"]=a.exports}}]);
-//# sourceMappingURL=crowdfunding.6b5c5478.js.map

@@ -466,4 +466,8 @@ export default {
         return fetchPost('/report/setReply', params)
     },
 
+    //个人流水
+    userLiuShui(params) {
+        return fetchPost('/admin/userLiuShui', params)
+    },
 }

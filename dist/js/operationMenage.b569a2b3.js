@@ -1,0 +1,2 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["operationMenage"],{f779:function(e,n,t){"use strict";t.r(n);var o=function(){var e=this,n=e.$createElement,t=e._self._c||n;return t("div",{},[t("router-view")],1)},r=[],a={data:function(){return{}},components:{}},u=a,c=t("2877"),i=Object(c["a"])(u,o,r,!1,null,"72874d19",null);n["default"]=i.exports}}]);
+//# sourceMappingURL=operationMenage.b569a2b3.js.map

@@ -101,6 +101,8 @@ const userFlow = () =>
     //     import ( /* webpackChunkName: "userFlow" */ './views/sellerMenage/guidesList.vue')
     // const bill = () =>
     //     import ( /* webpackChunkName: "userFlow" */ './views/bill.vue')
+const userbill = () =>
+    import ( /* webpackChunkName: "bill" */ './views/financeMenage/userbill.vue')
 Vue.use(Router)
 
 
@@ -381,6 +383,16 @@ export const asyRouter = [{
                 component: refund,
                 meta: {
                     name: '售后退款',
+                    iconfont: 'iconfont shouru1',
+                    needLogin: true, //需要登录
+                }
+            },
+            {
+                path: '/userbill',
+                name: 'userbill',
+                component: userbill,
+                meta: {
+                    name: '个人流水',
                     iconfont: 'iconfont shouru1',
                     needLogin: true, //需要登录
                 }
