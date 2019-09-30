@@ -462,5 +462,8 @@ export default {
     getReportsList(params) {
         return fetchPost('/report/getReportsList', params)
     },
+    setReply(params) {
+        return fetchPost('/report/setReply', params)
+    },
 
 }

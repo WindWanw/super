@@ -223,6 +223,47 @@ function punishTypes(types) {
     }
 }
 
+//订单类型
+function getLevelNum(level) {
+    switch (level) {
+        case '0':
+            return '用户';
+            break;
+        case '1':
+            return '用户';
+            break;
+        case '2':
+            return '商户';
+            break;
+        case '3':
+            return '代理商';
+            break;
+        case '4':
+            return '平台'
+            break;
+    }
+}
+
+function getLevelNumColor(level) {
+    switch (level) {
+        case '0':
+            return 'info';
+            break;
+        case '1':
+            return 'info';
+            break;
+        case '2':
+            return 'primary';
+            break;
+        case '3':
+            return 'success';
+            break;
+        case '4':
+            return 'danger'
+            break;
+    }
+}
+
 export default {
     formatTimeStamp,
     userStatus,
@@ -236,4 +277,6 @@ export default {
     authGenre,
     punishTypes,
     vestStatus,
+    getLevelNum,
+    getLevelNumColor,
 }

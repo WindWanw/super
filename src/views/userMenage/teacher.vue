@@ -11,34 +11,54 @@
         >返回</el-button>
       </div>
       <div class="search_wrap">
+        <el-input
+          :disabled="username !=''"
+          clearable
+          v-model="guide_id"
+          placeholder="请输入专引师id"
+          size="mini"
+          style="width:200px;margin-left:10px;"
+          @keyup.enter.native="search"
+        ></el-input>
         <el-select
           clearable
           v-model="status"
           placeholder="请选择用户类型"
-          size="small"
+          size="mini"
+          style="margin-left:10px;"
           @keyup.enter.native="search"
         >
           <el-option label="正常" :value="1"></el-option>
           <el-option label="禁用" :value="-1"></el-option>
         </el-select>
         <el-input
+          :disabled="guide_id !=''"
           clearable
           v-model="username"
           placeholder="请输入专引师用户名"
           size="mini"
-          style="width:200px"
+          style="width:200px;margin-left:10px;"
           @keyup.enter.native="search"
         ></el-input>
-        <el-input
+        <el-cascader
+          size="mini"
+          :options="cityData"
+          v-model="city"
+          change-on-select
+          placeholder="请输入专引师所在城市名称"
+          style="width:250px;margin-left:10px;"
+          @keyup.enter.native="search"
+        ></el-cascader>
+        <!-- <el-input
           clearable
           v-model="city"
           placeholder="请输入专引师所在城市名称"
           size="mini"
-          style="width:200px;margin:0 10px"
+          style="width:250px;margin-left:10px;"
           @keyup.enter.native="search"
-        ></el-input>
+        ></el-input> -->
         <el-date-picker
-          style="margin:0 10px"
+          style=";margin-left:10px;"
           value-format="timestamp"
           size="small"
           v-model="times"
@@ -61,14 +81,7 @@
           :label="item.label"
           :name="item.name"
         >
-          <el-table
-            :data="dataList.list"
-            stripe
-            border
-            style="width:100%"
-            v-loading="loading"
-            :height="height"
-          >
+          <el-table :data="dataList.list" stripe border style="width:100%" v-loading="loading">
             <el-table-column type="expand">
               <template slot-scope="props">
                 <div class="expand_wrap" v-if="props.row.idcard!=''">
@@ -126,7 +139,7 @@
                     class="mini-button"
                   >处罚</el-button>
                   <el-button
-                  v-if="uid==1"
+                    v-if="uid==1"
                     @click="refund(scope.row.order_id)"
                     type="danger"
                     size="mini"
@@ -182,12 +195,12 @@
   </div>
 </template>
 <script>
+import citys from "../../utils/province.js";
 export default {
   data() {
     return {
       loading: false,
       isShow: false,
-      height: 100,
       pickerOptions: {
         //快捷键
         shortcuts: [
@@ -224,11 +237,13 @@ export default {
         { label: "专引师", name: "0" },
         { label: "马甲专引师", name: "1" }
       ],
+      cityData: citys, //城市数据
       dataList: [],
       page: 1,
       limit: 10,
       gtype: "0",
       times: "",
+      guide_id: "", //专引师id
       shopname: "",
       status: 1,
       username: "", //用户名
@@ -239,7 +254,7 @@ export default {
       punishId: "", //处罚id
       punishType: "",
       punishContent: "",
-      uid:JSON.parse(localStorage.getItem("userinfo")).id
+      uid: JSON.parse(localStorage.getItem("userinfo")).id
     };
   },
   watch: {
@@ -262,6 +277,7 @@ export default {
           page: this.page,
           limit: this.limit,
           times: this.times,
+          guide_id: this.guide_id,
           shopname: this.shopname,
           status: this.status,
           gtype: this.gtype,
@@ -270,13 +286,6 @@ export default {
         })
         .then(res => {
           this.dataList = res.data || [];
-          this.height = 100;
-          let t = res.data.total;
-          if (t >= 10) {
-            this.height = 600;
-          } else if (t != 0) {
-            this.height = t * 700;
-          }
           if (res.code) {
             this.$message[res.code ? "warning" : "success"](res.data);
           }
@@ -304,6 +313,7 @@ export default {
       this.page = 1;
       this.limit = 10;
       this.times = "";
+      this.guide_id = "";
       this.shopname = "";
       this.status = 1;
       this.gtype = "0";
@@ -369,12 +379,12 @@ export default {
           "无法给该专引师退款，order_id为空，不存在专引师支付订单"
         );
       }
-      if(JSON.parse(localStorage.getItem("userinfo")).id!=1){
+      if (JSON.parse(localStorage.getItem("userinfo")).id != 1) {
         return this.$message.error("当前登录用户没有权限退款");
       }
       this.$confirm("确定要给该用户退款吗？")
         .then(_ => {
-          this.$api.setRefund({ order_id: val,type:"GUIDE" }).then(res => {
+          this.$api.setRefund({ order_id: val, type: "GUIDE" }).then(res => {
             this.message[res.code ? "warning" : "success"](res.data.message);
           });
         })
