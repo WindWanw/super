@@ -63,13 +63,7 @@
           :label="item.label"
           :name="item.name"
         >
-          <el-table
-            :data="dataList.list"
-            stripe
-            border
-            v-loading="loading"
-            class="order-table"
-          >
+          <el-table :data="dataList.list" stripe border v-loading="loading" class="order-table">
             <el-table-column prop="order_sn" label="订单编号" align="center"></el-table-column>
             <el-table-column prop="order_type" label="订单类型" align="center">
               <template slot-scope="scope">
@@ -132,7 +126,7 @@
                   v-if="status=='2' && scope.row.order_type=='1'"
                   type="success"
                   size="mini"
-                  @click="orderId=scope.row.id;guideId=scope.row.guide_id;dialog=true;address=scope.row.address;orderNumber='';orderCompany=''"
+                  @click="orderId=scope.row.id;guideId=scope.row.guide_id;dialog=true;address=scope.row.address;uname=scope.row.name;tel=scope.row.tel;orderNumber='';orderCompany=''"
                   icon="el-icon-goods"
                 >点击发货</el-button>
                 <el-button
@@ -140,7 +134,7 @@
                   v-if="status !='2' && scope.row.order_type=='1'"
                   type="success"
                   size="mini"
-                  @click="address=scope.row.address;express_number=scope.row.express_number;express_company=scope.row.company;exdialog=true"
+                  @click="address=scope.row.address;express_number=scope.row.express_number;express_company=scope.row.company;uname=scope.row.name;tel=scope.row.tel;exdialog=true"
                   icon="el-icon-goods"
                 >查看物流</el-button>
                 <el-button
@@ -193,6 +187,12 @@
       @close="orderNumber='';orderCompany='';QTshow=false"
     >
       <el-form label-width="100px">
+        <el-form-item label="用户姓名">
+          <el-input v-model="uname" readonly></el-input>
+        </el-form-item>
+        <el-form-item label="联系方式">
+          <el-input v-model="tel" readonly></el-input>
+        </el-form-item>
         <el-form-item label="目的地">
           <el-input v-model="address" readonly></el-input>
         </el-form-item>
@@ -221,6 +221,12 @@
     <!-- 查看物流dialog -->
     <el-dialog title="查看物流" :visible.sync="exdialog">
       <el-form label-width="100px">
+        <el-form-item label="用户姓名">
+          <el-input v-model="uname" readonly></el-input>
+        </el-form-item>
+        <el-form-item label="联系方式">
+          <el-input v-model="tel" readonly></el-input>
+        </el-form-item>
         <el-form-item label="目的地">
           <el-input v-model="address" readonly></el-input>
         </el-form-item>
@@ -302,12 +308,14 @@ export default {
       express_company: "",
       address: "",
       order_num: "", //订单编号
+      uname: "",
+      tel: "",
       show: false, //线上返回
       openOrderGoodsDialog: false, //订单商品
       order_goods: [], //订单商品列表
       expressList: [], //快递公司列表
       QTshow: false,
-      uid:JSON.parse(localStorage.getItem("userinfo")).id
+      uid: JSON.parse(localStorage.getItem("userinfo")).id
     };
   },
   mounted: function() {},
@@ -449,12 +457,12 @@ export default {
 
     //退款
     refund(val) {
-      if(JSON.parse(localStorage.getItem("userinfo")).id!=1){
+      if (JSON.parse(localStorage.getItem("userinfo")).id != 1) {
         return this.$message.error("当前登录用户没有权限退款");
       }
       this.$confirm("确定要给该用户退款吗？")
         .then(_ => {
-          this.$api.setRefund({ order_id: val,type:"VEST" }).then(res => {
+          this.$api.setRefund({ order_id: val, type: "VEST" }).then(res => {
             this.$message[res.code ? "warning" : "success"](res.data.message);
             this.getDataList();
           });
@@ -485,7 +493,7 @@ export default {
   width: 50px;
   height: 50px;
 }
-.el-button+.el-button {
-    margin: 10px 0;
+.el-button + .el-button {
+  margin: 10px 0;
 }
 </style>
