@@ -570,6 +570,7 @@ export default {
         if (res.data.list != null) {
           this.card.start = res.data.list.start;
           this.card.end = res.data.list.end;
+          this.getTwoDateDay();
         }
       });
     },

@@ -470,4 +470,9 @@ export default {
     userLiuShui(params) {
         return fetchPost('/admin/userLiuShui', params)
     },
+
+    //清除拥有马甲的账号
+    delVestUser(params) {
+        return fetchPost('/Client/delVestUser', params)
+    },
 }
