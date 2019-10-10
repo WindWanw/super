@@ -224,6 +224,9 @@
                 placeholder="请选择城市"
               ></el-cascader>
             </el-form-item>
+            <el-form-item label="到期时间" v-if="vest.type=='_G'" prop="timeout">
+              <el-date-picker v-model="vest.timeout" type="date" placeholder="选择日期"></el-date-picker>
+            </el-form-item>
           </el-form>
         </el-tab-pane>
       </el-tabs>
@@ -348,7 +351,8 @@ export default {
         pics: [],
         citycode: [], //选择城市
         type: "_U", //用户类型
-        vtype: "0"
+        vtype: "0",
+        timeout: ""
       },
       rout: {
         genre: "",
@@ -387,6 +391,9 @@ export default {
         genre: [{ required: true, message: "角色必须选择", trigger: "blur" }],
         routing: [
           { required: true, message: "功能模块必须选择", trigger: "blur" }
+        ],
+        timeout: [
+          { required: true, message: "专引师到期时间必须选择", trigger: "blur" }
         ]
       }
     };
@@ -487,6 +494,10 @@ export default {
       }
       if (this.vest.pics.length == 0) {
         this.$message("请上传至少一张头像图");
+        return;
+      }
+      if(this.vest.type=='_G' && this.vest.timeout==''){
+        this.$message("专引师到期时间必须选择");
         return;
       }
 
@@ -609,9 +620,9 @@ export default {
       this.$message.info("设置用户修改银行卡的日期，每月的日期范围");
     },
     //清除个别
-    delGuideGift(){},
+    delGuideGift() {},
 
-//一键清除所有已领取大礼包的专引师记录
+    //一键清除所有已领取大礼包的专引师记录
     delAllGidft() {
       this.$confirm("确定要清除吗？")
         .then(_ => {
