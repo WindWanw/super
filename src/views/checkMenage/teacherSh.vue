@@ -2,7 +2,13 @@
   <div class="teacherSh">
     <div class="table_title">
       <div>
-        <el-button v-if="isShow" type="primary" size="mini" class="el-icon-d-arrow-left" @click="back()">返回</el-button>
+        <el-button
+          v-if="isShow"
+          type="primary"
+          size="mini"
+          class="el-icon-d-arrow-left"
+          @click="back()"
+        >返回</el-button>
       </div>
       <div class="search_wrap">
         <el-date-picker
@@ -41,8 +47,16 @@
               </p>
               <p>
                 <span>身份证正反面:</span>
-                <img class="idcard_img viewBig" :src="props.row.picOn" @click="viewBigImg(props.row.picOn)">
-                <img class="idcard_img viewBig" :src="props.row.picOff" @click="viewBigImg(props.row.picOff)">
+                <img
+                  class="idcard_img viewBig"
+                  :src="props.row.picOn"
+                  @click="viewBigImg(props.row.picOn)"
+                />
+                <img
+                  class="idcard_img viewBig"
+                  :src="props.row.picOff"
+                  @click="viewBigImg(props.row.picOff)"
+                />
               </p>
             </div>
           </template>
@@ -51,7 +65,12 @@
         <el-table-column prop="username" label="用户名"></el-table-column>
         <el-table-column prop="tag" label="标签" width="300px">
           <template slot-scope="scope">
-            <el-tag class="mini-button" style="margin-right:10px" v-for="item in scope.row.tag" :key="item">{{item}}</el-tag>
+            <el-tag
+              class="mini-button"
+              style="margin-right:10px"
+              v-for="item in scope.row.tag"
+              :key="item"
+            >{{item}}</el-tag>
           </template>
         </el-table-column>
         <!-- <el-table-column prop="shopname" label="商店"></el-table-column> -->
@@ -60,20 +79,24 @@
         </el-table-column>
         <el-table-column prop label="账号状态">
           <template slot-scope="scope">
-            <el-button class="mini-button" type="warning" size="mini">{{scope.row.status | userStatus}}</el-button>
+            <el-button
+              class="mini-button"
+              :type="scope.row.status | checkStatus"
+              size="mini"
+            >{{scope.row.status | userStatus}}</el-button>
           </template>
         </el-table-column>
         <el-table-column prop label="操作" width="200px">
           <template slot-scope="scope">
             <div class="cz_btn">
               <el-button
-               class="mini-button"
+                class="mini-button"
                 @click="dialogVisible=true;id=scope.row.id;pass='';remark=''"
-                type="primary"
+                :type="scope.row.status=='0' ? 'primary' : 'warning'"
                 size="mini"
                 icon="el-icon-edit-outline"
-                title="点我对该条信息进行审核认证"
-              >点击审核</el-button>
+                :disabled="scope.row.status=='0' ? false : true"
+              >{{scope.row.status=='0' ? '点击审核' : '已审核'}}</el-button>
             </div>
           </template>
         </el-table-column>
@@ -116,7 +139,7 @@ export default {
   data() {
     return {
       loading: false,
-      isShow:false,
+      isShow: false,
       pickerOptions: {
         //快捷键
         shortcuts: [
@@ -158,9 +181,9 @@ export default {
       pass: "", //通过/驳回
       remark: "", //备注消息
       dialogVisible: false,
-      id: "" ,//审核id
-      viewImg:false,//查看大图dialog
-      viewBigImage:'',//查看大图
+      id: "", //审核id
+      viewImg: false, //查看大图dialog
+      viewBigImage: "" //查看大图
     };
   },
   components: {},
@@ -172,10 +195,9 @@ export default {
     }
   },
   methods: {
-
-    viewBigImg(img){
-      this.viewImg=true;
-      this.viewBigImage=img;
+    viewBigImg(img) {
+      this.viewImg = true;
+      this.viewBigImage = img;
     },
     //获取数据列表
     getDataList() {
@@ -185,7 +207,8 @@ export default {
           page: this.page,
           limit: this.limit,
           status: this.status,
-          times: this.times
+          times: this.times,
+          check: 1 //审核专引师列表标志
         })
         .then(res => {
           this.dataList = res.data || [];
@@ -209,16 +232,16 @@ export default {
     search() {
       this.page = 1;
       this.getDataList();
-      this.isShow=true;
+      this.isShow = true;
     },
 
-    back(){
-      this.page=1;
-      this.limit=10;
-      this.status=0;
-      this.times="";
+    back() {
+      this.page = 1;
+      this.limit = 10;
+      this.status = 0;
+      this.times = "";
       this.getDataList();
-      this.isShow=false;
+      this.isShow = false;
     },
     //审核通过驳回
 
@@ -269,7 +292,7 @@ export default {
   margin-right: 10px;
   margin-top: 10px;
 }
-.viewBig{
+.viewBig {
   cursor: pointer;
 }
 </style>

@@ -24,7 +24,7 @@ function add0(m) {
 //用户账号状态
 function userStatus(type) {
     if (type == 0) {
-        return '未注册完全'
+        return '待审核'
     } else if (type == 1) {
         return '正常'
     } else if (type == -1) {
@@ -34,6 +34,22 @@ function userStatus(type) {
     }
 }
 
+function checkStatus(type) {
+    switch (type) {
+        case '-1':
+            return 'danger';
+            break;
+        case '0':
+            return 'info';
+            break;
+        case '1':
+            return 'success';
+            break;
+        case '2':
+            return 'warning'
+            break;
+    }
+}
 //性别
 function sexStatus(type) {
     return type == 0 ? '女' : type == 1 ? '男' : '未知';
@@ -267,6 +283,7 @@ function getLevelNumColor(level) {
 export default {
     formatTimeStamp,
     userStatus,
+    checkStatus,
     sexStatus,
     copyArray,
     orderStatus,
