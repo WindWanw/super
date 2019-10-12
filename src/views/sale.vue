@@ -179,6 +179,38 @@
             <el-radio :label="4">拒绝</el-radio>
           </el-radio-group>
         </el-form-item>
+        <el-form-item label="退货地址" v-if="form.status=='3'">
+          <el-select
+            v-model="form.address"
+            filterable
+            allow-create
+            default-first-option
+            placeholder="请输入退货地址"
+          >
+            <el-option
+              v-for="item in address"
+              :key="item"
+              :label="item"
+              :value="item"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="联系方式" v-if="form.status=='3'">
+          <el-select
+            v-model="form.phone"
+            filterable
+            allow-create
+            default-first-option
+            placeholder="请输入联系方式"
+          >
+            <el-option
+              v-for="item in phone"
+              :key="item"
+              :label="item"
+              :value="item"
+            ></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="拒绝原因" v-if="form.status=='4'">
           <el-input type="textarea" v-model="form.result"></el-input>
         </el-form-item>
@@ -257,8 +289,12 @@ export default {
       form: {
         id: "",
         status: "",
-        result: ""
+        result: "",
+        address: "",
+        phone: ""
       },
+      phone: [],
+      address: [],
       uid: JSON.parse(localStorage.getItem("userinfo")).id,
       express_company: "",
       express_num: "",
@@ -324,6 +360,12 @@ export default {
           this.loading = false;
         });
     },
+    getAddress() {
+      this.$api.getAddress().then(res => {
+        this.phone = res.data.phone || [];
+        this.address = res.data.address || [];
+      });
+    },
     // tab切换
     tabClick(val) {
       this.status = val.name;
@@ -340,9 +382,12 @@ export default {
       this.form.id = item.id;
       this.clear();
       this.handleDialog = true;
+      this.getAddress();
     },
     clear() {
       this.form.result = "";
+      this.form.address = "";
+      this.form.phone = "";
       console.log(this.form);
     },
 

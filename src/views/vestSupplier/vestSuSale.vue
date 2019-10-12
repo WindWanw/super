@@ -73,7 +73,12 @@
             <el-table-column prop="outlet" label="抵扣金额(元)" align="center"></el-table-column>
             <el-table-column label="售后商品" align="center">
               <template slot-scope="scope">
-                <el-button @click="viewGoods(scope.row.goods)" type="success" size="mini" icon="el-icon-view">查看</el-button>
+                <el-button
+                  @click="viewGoods(scope.row.goods)"
+                  type="success"
+                  size="mini"
+                  icon="el-icon-view"
+                >查看</el-button>
               </template>
             </el-table-column>
             <el-table-column prop="good_status" label="商品状态" align="center">
@@ -182,6 +187,28 @@
             <el-radio :label="2">拒绝</el-radio>
           </el-radio-group>
         </el-form-item>
+        <el-form-item label="退货地址" v-if="form.status=='1'">
+          <el-select
+            v-model="form.address"
+            filterable
+            allow-create
+            default-first-option
+            placeholder="请输入退货地址"
+          >
+            <el-option v-for="item in address" :key="item" :label="item" :value="item"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="联系方式" v-if="form.status=='1'">
+          <el-select
+            v-model="form.phone"
+            filterable
+            allow-create
+            default-first-option
+            placeholder="请输入联系方式"
+          >
+            <el-option v-for="item in phone" :key="item" :label="item" :value="item"></el-option>
+          </el-select>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="handle()">确定</el-button>
@@ -256,15 +283,19 @@ export default {
       form: {
         id: "",
         status: "",
-        result: ""
+        result: "",
+        address: "",
+        phone: ""
       },
+      phone: [],
+      address: [],
       uid: JSON.parse(localStorage.getItem("userinfo")).id,
       express_company: "",
       express_num: "",
       express_time: "",
       expressDialog: false,
-      order_goods:[],
-      openOrderGoodsDialog: false, //订单商品
+      order_goods: [],
+      openOrderGoodsDialog: false //订单商品
     };
   },
   mounted: function() {},
@@ -323,6 +354,12 @@ export default {
           this.loading = false;
         });
     },
+    getAddress() {
+      this.$api.getAddress().then(res => {
+        this.phone = res.data.phone || [];
+        this.address = res.data.address || [];
+      });
+    },
     // tab切换
     tabClick(val) {
       this.status = val.name;
@@ -339,9 +376,12 @@ export default {
       this.form.id = item.id;
       this.clear();
       this.handleDialog = true;
+      this.getAddress();
     },
     clear() {
       this.form.result = "";
+      this.form.address = "";
+      this.form.phone = "";
       console.log(this.form);
     },
 

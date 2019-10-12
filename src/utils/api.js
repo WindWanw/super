@@ -65,12 +65,28 @@ export default {
      * @需求管理
      * 获取需求列表
      * 二维码
+     * 设置需求内容关键字
+     * 系统标签
+     * 词法分析
+     * 添加需求keywords
      */
     getNeedList(params) {
         return fetchPost('/admin/getNeedUser', params)
     },
     transWx(params) {
         return fetchPost('/qrcode/createImQrcode', params)
+    },
+    needsKeywordsList(params) {
+        return fetchPost('/admin/needsKeywordsList', params)
+    },
+    getSystemTip(params) {
+        return fetchPost('/admin/getSystemTip', params)
+    },
+    getLexical(params) {
+        return fetchPost('/admin/getLexical', params)
+    },
+    addNeedKeywords(params) {
+        return fetchPost('/admin/addNeedKeywords', params)
     },
     /**
      * @代理商管理
@@ -269,6 +285,9 @@ export default {
     },
     suProcess(params) {
         return fetchPost('/after/suProcess', params)
+    },
+    getAddress(params) {
+        return fetchPost('/after/getAddress', params)
     },
 
     /**
