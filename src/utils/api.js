@@ -485,6 +485,16 @@ export default {
         return fetchPost('/report/setReply', params)
     },
 
+    /** 
+     * 认证审核
+     */
+    getIdentifyList(params) {
+        return fetchPost('/identify/getIdentifyList', params)
+    },
+    checkIdentify(params) {
+        return fetchPost('/identify/checkIdentify', params)
+    },
+
     //个人流水
     userLiuShui(params) {
         return fetchPost('/admin/userLiuShui', params)

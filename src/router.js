@@ -58,6 +58,9 @@ const teacherSh = () =>
 const reports = () =>
     import ( /* webpackChunkName: "reports" */ './views/checkMenage/reports.vue')
 
+const identification = () =>
+    import ( /* webpackChunkName: "identification" */ './views/checkMenage/identification.vue')
+
 const order = () =>
     import ( /* webpackChunkName: "order" */ './views/order.vue')
 const vestSupplier = () =>
@@ -263,6 +266,16 @@ export const asyRouter = [{
                 component: reports,
                 meta: {
                     name: '投诉单',
+                    iconfont: 'iconfont shenhe',
+                    needLogin: true, //需要登录
+                }
+            },
+            {
+                path: '/checkMenage/identification',
+                name: 'identification',
+                component: identification,
+                meta: {
+                    name: '认证审核',
                     iconfont: 'iconfont shenhe',
                     needLogin: true, //需要登录
                 }
