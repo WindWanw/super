@@ -117,6 +117,8 @@
             </el-table-column>
             <el-table-column prop="times" label="注册时间" align="center"></el-table-column>
             <el-table-column prop="timeout" label="到期时间" align="center"></el-table-column>
+            <el-table-column prop="needs" label="抢单数" align="center"></el-table-column>
+            <el-table-column prop="needs_reply" label="回复需求数" align="center"></el-table-column>
             <el-table-column prop label="账号状态" align="center">
               <template slot-scope="scope">
                 <el-button
@@ -247,7 +249,7 @@ export default {
       shopname: "",
       status: 1,
       username: "", //用户名
-      city: "",
+      city: [],
       punishDialog: false, //处罚dialog
       punishList: "",
       punishContentList: "",
@@ -409,5 +411,8 @@ export default {
   border: 1px dashed #ccc;
   margin-right: 10px;
   margin-top: 10px;
+}
+.el-button+.el-button {
+    margin:10px 0 0 0;
 }
 </style>

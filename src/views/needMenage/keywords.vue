@@ -25,12 +25,12 @@
           <el-table :data="dataList.list" stripe border v-loading="loading">
             <el-table-column prop="id" label="ID" align="center"></el-table-column>
             <el-table-column prop="text" label="内容" align="center"></el-table-column>
-            <el-table-column prop="system_tip" label="系统标签" align="center" v-if="status=='2'">
+            <el-table-column prop="system_tag" label="系统标签" align="center" v-if="status=='2'">
               <template slot-scope="scope">
                 <el-tag
                   size="mini"
                   type="primary"
-                  v-for="item in scope.row.system_tip"
+                  v-for="item in scope.row.system_tag"
                   :key="item"
                   style="margin-left:10px;"
                 >{{item}}</el-tag>
