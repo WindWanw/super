@@ -28,8 +28,16 @@
         </el-select>
         <el-input
           clearable
+          v-model="pay_sn"
+          placeholder="请输入支付订单编号"
+          size="mini"
+          style="width:200px;margin-right:10px;"
+          @keyup.enter.native="search"
+        ></el-input>
+        <el-input
+          clearable
           v-model="name"
-          placeholder="请输入订单"
+          placeholder="请输入订单编号"
           size="mini"
           style="width:200px"
           @keyup.enter.native="search"
@@ -83,7 +91,11 @@
                 >{{scope.row.status | orderStatus}}</el-button>
               </template>
             </el-table-column>
-            <el-table-column label="操作" v-if="['2','3','5'].indexOf(status) !==-1 && uid==1" align="center">
+            <el-table-column
+              label="操作"
+              v-if="['2','3','5'].indexOf(status) !==-1 && uid==1"
+              align="center"
+            >
               <template slot-scope="scope">
                 <el-button
                   @click="refund(scope.row.id)"
@@ -161,6 +173,7 @@ export default {
         { label: "交易成功", name: "5" }
       ],
       name: "",
+      pay_sn: "",
       date: [],
       status: "0",
       dataList: [],
@@ -172,7 +185,7 @@ export default {
         { label: "线下订单", val: 2 },
         { label: "技术服务费", val: 3 }
       ],
-      uid:JSON.parse(localStorage.getItem("userinfo")).id
+      uid: JSON.parse(localStorage.getItem("userinfo")).id
     };
   },
   methods: {
@@ -196,6 +209,7 @@ export default {
           status: this.status,
           times: this.date,
           order_sn: this.name,
+          pay_sn: this.pay_sn,
           is_online: this.is_online
         })
         .then(res => {
@@ -224,6 +238,7 @@ export default {
       this.status = "0";
       this.date = [];
       this.name = "";
+      this.pay_sn = "";
       this.is_online = "";
       this.getDataList();
       this.isShow = false;
@@ -233,12 +248,12 @@ export default {
       console.log(val);
     },
     refund(val) {
-      if(JSON.parse(localStorage.getItem("userinfo")).id!=1){
+      if (JSON.parse(localStorage.getItem("userinfo")).id != 1) {
         return this.$message.error("当前登录用户没有权限退款");
       }
       this.$confirm("确定要给该用户退款吗？")
         .then(_ => {
-          this.$api.setRefund({ order_id: val,type:"GOODS" }).then(res => {
+          this.$api.setRefund({ order_id: val, type: "GOODS" }).then(res => {
             this.$message[res.code ? "warning" : "success"](res.data.message);
             this.getDataList();
           });
