@@ -313,7 +313,7 @@ export default {
       status: "", //用户状态
       date: "", //日期
       sex: "",
-      city: "",
+      city: [],
       dataList: [], //数据源
       page: 1, //页
       limit: 10, //条
@@ -459,7 +459,7 @@ export default {
       this.times = "";
       this.username = "";
       this.user_id = "";
-      this.city = "";
+      this.city = [];
       this.gender = "";
       this.getDataList();
       this.isShow = false;
