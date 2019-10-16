@@ -300,9 +300,14 @@ export default {
           }
         ]
       },
-      tabList: [{ label: "全部", name: "0" }, { label: "马甲主号", name: "1" }],
+      tabList: [
+        { label: "普通用户", name: "3" },
+        { label: "马甲用户", name: "2" },
+        { label: "马甲主号", name: "1" },
+        { label: "全部", name: "0" }
+      ],
       cityData: citys, //城市数据
-      utype: "0", //用户类型
+      utype: "3", //用户类型
       user_id: "", //用户id
       username: "", //用户名
       status: "", //用户状态
