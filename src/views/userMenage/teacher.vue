@@ -117,7 +117,7 @@
             </el-table-column>
             <el-table-column prop="times" label="注册时间" align="center"></el-table-column>
             <el-table-column prop="timeout" label="到期时间" align="center"></el-table-column>
-            <!-- <el-table-column prop="needs" label="抢单数" align="center"></el-table-column> -->
+            <el-table-column prop="needs" label="抢单数" align="center"></el-table-column>
             <el-table-column prop="needs_reply" label="回复需求数" align="center"></el-table-column>
             <el-table-column prop label="账号状态" align="center">
               <template slot-scope="scope">
@@ -320,7 +320,7 @@ export default {
       this.status = 1;
       this.gtype = "0";
       this.username = "";
-      this.city = "";
+      this.city = [];
       this.getDataList();
       this.isShow = false;
     },

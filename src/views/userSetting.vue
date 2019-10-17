@@ -481,6 +481,9 @@ export default {
     tabClick(val) {
       this.vest.vtype = val.name;
       this.vest.num = "";
+      this.vest.pics = [];
+      this.vest.citycode = [];
+      this.vest.timeout = "";
     },
 
     //设置马甲用户信息
@@ -496,7 +499,7 @@ export default {
         this.$message("请上传至少一张头像图");
         return;
       }
-      if(this.vest.type=='_G' && this.vest.timeout==''){
+      if (this.vest.type == "_G" && this.vest.timeout == "") {
         this.$message("专引师到期时间必须选择");
         return;
       }
