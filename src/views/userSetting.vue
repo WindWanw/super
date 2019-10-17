@@ -23,7 +23,7 @@
     </div>
     <div class="diy-content" v-if="admin==1">
       <div>
-        <span>1.设置商户密码</span>
+        <span>设置商户密码</span>
       </div>
       <div>
         <el-button
@@ -34,9 +34,9 @@
         >点击设置</el-button>
       </div>
     </div>
-    <div class="diy-content" v-if="admin==1">
+    <div class="diy-content">
       <div>
-        <span>2.设置马甲用户</span>
+        <span>设置马甲用户</span>
       </div>
       <div>
         <el-button class="mini-button" type="primary" size="small" @click="openVestDialog=true">点击生成</el-button>
@@ -44,7 +44,7 @@
     </div>
     <div class="diy-content" v-if="admin==1">
       <div>
-        <span>3.设置用户权限</span>
+        <span>设置用户权限</span>
       </div>
       <div>
         <el-button class="mini-button" type="primary" size="small" @click="openRoutDialog=true">点击设置</el-button>
@@ -52,7 +52,7 @@
     </div>
     <div class="diy-content" v-if="admin==1">
       <div>
-        <span>4.设置版本号</span>
+        <span>设置版本号</span>
       </div>
       <div>
         <el-input v-model="version" size="mini"></el-input>
@@ -61,9 +61,9 @@
         <el-button class="mini-button" type="primary" size="mini" @click="setVersion">点击保存</el-button>
       </div>
     </div>
-    <div class="diy-content" v-if="admin==1">
+    <div class="diy-content">
       <div>
-        <span>5.设置可修改银行卡日期（号）</span>
+        <span>设置可修改银行卡日期（号）</span>
         <span class="iconfont BAI-heirenwenhao" @click="explanation()" style="cursor:pointer"></span>
       </div>
       <el-select
@@ -95,7 +95,7 @@
     </div>
     <div class="diy-content" v-if="admin==1">
       <div>
-        <span>6.清除已领取礼包状态</span>
+        <span>清除已领取礼包状态</span>
       </div>
       <div>
         <!-- <el-button class="mini-button" type="primary" size="small" @click="delGuideGift">设置用户</el-button> -->
