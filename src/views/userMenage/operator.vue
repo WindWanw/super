@@ -64,6 +64,18 @@
         <el-table-column prop="unum" label="马甲消费者数量" align="center"></el-table-column>
         <el-table-column prop="reply" label="回复需求数" align="center"></el-table-column>
         <el-table-column prop="gnum" label="马甲专引师数量" align="center"></el-table-column>
+        <el-table-column prop="team" label="所属" align="center">
+          <template slot-scope="scope">
+            <div v-if="scope.row.team">{{scope.row.tem}}</div>
+            <div v-else>
+              <el-select v-model="team" placeholder="请选择系统标签" multiple style="width:99%">
+                <el-option-group v-for="group in options" :key="group.label" :label="group.label">
+                  <el-option v-for="item in group.options" :key="item" :label="item" :value="item"></el-option>
+                </el-option-group>
+              </el-select>
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button
