@@ -23,7 +23,7 @@
     </div>
     <div class="diy-content" v-if="admin==1">
       <div>
-        <span>1.设置商户密码</span>
+        <span>设置商户密码</span>
       </div>
       <div>
         <el-button
@@ -34,9 +34,9 @@
         >点击设置</el-button>
       </div>
     </div>
-    <div class="diy-content" v-if="admin==1">
+    <div class="diy-content">
       <div>
-        <span>2.设置马甲用户</span>
+        <span>设置马甲用户</span>
       </div>
       <div>
         <el-button class="mini-button" type="primary" size="small" @click="openVestDialog=true">点击生成</el-button>
@@ -44,7 +44,7 @@
     </div>
     <div class="diy-content" v-if="admin==1">
       <div>
-        <span>3.设置用户权限</span>
+        <span>设置用户权限</span>
       </div>
       <div>
         <el-button class="mini-button" type="primary" size="small" @click="openRoutDialog=true">点击设置</el-button>
@@ -52,7 +52,7 @@
     </div>
     <div class="diy-content" v-if="admin==1">
       <div>
-        <span>4.设置版本号</span>
+        <span>设置版本号</span>
       </div>
       <div>
         <el-input v-model="version" size="mini"></el-input>
@@ -61,9 +61,9 @@
         <el-button class="mini-button" type="primary" size="mini" @click="setVersion">点击保存</el-button>
       </div>
     </div>
-    <div class="diy-content" v-if="admin==1">
+    <div class="diy-content">
       <div>
-        <span>5.设置可修改银行卡日期（号）</span>
+        <span>设置可修改银行卡日期（号）</span>
         <span class="iconfont BAI-heirenwenhao" @click="explanation()" style="cursor:pointer"></span>
       </div>
       <el-select
@@ -95,7 +95,7 @@
     </div>
     <div class="diy-content" v-if="admin==1">
       <div>
-        <span>6.清除已领取礼包状态</span>
+        <span>清除已领取礼包状态</span>
       </div>
       <div>
         <!-- <el-button class="mini-button" type="primary" size="small" @click="delGuideGift">设置用户</el-button> -->
@@ -224,6 +224,9 @@
                 placeholder="请选择城市"
               ></el-cascader>
             </el-form-item>
+            <el-form-item label="到期时间" v-if="vest.type=='_G'" prop="timeout">
+              <el-date-picker v-model="vest.timeout" type="date" placeholder="选择日期"></el-date-picker>
+            </el-form-item>
           </el-form>
         </el-tab-pane>
       </el-tabs>
@@ -348,7 +351,8 @@ export default {
         pics: [],
         citycode: [], //选择城市
         type: "_U", //用户类型
-        vtype: "0"
+        vtype: "0",
+        timeout: ""
       },
       rout: {
         genre: "",
@@ -387,6 +391,9 @@ export default {
         genre: [{ required: true, message: "角色必须选择", trigger: "blur" }],
         routing: [
           { required: true, message: "功能模块必须选择", trigger: "blur" }
+        ],
+        timeout: [
+          { required: true, message: "专引师到期时间必须选择", trigger: "blur" }
         ]
       }
     };
@@ -474,6 +481,9 @@ export default {
     tabClick(val) {
       this.vest.vtype = val.name;
       this.vest.num = "";
+      this.vest.pics = [];
+      this.vest.citycode = [];
+      this.vest.timeout = "";
     },
 
     //设置马甲用户信息
@@ -487,6 +497,10 @@ export default {
       }
       if (this.vest.pics.length == 0) {
         this.$message("请上传至少一张头像图");
+        return;
+      }
+      if (this.vest.type == "_G" && this.vest.timeout == "") {
+        this.$message("专引师到期时间必须选择");
         return;
       }
 
@@ -570,6 +584,7 @@ export default {
         if (res.data.list != null) {
           this.card.start = res.data.list.start;
           this.card.end = res.data.list.end;
+          this.getTwoDateDay();
         }
       });
     },
@@ -608,9 +623,9 @@ export default {
       this.$message.info("设置用户修改银行卡的日期，每月的日期范围");
     },
     //清除个别
-    delGuideGift(){},
+    delGuideGift() {},
 
-//一键清除所有已领取大礼包的专引师记录
+    //一键清除所有已领取大礼包的专引师记录
     delAllGidft() {
       this.$confirm("确定要清除吗？")
         .then(_ => {

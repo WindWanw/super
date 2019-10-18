@@ -188,7 +188,7 @@ export default {
           page: this.page,
           limit: this.limit,
           su_id: this.su_id,
-          date: this.date,
+          times: this.date,
           status: this.status,
           goodsname: this.goodsname
         })

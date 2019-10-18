@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-09-29 13:26:02
- * @LastEditTime: 2019-10-18 13:07:26
+ * @LastEditTime: 2019-10-18 14:29:56
  * @LastEditors: Please set LastEditors
  */
 import { fetchGet, fetchPost } from './fetch';
@@ -72,12 +72,28 @@ export default {
      * @需求管理
      * 获取需求列表
      * 二维码
+     * 设置需求内容关键字
+     * 系统标签
+     * 词法分析
+     * 添加需求keywords
      */
     getNeedList(params) {
         return fetchPost('/admin/getNeedUser', params)
     },
     transWx(params) {
         return fetchPost('/qrcode/createImQrcode', params)
+    },
+    needsKeywordsList(params) {
+        return fetchPost('/admin/needsKeywordsList', params)
+    },
+    getSystemTip(params) {
+        return fetchPost('/admin/getSystemTip', params)
+    },
+    getLexical(params) {
+        return fetchPost('/admin/getLexical', params)
+    },
+    addNeedKeywords(params) {
+        return fetchPost('/admin/addNeedKeywords', params)
     },
     /**
      * @代理商管理
@@ -277,6 +293,9 @@ export default {
     suProcess(params) {
         return fetchPost('/after/suProcess', params)
     },
+    getAddress(params) {
+        return fetchPost('/after/getAddress', params)
+    },
 
     /**
      * @专引师管理
@@ -469,6 +488,20 @@ export default {
     getReportsList(params) {
         return fetchPost('/report/getReportsList', params)
     },
+    setReply(params) {
+        return fetchPost('/report/setReply', params)
+    },
+
+    /** 
+     * 认证审核
+     */
+    getIdentifyList(params) {
+        return fetchPost('/identify/getIdentifyList', params)
+    },
+    checkIdentify(params) {
+        return fetchPost('/identify/checkIdentify', params)
+    },
+
     //个人流水
     userLiuShui(params) {
         return fetchPost('/admin/userLiuShui', params)
@@ -476,5 +509,9 @@ export default {
     //个人流水明细
     oneLiuShui(params) {
         return fetchPost('/orders/oneLiuShui', params)
+    },
+    //清除拥有马甲的账号
+    delVestUser(params) {
+        return fetchPost('/Client/delVestUser', params)
     },
 }

@@ -2,7 +2,13 @@
   <div class="teacher">
     <div class="table_title">
       <div>
-        <el-button v-if="isShow" type="primary" size="mini" class="el-icon-d-arrow-left" @click="back()">返回</el-button>
+        <el-button
+          v-if="isShow"
+          type="primary"
+          size="mini"
+          class="el-icon-d-arrow-left"
+          @click="back()"
+        >返回</el-button>
       </div>
       <div class="search_wrap">
         <el-date-picker
@@ -24,14 +30,19 @@
           <el-radio-button label="threedays">近三天</el-radio-button>
           <el-radio-button label="week">近一周</el-radio-button>
         </el-radio-group>
-        <el-button type="success" icon="el-icon-search" size="mini" @click="search" style="margin:0 0 0 10px;">搜索</el-button>
+        <el-button
+          type="success"
+          icon="el-icon-search"
+          size="mini"
+          @click="search"
+          style="margin:0 0 0 10px;"
+        >搜索</el-button>
         <el-button type="success" size="mini" @click="beforeExport" icon="iconfont daochu">导出</el-button>
       </div>
     </div>
     <div class="content">
       <el-table
         :data="dataList.list"
-        :height="height"
         stripe
         border
         style="width:100%"
@@ -53,6 +64,30 @@
         <el-table-column prop="unum" label="马甲消费者数量" align="center"></el-table-column>
         <el-table-column prop="reply" label="回复需求数" align="center"></el-table-column>
         <el-table-column prop="gnum" label="马甲专引师数量" align="center"></el-table-column>
+        <el-table-column prop="team" label="所属" align="center">
+          <template slot-scope="scope">
+            <div v-if="scope.row.team">{{scope.row.tem}}</div>
+            <div v-else>
+              <el-select v-model="team" placeholder="请选择系统标签" multiple style="width:99%">
+                <el-option-group v-for="group in options" :key="group.label" :label="group.label">
+                  <el-option v-for="item in group.options" :key="item" :label="item" :value="item"></el-option>
+                </el-option-group>
+              </el-select>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" align="center">
+          <template slot-scope="scope">
+            <el-button
+              title="删除"
+              @click="delVest(scope.row.id)"
+              type="danger"
+              size="mini"
+              class="mini-button"
+              style="margin : 10px 0 0 0;"
+            >删除</el-button>
+          </template>
+        </el-table-column>
       </el-table>
       <el-pagination
         background
@@ -74,8 +109,7 @@ export default {
   data() {
     return {
       loading: false,
-      isShow:false,
-      height:200,
+      isShow: false,
       pickerOptions: {
         //快捷键
         shortcuts: [
@@ -112,7 +146,7 @@ export default {
       page: 1,
       limit: 10,
       times: "",
-      day:'today',
+      day: "today",
       shopname: ""
     };
   },
@@ -158,22 +192,25 @@ export default {
           page: this.page,
           limit: this.limit,
           date: this.times,
-          day:this.day
+          day: this.day
         })
         .then(res => {
           this.dataList = res.data || [];
-          this.height=100;
-          let t = res.data.total;
-          if (t >= 10) {
-            this.height = 750;
-          } else if (t != 0) {
-            this.height = t * 100;
-          }
           if (res.code) {
             this.$message[res.code ? "warning" : "success"](res.data);
           }
           this.loading = false;
         });
+    },
+    delVest(id) {
+      this.$confirm("确定要删除吗？")
+        .then(_ => {
+          this.$api.delVestUser({ id: id }).then(res => {
+            this.$message[res.code ? "warning" : "success"](res.data.message);
+            this.getDataList();
+          });
+        })
+        .catch(_ => {});
     },
     //分页
     handleSizeChange(val) {
@@ -189,21 +226,21 @@ export default {
     search() {
       this.page = 1;
       this.getDataList();
-      this.isShow=true;
+      this.isShow = true;
     },
 
-    back(){
-      this.page=1;
-      this.limit=10;
-      this.times="";
-      this.day="today";
-      this.getDataList();
-      this.isShow=false;
-    },
-
-    getVestJobs(){
+    back() {
       this.page = 1;
-      this.times='';
+      this.limit = 10;
+      this.times = "";
+      this.day = "today";
+      this.getDataList();
+      this.isShow = false;
+    },
+
+    getVestJobs() {
+      this.page = 1;
+      this.times = "";
       this.getDataList();
     }
   },

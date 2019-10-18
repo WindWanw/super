@@ -40,76 +40,66 @@
           :label="item.label"
           :name="item.name"
         >
-          <el-table
-            :data="dataList.list"
-            stripe
-            border
-            style="width:100%"
-            v-loading="loading"
-            :key="Math.random()"
-          >
+          <el-table :data="dataList.list" stripe border style="width:100%" v-loading="loading">
+            <el-table-column type="expand">
+              <template slot-scope="props">
+                <div class="expand_wrap">
+                  <p v-if="props.row.data.name">
+                    <span>{{props.row.type=='truename' ? '姓名' : '公司名称'}}:</span>
+                    {{props.row.data.name.value}}
+                  </p>
+                  <p v-if="props.row.data.ids">
+                    <span>身份证号码:</span>
+                    {{props.row.data.ids.value}}
+                  </p>
+                  <p v-if="props.row.data.companyId">
+                    <span>企业信用代码:</span>
+                    {{props.row.data.companyId.value}}
+                  </p>
+                  <p v-if="props.row.data.idcard1 || props.row.data.idcard2">
+                    <span>身份证正反面:</span>
+                    <img
+                      class="idcard_img viewBig"
+                      :src="props.row.data.idcard1.value"
+                      @click="viewBigImg(props.row.data.idcard1.value)"
+                    />
+                    <img
+                      class="idcard_img viewBig"
+                      :src="props.row.data.idcard2.value"
+                      @click="viewBigImg(props.row.data.idcard2.value)"
+                    />
+                  </p>
+                  <p v-if="props.row.data.license">
+                    <span>营业执照:</span>
+                    <img
+                      class="license_img viewBig"
+                      :src="props.row.data.license.value"
+                      @click="viewBigImg(props.row.data.license.value)"
+                    />
+                  </p>
+                </div>
+              </template>
+            </el-table-column>
             <el-table-column prop="id" label="ID" align="center"></el-table-column>
-            <el-table-column prop="user_name" label="投诉人" align="center"></el-table-column>
-            <el-table-column prop="label" label="投诉对象类型" align="center"></el-table-column>
-            <el-table-column prop="object_info" label="投诉内容" align="center">
-              <template slot-scope="scope">
-                <el-button
-                  size="mini"
-                  class="mini-button"
-                  type="success"
-                  icon="iconfont examine"
-                  @click="openObjectDialog=true;object_info=scope.row.object_info;"
-                  title="点击查看投诉内容"
-                >查看</el-button>
-              </template>
-            </el-table-column>
-            <el-table-column prop="reason" label="投诉原因" align="center"></el-table-column>
-            <el-table-column prop="info" label="投诉备注" align="center">
-              <template slot-scope="scope">
-                <el-button
-                  size="mini"
-                  class="mini-button"
-                  type="warning"
-                  icon="iconfont zixun"
-                  @click="getInfo(scope.row.info,'info')"
-                  title="点击查看备注内容"
-                >查看</el-button>
-              </template>
-            </el-table-column>
-            <el-table-column prop="times" label="投诉时间" align="center"></el-table-column>
-            <el-table-column v-if="status=='1'" prop="reply_name" label="回复人" align="center"></el-table-column>
-            <el-table-column prop="reply" label="官方回复" align="center" v-if="status=='1'">
-              <template slot-scope="scope">
-                <el-button
-                  size="mini"
-                  class="mini-button"
-                  type="primary"
-                  icon="el-icon-view"
-                  @click="getInfo(scope.row.reply,'reply')"
-                  title="点击查看回复内容"
-                >查看</el-button>
-              </template>
-            </el-table-column>
-            <el-table-column v-if="status=='1'" prop="reply_time" label="回复时间" align="center"></el-table-column>
+            <el-table-column prop="username" label="用户姓名" align="center"></el-table-column>
+            <el-table-column prop="typeinfo" label="认证类型" align="center"></el-table-column>
+            <el-table-column prop="times" label="认证申请时间" align="center"></el-table-column>
+            <el-table-column v-if="status!='0'" prop="checker" label="审核人" align="center"></el-table-column>
+            <el-table-column v-if="status!='0'" prop="check_time" label="审核时间" align="center"></el-table-column>
+            <el-table-column v-if="status!='0'" prop="reason" label="审核结果" align="center"></el-table-column>
             <el-table-column prop label="操作" align="center">
               <template slot-scope="scope">
                 <div class="cz_btn">
+                  <!-- <el-button size="mini" type="danger" @click="del(scope.row.id)">删除</el-button> -->
                   <el-button
-                    v-if="status=='1'"
-                    size="mini"
-                    type="danger"
-                    @click="del(scope.row.id)"
-                    icon="el-icon-delete"
-                  >删除</el-button>
-                  <el-button
-                    v-if="status!=1"
+                    v-if="status=='0'"
                     @click="openCheck(scope.row)"
                     type="primary"
                     size="mini"
                     icon="el-icon-edit-outline"
-                    title="点我对该条信息进行回复"
+                    title="点我对该条信息进行审核认证"
                     class="mini-button"
-                  >点击回复</el-button>
+                  >点击审核</el-button>
                 </div>
               </template>
             </el-table-column>
@@ -128,53 +118,27 @@
       ></el-pagination>
     </div>
 
-    <!-- 查看内容 -->
-    <el-dialog title="投诉内容" :visible.sync="openObjectDialog" width="800px" top="20px">
-      <div class="expand_wrap">
-        <p>
-          <span>用户头像:</span>
-          <img class="avatar" :src="object_info.avatar" />
-        </p>
-        <p>
-          <span>用户姓名:</span>
-          {{object_info.username}}
-        </p>
-        <p>
-          <span>需求内容:</span>
-          {{object_info.info}}
-        </p>
-      </div>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="openObjectDialog = false">关闭</el-button>
-      </div>
+    <el-dialog class="big-img" top="50px" title="查看大图" :visible.sync="viewImg" width="800px">
+      <img style="width:100%;height:100%" :src="viewBigImage" />
     </el-dialog>
-
-    <!-- 查看内容 -->
     <el-dialog
-      :title="type=='info' ? '查看备注' : '查看回复'"
-      :visible.sync="infoDialog"
-      width="800px"
-      top="20px"
-    >
-      <div v-html="info"></div>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="infoDialog = false">关闭</el-button>
-      </div>
-    </el-dialog>
-
-    <el-dialog
-      title="回复"
+      title="审核"
       :visible.sync="dialogVisible"
-      @close="form.reply=''"
+      @close="pass='';remark=''"
       width="30%"
       v-loading="loading"
     >
+      <el-radio-group v-model="form.status">
+        <el-radio :label="1">通过</el-radio>
+        <el-radio :label="3">驳回</el-radio>
+      </el-radio-group>
       <el-input
+        v-if="form.status=='3'"
         style="margin-top:20px"
         type="textarea"
         :rows="2"
-        placeholder="请输入回复信息"
-        v-model="form.reply"
+        placeholder="请输入备注信息"
+        v-model="form.reason"
       ></el-input>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
@@ -226,20 +190,24 @@ export default {
       page: 1,
       limit: 10,
       times: "",
-      tabList: [{ label: "未回复", name: "0" }, { label: "已回复", name: "1" }],
+      tabList: [
+        { label: "待审核", name: "0" },
+        { label: "审核通过", name: "1" },
+        { label: "自动审核失败", name: "2" },
+        { label: "人工审核失败", name: "3" }
+      ],
       status: "0",
       form: {
         id: "",
-        uid: "",
-        object_id: "",
-        reply: "" //回复消息
+        status: "",
+        reason: ""
       },
+      types: "", //处罚类型
+      to_uid: "", //处罚对象
+      values: "", //处罚具体数值
       dialogVisible: false,
-      infoDialog: false, //内容dialog
-      info: "", //内容
-      type: "",
-      openObjectDialog: false,
-      object_info: []
+      viewImg: false, //查看大图dialog
+      viewBigImage: "" //查看大图
     };
   },
   watch: {
@@ -250,24 +218,22 @@ export default {
     }
   },
   methods: {
-    getInfo(item, type) {
-      this.info = item;
-      this.type = type;
-      this.infoDialog = true;
+    viewBigImg(img) {
+      this.viewImg = true;
+      this.viewBigImage = img;
     },
     //审核
     openCheck(item) {
       this.dialogVisible = true;
       this.form.id = item.id;
-      this.form.uid = item.uid;
-      this.form.object_id = item.object_id;
-      this.formreply = "";
+      this.form.status = "";
+      this.form.reason = "";
     },
     //获取数据列表
     getDataList() {
       this.loading = true;
       this.$api
-        .getReportsList({
+        .getIdentifyList({
           page: this.page,
           limit: this.limit,
           status: this.status,
@@ -333,13 +299,24 @@ export default {
     //审核通过驳回
 
     sure() {
-      this.loading = true;
-      this.$api.setReply(this.form).then(res => {
-        this.loading = false;
-        this.$message[res.code ? "warning" : "success"](res.data.message);
-        this.dialogVisible = false;
-        this.getDataList();
-      });
+      if (!this.form.status) {
+        this.$message.warning("请选择通过或者驳回");
+      } else if (this.form.status == "3" && !this.form.reason) {
+        this.$message.warning("请填写驳回原因");
+      } else {
+        this.loading = true;
+        this.$api.checkIdentify(this.form).then(res => {
+          this.loading = false;
+          this.$message[res.code ? "warning" : "success"](res.data.message);
+          this.page = this.$options.filters.pagination(
+            this.page,
+            this.limit,
+            this.dataList.total
+          );
+          this.dialogVisible = false;
+          this.getDataList();
+        });
+      }
     }
   },
 
@@ -355,9 +332,7 @@ export default {
   padding: 20px;
   box-sizing: border-box;
 }
-.avatar {
-  width: 50px;
-  height: 50px;
+.viewBig {
+  cursor: pointer;
 }
-.expand_wrap p span{}
 </style>

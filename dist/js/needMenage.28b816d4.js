@@ -1,0 +1,2 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["needMenage"],{c51e:function(e,n,t){"use strict";t.r(n);var r=function(){var e=this,n=e.$createElement,t=e._self._c||n;return t("div",{},[t("router-view")],1)},a=[],c={data:function(){return{}},components:{}},o=c,u=t("2877"),i=Object(u["a"])(o,r,a,!1,null,"014a4e74",null);n["default"]=i.exports}}]);
+//# sourceMappingURL=needMenage.28b816d4.js.map

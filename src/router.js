@@ -9,6 +9,12 @@ const home = () =>
 const dataStatistics = () =>
     import ( /* webpackChunkName: "dataStatistics" */ './views/dataStatistics.vue')
 
+const needMenage = () =>
+    import ( /* webpackChunkName: "needMenage" */ './views/needMenage')
+const needList = () =>
+    import ( /* webpackChunkName: "needList" */ './views/needMenage/needList.vue')
+const keywords = () =>
+    import ( /* webpackChunkName: "keywords" */ './views/needMenage/keywords.vue')
 const userMenage = () =>
     import ( /* webpackChunkName: "userMenage" */ './views/userMenage')
 const userList = () =>
@@ -18,8 +24,8 @@ const operator = () =>
 
 const teacher = () =>
     import ( /* webpackChunkName: "teacher" */ './views/userMenage/teacher.vue')
-const needList = () =>
-    import ( /* webpackChunkName: "needList" */ './views/needList.vue')
+    // const needList = () =>
+    //     import ( /* webpackChunkName: "needList" */ './views/needList.vue')
 const financeMenage = () =>
     import ( /* webpackChunkName: "financeMenage" */ './views/financeMenage')
 const finance = () =>
@@ -51,6 +57,9 @@ const teacherSh = () =>
     import ( /* webpackChunkName: "teacherSh" */ './views/checkMenage/teacherSh.vue')
 const reports = () =>
     import ( /* webpackChunkName: "reports" */ './views/checkMenage/reports.vue')
+
+const identification = () =>
+    import ( /* webpackChunkName: "identification" */ './views/checkMenage/identification.vue')
 
 const order = () =>
     import ( /* webpackChunkName: "order" */ './views/order.vue')
@@ -118,15 +127,47 @@ export const asyRouter = [{
         }
     },
     {
-        path: '/needList',
-        name: 'needList',
-        component: needList,
+        path: '/needMenage',
+        name: 'needMenage',
+        component: needMenage,
         meta: {
             name: '需求管理',
             iconfont: 'iconfont shouhou-',
             needLogin: true, //需要登录
-        }
+        },
+        redirect: '/needMenage/needList',
+        children: [{
+                path: '/needMenage/needList',
+                name: 'needList',
+                component: needList,
+                meta: {
+                    name: '回复需求',
+                    iconfont: 'iconfont shoujihao1',
+                    needLogin: true, //需要登录
+                }
+            },
+            {
+                path: '/needMenage/keywords',
+                name: 'keywords',
+                component: keywords,
+                meta: {
+                    name: '需求关键词',
+                    iconfont: 'iconfont qianyue',
+                    needLogin: true, //需要登录
+                }
+            },
+        ]
     },
+    // {
+    //     path: '/needList',
+    //     name: 'needList',
+    //     component: needList,
+    //     meta: {
+    //         name: '需求管理',
+    //         iconfont: 'iconfont shouhou-',
+    //         needLogin: true, //需要登录
+    //     }
+    // },
     {
         path: '/userMenage',
         name: 'userMenage',
@@ -225,6 +266,16 @@ export const asyRouter = [{
                 component: reports,
                 meta: {
                     name: '投诉单',
+                    iconfont: 'iconfont shenhe',
+                    needLogin: true, //需要登录
+                }
+            },
+            {
+                path: '/checkMenage/identification',
+                name: 'identification',
+                component: identification,
+                meta: {
+                    name: '认证审核',
                     iconfont: 'iconfont shenhe',
                     needLogin: true, //需要登录
                 }

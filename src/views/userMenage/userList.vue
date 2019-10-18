@@ -14,21 +14,40 @@
       <div class="search_wrap">
         <el-input
           clearable
-          v-model="username"
-          placeholder="请输入用户名"
+          v-model="user_id"
+          placeholder="请输入用户id"
           size="mini"
-          style="width:200px"
+          :disabled="username !=''"
+          style="width:200px;margin-left:10px;"
           @keyup.enter.native="search"
         ></el-input>
         <el-input
+          clearable
+          v-model="username"
+          placeholder="请输入用户名"
+          size="mini"
+          :disabled="user_id !=''"
+          style="width:200px;margin-left:10px;"
+          @keyup.enter.native="search"
+        ></el-input>
+        <el-cascader
+          size="mini"
+          :options="cityData"
+          v-model="city"
+          change-on-select
+          placeholder="请输入专引师所在城市名称"
+          style="width:250px;margin-left:10px;"
+          @keyup.enter.native="search"
+        ></el-cascader>
+        <!-- <el-input
           clearable
           v-model="city"
           placeholder="请输入城市名称"
           size="mini"
           style="width:200px;margin:0 10px"
           @keyup.enter.native="search"
-        ></el-input>
-        <el-select
+        ></el-input>-->
+        <!-- <el-select
           clearable
           v-model="sex"
           placeholder="请选择用户性别"
@@ -38,19 +57,20 @@
         >
           <el-option label="男" :value="1"></el-option>
           <el-option label="女" :value="0"></el-option>
-        </el-select>
+        </el-select>-->
         <el-select
           clearable
           v-model="status"
           placeholder="请选择用户类型"
           size="mini"
-          style="margin:0 10px"
+          style="margin-left:10px;"
           @keyup.enter.native="search"
         >
           <el-option label="正常" :value="1"></el-option>
           <el-option label="禁用" :value="-1"></el-option>
         </el-select>
         <el-date-picker
+          style="margin-left:10px;"
           size="mini"
           v-model="date"
           type="daterange"
@@ -80,14 +100,7 @@
           :label="item.label"
           :name="item.name"
         >
-          <el-table
-            :data="dataList.list"
-            stripe
-            border
-            v-loading="loading"
-            ref="table"
-            :height="height"
-          >
+          <el-table :data="dataList.list" stripe border v-loading="loading" ref="table">
             <el-table-column type="expand">
               <template slot-scope="scope">
                 <el-table :data="scope.row.vestUser" stripe border style="width:100%">
@@ -137,25 +150,28 @@
                 </el-table>
               </template>
             </el-table-column>
+            <el-table-column prop="id" label="ID" align="center"></el-table-column>
             <el-table-column prop="username" label="用户名" align="center">
               <template slot-scope="scope">
-                {{scope.row.username}}
-                <div>{{scope.row.isVest | vestStatus}}</div>
+                <p>
+                  <img class="avatar" :src="scope.row.avatar" />
+                </p>
+                <p>{{scope.row.username}}{{scope.row.isVest | vestStatus}}</p>
               </template>
             </el-table-column>
-            <el-table-column prop label="头像" align="center">
+            <!-- <el-table-column prop label="头像" align="center">
               <template slot-scope="scope">
-                <img class="avatar" :src="scope.row.avatar" />
+                <p><img class="avatar" :src="scope.row.avatar" /></p>
               </template>
-            </el-table-column>
+            </el-table-column>-->
             <el-table-column prop="sex" label="性别" align="center">
               <template slot-scope="scope">{{scope.row.sex | sexStatus}}</template>
             </el-table-column>
             <el-table-column prop="city" label="城市" align="center"></el-table-column>
             <el-table-column prop="tel" label="手机号" align="center"></el-table-column>
-            <el-table-column prop="coin" label="积分" align="center"></el-table-column>
-            <el-table-column prop="exp" label="经验" align="center"></el-table-column>
-            <el-table-column prop="card_price" label="卡卷金额（元）" align="center"></el-table-column>
+            <el-table-column prop="coin" label="积分" align="center" width="60px"></el-table-column>
+            <el-table-column prop="exp" label="经验" align="center" width="60px"></el-table-column>
+            <el-table-column prop="card_price" label="卡卷金额（元）" align="center" width="100px"></el-table-column>
             <el-table-column prop label="账号状态" align="center">
               <template slot-scope="scope">
                 <el-button
@@ -246,12 +262,12 @@
 </template>
 
 <script>
+import citys from "../../utils/province.js";
 export default {
   data() {
     return {
       loading: false,
       isShow: false,
-      height: 100,
       pickerOptions: {
         //快捷键
         shortcuts: [
@@ -284,13 +300,20 @@ export default {
           }
         ]
       },
-      tabList: [{ label: "全部", name: "0" }, { label: "马甲主号", name: "1" }],
-      utype: "0", //用户类型
+      tabList: [
+        { label: "普通用户", name: "3" },
+        { label: "马甲用户", name: "2" },
+        { label: "马甲主号", name: "1" },
+        { label: "全部", name: "0" }
+      ],
+      cityData: citys, //城市数据
+      utype: "3", //用户类型
+      user_id: "", //用户id
       username: "", //用户名
       status: "", //用户状态
       date: "", //日期
       sex: "",
-      city: "",
+      city: [],
       dataList: [], //数据源
       page: 1, //页
       limit: 10, //条
@@ -326,17 +349,11 @@ export default {
           times: this.date,
           gender: this.sex,
           city: this.city,
-          username: this.username
+          username: this.username,
+          user_id: this.user_id
         })
         .then(res => {
           this.dataList = res.data || [];
-          this.height = 100;
-          let t = res.data.total;
-          if (t >= 10) {
-            this.height = 750;
-          } else if (t != 0) {
-            this.height = t * 160;
-          }
           if (res.code) {
             this.$message[res.code ? "warning" : "success"](res.data);
           }
@@ -441,7 +458,8 @@ export default {
       this.status = "";
       this.times = "";
       this.username = "";
-      this.city = "";
+      this.user_id = "";
+      this.city = [];
       this.gender = "";
       this.getDataList();
       this.isShow = false;
