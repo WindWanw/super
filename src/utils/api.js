@@ -1,3 +1,10 @@
+/*
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-09-29 13:26:02
+ * @LastEditTime: 2019-10-18 13:07:26
+ * @LastEditors: Please set LastEditors
+ */
 import { fetchGet, fetchPost } from './fetch';
 
 // {headers:{ 'Content-Type': 'multipart/form-data' }}
@@ -465,5 +472,9 @@ export default {
     //个人流水
     userLiuShui(params) {
         return fetchPost('/admin/userLiuShui', params)
+    },
+    //个人流水明细
+    oneLiuShui(params) {
+        return fetchPost('/orders/oneLiuShui', params)
     },
 }
