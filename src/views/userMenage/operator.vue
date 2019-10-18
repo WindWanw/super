@@ -11,6 +11,16 @@
         >返回</el-button>
       </div>
       <div class="search_wrap">
+        <el-select v-model="team" placeholder="请选择所属团队" size="mini">
+          <el-option-group v-for="group in options" :key="group.label" :label="group.label">
+            <el-option
+              v-for="item in group.options"
+              :key="item.value"
+              :label="item.name"
+              :value="item.value"
+            ></el-option>
+          </el-option-group>
+        </el-select>
         <el-date-picker
           style="margin:0 10px"
           value-format="timestamp"
@@ -64,18 +74,20 @@
         <el-table-column prop="unum" label="马甲消费者数量" align="center"></el-table-column>
         <el-table-column prop="reply" label="回复需求数" align="center"></el-table-column>
         <el-table-column prop="gnum" label="马甲专引师数量" align="center"></el-table-column>
-        <el-table-column prop="team" label="所属" align="center">
+        <!-- <el-table-column prop="team" label="所属" align="center">
           <template slot-scope="scope">
-            <div v-if="scope.row.team">{{scope.row.tem}}</div>
-            <div v-else>
-              <el-select v-model="team" placeholder="请选择系统标签" multiple style="width:99%">
-                <el-option-group v-for="group in options" :key="group.label" :label="group.label">
-                  <el-option v-for="item in group.options" :key="item" :label="item" :value="item"></el-option>
-                </el-option-group>
-              </el-select>
-            </div>
+            <el-select v-model="team" placeholder="请选择所属团队" style="width:99%">
+              <el-option-group v-for="group in options" :key="group.label" :label="group.label">
+                <el-option
+                  v-for="item in group.options"
+                  :key="item.value"
+                  :label="item.name"
+                  :value="item.value"
+                ></el-option>
+              </el-option-group>
+            </el-select>
           </template>
-        </el-table-column>
+        </el-table-column>-->
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button
@@ -142,6 +154,8 @@ export default {
           }
         ]
       },
+      team: "",
+      options: [],
       dataList: [],
       page: 1,
       limit: 10,
@@ -192,7 +206,8 @@ export default {
           page: this.page,
           limit: this.limit,
           date: this.times,
-          day: this.day
+          day: this.day,
+          team:this.team
         })
         .then(res => {
           this.dataList = res.data || [];
@@ -234,6 +249,7 @@ export default {
       this.limit = 10;
       this.times = "";
       this.day = "today";
+      this.team="";
       this.getDataList();
       this.isShow = false;
     },
@@ -242,9 +258,15 @@ export default {
       this.page = 1;
       this.times = "";
       this.getDataList();
+    },
+    getTeam() {
+      this.$api.getTeam().then(res => {
+        this.options = res.data.list;
+      });
     }
   },
   created() {
+    this.getTeam();
     this.getDataList();
   }
 };

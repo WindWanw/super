@@ -45,6 +45,9 @@ export default {
     setOpenId(params) {
         return fetchPost('/Client/setOpenId', params)
     },
+    getTeam(params) {
+        return fetchPost('/Client/getTeam', params)
+    },
 
     //审核商户
     checkSupplier(params) {

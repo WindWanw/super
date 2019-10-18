@@ -252,6 +252,13 @@
         <el-form-item label="马甲用户">
           <el-input type="textarea" v-model="form.uids" placeholder="请输入马甲用户id，多个用户id用“,”隔开"></el-input>
         </el-form-item>
+        <el-form-item label="所属团队">
+          <el-select v-model="form.team" placeholder="请选择所属团队" style="width:99%">
+            <el-option-group v-for="group in options" :key="group.label" :label="group.label">
+              <el-option v-for="item in group.options" :key="item.value" :label="item.name" :value="item.value"></el-option>
+            </el-option-group>
+          </el-select>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="openSetVestUserDialog = false">取 消</el-button>
@@ -268,6 +275,7 @@ export default {
     return {
       loading: false,
       isShow: false,
+      options:[],
       pickerOptions: {
         //快捷键
         shortcuts: [
@@ -321,7 +329,8 @@ export default {
       vestIdTag: [], //马甲用户id
       form: {
         id: "",
-        uids: ""
+        uids: "",
+        team:"",
       },
       uid: JSON.parse(localStorage.getItem("userinfo")).id
     };
@@ -425,6 +434,8 @@ export default {
       this.openSetVestUserDialog = true;
       this.form.id = item.id;
       this.vestIdTag = item.vestId;
+      this.form.team=item.belong;
+      this.getTeam();
     },
     setVestUser() {
       this.$api.setVestUser(this.form).then(res => {
@@ -432,6 +443,11 @@ export default {
         if (res.code) return;
         this.openSetVestUserDialog = false;
         this.getDataList();
+      });
+    },
+    getTeam() {
+      this.$api.getTeam().then(res => {
+        this.options = res.data.list;
       });
     },
 
