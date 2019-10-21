@@ -11,7 +11,14 @@
         >返回</el-button>
       </div>
       <div class="search_wrap">
-        
+        <el-input
+          clearable
+          v-model="name"
+          placeholder="请输入商户姓名"
+          size="mini"
+          style="width:200px;margin-right:10px;"
+          @keyup.enter.native="search"
+        ></el-input>
         <el-input
           clearable
           v-model="username"
@@ -42,6 +49,10 @@
           <template slot-scope="props">
             <div class="expand_wrap">
               <p>
+                <span>用户姓名:</span>
+                {{props.row.name}}
+              </p>
+              <p>
                 <span>身份证号码:</span>
                 {{props.row.idcard}}
               </p>
@@ -59,6 +70,14 @@
                 />
               </p>
               <p>
+                <span>店铺名称:</span>
+                {{props.row.shopname}}
+              </p>
+              <p>
+                <span>店铺地址:</span>
+                {{props.row.address}}
+              </p>
+              <p>
                 <span>营业执照:</span>
                 <img
                   class="license_img viewBig"
@@ -69,21 +88,32 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="city" label="城市"></el-table-column>
-        <el-table-column prop="name" label="商户姓名"></el-table-column>
-        <el-table-column prop="username" label="账号"></el-table-column>
-
-        <el-table-column prop="address" label="详细地址"></el-table-column>
-        <!-- <el-table-column prop="info" label="商户描述"></el-table-column> -->
-        <el-table-column prop="tel" label="手机号码"></el-table-column>
-        <el-table-column prop="times" label="入驻时间">
-          <!-- <template slot-scope="scope">{{scope.row.times | formatTimeStamp}}</template> -->
+        <el-table-column prop="city" label="城市" align="center"></el-table-column>
+        <el-table-column prop="username" label="商户账号" align="center"></el-table-column>
+        <el-table-column prop="tel" label="手机号码" align="center"></el-table-column>
+        <el-table-column prop="tags" label="店铺标签" align="center">
+          <template slot-scope="scope">
+            <el-tag
+              size="mini"
+              :type="scope.row.tags ? 'primary' : 'danger'"
+            >{{scope.row.tags ? scope.row.tags : '无'}}</el-tag>
+          </template>
         </el-table-column>
-        <el-table-column prop label="账号状态">
+        <el-table-column prop="commission" label="签约模式" align="center">
+          <template slot-scope="scope">
+            <el-tag
+              size="mini"
+              :type="scope.row.commission=='1' ? 'success' : 'warning'"
+            >{{scope.row.commission==1 ? '平台托管' :'自定义'}}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="discount" label="折扣率(%)" align="center"></el-table-column>
+        <el-table-column prop="times" label="入驻时间" align="center"></el-table-column>
+        <el-table-column prop label="账号状态" align="center">
           <el-button class="mini-button" type="warning" size="mini">待审核</el-button>
         </el-table-column>
 
-        <el-table-column prop label="操作" width="200px">
+        <el-table-column prop label="操作" align="center">
           <template slot-scope="scope">
             <div class="cz_btn">
               <el-button
@@ -110,8 +140,8 @@
       ></el-pagination>
     </div>
 
-    <el-dialog class="big-img" top="50px" title="查看大图" :visible.sync="viewImg" width="800px">
-      <img style="width:100%;height:100%" :src="viewBigImage" />
+    <el-dialog top="50px" title="查看大图" :visible.sync="viewImg">
+      <img style="width:100%;height:100%;" :src="viewBigImage" />
     </el-dialog>
     <el-dialog
       title="审核"
@@ -183,6 +213,7 @@ export default {
       check: 1, //是否是审核商户数据
       times: "",
       username: "",
+      name: "",
       pass: "",
       remark: "",
       dialogVisible: false,
@@ -194,7 +225,7 @@ export default {
         name: "",
         result: 1,
         remark: ""
-      }
+      },
     };
   },
   watch: {
@@ -208,6 +239,7 @@ export default {
   methods: {
     //查看大图
     viewBigImg(img) {
+      // this.getImageData(img);
       this.viewImg = true;
       this.viewBigImage = img;
     },
@@ -227,15 +259,32 @@ export default {
           check: this.check,
           times: this.times,
           username: this.username,
+          name: this.name
         })
         .then(res => {
           this.dataList = res.data || [];
+
           if (res.code) {
             this.$message[res.code ? "warning" : "success"](res.data);
           }
           this.loading = false;
         });
     },
+    // getImageData(url) {
+    //   var img = new Image();
+
+    //   img.src = url;
+    //   console.log(this.width);
+    //   console.log(this.height);
+
+    //   img.onload = function() {
+    //     console.log(img.width);
+    //     console.log(img.height);
+    //     this.width = img.width;
+    //     this.height = img.height;
+    //   };
+    // },
+
     //分页
     handleSizeChange(val) {
       this.limit = val;
@@ -259,6 +308,7 @@ export default {
       this.check = 1;
       this.times = "";
       this.username = "";
+      this.name = "";
       this.getDataList();
       this.isShow = false;
     },
@@ -318,5 +368,9 @@ export default {
 }
 .viewBig {
   cursor: pointer;
+}
+.el-dialog__body {
+    max-height: 100%;
+    overflow: auto;
 }
 </style>

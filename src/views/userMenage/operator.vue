@@ -65,29 +65,18 @@
             <img class="avatar" :src="scope.row.avatar" />
           </template>
         </el-table-column>
-        <el-table-column prop="username" label="用户名" align="center">
+        <el-table-column prop="name" label="真实姓名" align="center"></el-table-column>
+        <el-table-column prop="username" label="用户名（昵称）" align="center">
           <template
             slot-scope="scope"
           >{{scope.row.username}}{{scope.row.nickname ?"("+scope.row.nickname+")": ''}}</template>
         </el-table-column>
+        
         <el-table-column prop="need" label="发布需求数" align="center"></el-table-column>
         <el-table-column prop="unum" label="马甲消费者数量" align="center"></el-table-column>
         <el-table-column prop="reply" label="回复需求数" align="center"></el-table-column>
         <el-table-column prop="gnum" label="马甲专引师数量" align="center"></el-table-column>
-        <!-- <el-table-column prop="team" label="所属" align="center">
-          <template slot-scope="scope">
-            <el-select v-model="team" placeholder="请选择所属团队" style="width:99%">
-              <el-option-group v-for="group in options" :key="group.label" :label="group.label">
-                <el-option
-                  v-for="item in group.options"
-                  :key="item.value"
-                  :label="item.name"
-                  :value="item.value"
-                ></el-option>
-              </el-option-group>
-            </el-select>
-          </template>
-        </el-table-column>-->
+
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button

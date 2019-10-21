@@ -187,4 +187,8 @@ html,
 .el-submenu__title i {
   color: #fff;
 }
+.el-input-diy{
+  width: 200px;
+  margin-right: 10px;
+}
 </style>
