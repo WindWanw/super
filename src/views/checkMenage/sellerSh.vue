@@ -2,14 +2,28 @@
   <div class="sellerSh">
     <div class="table_title">
       <div>
-        <el-button v-if="isShow" type="primary" size="mini" class="el-icon-d-arrow-left" @click="back()">返回</el-button>
+        <el-button
+          v-if="isShow"
+          type="primary"
+          size="mini"
+          class="el-icon-d-arrow-left"
+          @click="back()"
+        >返回</el-button>
       </div>
       <div class="search_wrap">
-        <el-input clearable v-model="username" placeholder="请输入账号" size="small" style="width:200px" @keyup.enter.native="search"></el-input>
+        
+        <el-input
+          clearable
+          v-model="username"
+          placeholder="请输入账号"
+          size="mini"
+          style="width:200px"
+          @keyup.enter.native="search"
+        ></el-input>
         <el-date-picker
           style="margin:0 10px"
           value-format="timestamp"
-          size="small"
+          size="mini"
           v-model="times"
           type="daterange"
           align="right"
@@ -19,7 +33,7 @@
           end-placeholder="结束日期"
           :picker-options="pickerOptions"
         ></el-date-picker>
-        <el-button type="primary" icon="el-icon-search" size="small" @click="search">搜索</el-button>
+        <el-button type="primary" icon="el-icon-search" size="mini" @click="search">搜索</el-button>
       </div>
     </div>
     <div class="content">
@@ -33,12 +47,24 @@
               </p>
               <p>
                 <span>身份证正反面:</span>
-                <img class="idcard_img viewBig" :src="props.row.picOn" @click="viewBigImg(props.row.picOn)">
-                <img class="idcard_img viewBig" :src="props.row.picOff" @click="viewBigImg(props.row.picOff)">
+                <img
+                  class="idcard_img viewBig"
+                  :src="props.row.picOn"
+                  @click="viewBigImg(props.row.picOn)"
+                />
+                <img
+                  class="idcard_img viewBig"
+                  :src="props.row.picOff"
+                  @click="viewBigImg(props.row.picOff)"
+                />
               </p>
               <p>
                 <span>营业执照:</span>
-                <img class="license_img viewBig" :src="props.row.license" @click="viewBigImg(props.row.license)">
+                <img
+                  class="license_img viewBig"
+                  :src="props.row.license"
+                  @click="viewBigImg(props.row.license)"
+                />
               </p>
             </div>
           </template>
@@ -46,7 +72,7 @@
         <el-table-column prop="city" label="城市"></el-table-column>
         <el-table-column prop="name" label="商户姓名"></el-table-column>
         <el-table-column prop="username" label="账号"></el-table-column>
-        
+
         <el-table-column prop="address" label="详细地址"></el-table-column>
         <!-- <el-table-column prop="info" label="商户描述"></el-table-column> -->
         <el-table-column prop="tel" label="手机号码"></el-table-column>
@@ -61,7 +87,7 @@
           <template slot-scope="scope">
             <div class="cz_btn">
               <el-button
-               class="mini-button"
+                class="mini-button"
                 @click="openCheckDialog(scope.row)"
                 type="primary"
                 size="mini"
@@ -85,7 +111,7 @@
     </div>
 
     <el-dialog class="big-img" top="50px" title="查看大图" :visible.sync="viewImg" width="800px">
-      <img style="width:100%;height:100%" :src="viewBigImage">
+      <img style="width:100%;height:100%" :src="viewBigImage" />
     </el-dialog>
     <el-dialog
       title="审核"
@@ -118,7 +144,7 @@ export default {
   data() {
     return {
       loading: false,
-      isShow:false,
+      isShow: false,
       pickerOptions: {
         //快捷键
         shortcuts: [
@@ -160,8 +186,8 @@ export default {
       pass: "",
       remark: "",
       dialogVisible: false,
-      viewImg:false,//查看大图dialog
-      viewBigImage:'',//查看大图
+      viewImg: false, //查看大图dialog
+      viewBigImage: "", //查看大图
       check: {
         id: "",
         tel: "",
@@ -181,9 +207,9 @@ export default {
   components: {},
   methods: {
     //查看大图
-    viewBigImg(img){
-      this.viewImg=true;
-      this.viewBigImage=img;
+    viewBigImg(img) {
+      this.viewImg = true;
+      this.viewBigImage = img;
     },
     openCheckDialog(item) {
       this.dialogVisible = true;
@@ -200,7 +226,7 @@ export default {
           limit: this.limit,
           check: this.check,
           times: this.times,
-          username: this.username
+          username: this.username,
         })
         .then(res => {
           this.dataList = res.data || [];
@@ -224,17 +250,17 @@ export default {
     search() {
       this.page = 1;
       this.getDataList();
-      this.isShow=true;
+      this.isShow = true;
     },
 
-    back(){
-      this.page=1;
-      this.limit=10;
-      this.check=1;
-      this.times="";
-      this.username="";
+    back() {
+      this.page = 1;
+      this.limit = 10;
+      this.check = 1;
+      this.times = "";
+      this.username = "";
       this.getDataList();
-      this.isShow=false;
+      this.isShow = false;
     },
 
     //审核
@@ -244,8 +270,8 @@ export default {
       } else if (!this.check.result && !this.check.remark) {
         this.$message.warning("请填写驳回原因");
       } else {
-        if(this.check.result=='1'){
-          this.check.remark='';
+        if (this.check.result == "1") {
+          this.check.remark = "";
         }
         this.$api.checkSupplier(this.check).then(res => {
           console.log(res.code);
@@ -290,7 +316,7 @@ export default {
   border: 1px dashed #ddd;
   box-sizing: border-box;
 }
-.viewBig{
+.viewBig {
   cursor: pointer;
 }
 </style>

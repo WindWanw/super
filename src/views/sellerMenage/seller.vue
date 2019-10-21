@@ -19,8 +19,16 @@
       <div class="search_wrap">
         <el-input
           clearable
+          v-model="checker"
+          placeholder="请输入审核人员姓名"
+          size="mini"
+          style="width:200px;margin-right:10px;"
+          @keyup.enter.native="search"
+        ></el-input>
+        <el-input
+          clearable
           v-model="name"
-          placeholder="按姓名搜索"
+          placeholder="请输入商户姓名"
           size="mini"
           style="width:200px"
           @keyup.enter.native="search"
@@ -28,7 +36,7 @@
         <el-select
           clearable
           v-model="status"
-          placeholder="请选择用户类型"
+          placeholder="请选择商户账号状态"
           size="mini"
           style="margin:0 10px"
           @keyup.enter.native="search"
@@ -64,7 +72,6 @@
         border
         v-loading="loading"
         @cell-click="toGoodlist"
-        :height="height"
       >
         <el-table-column type="expand">
           <template slot-scope="props">
@@ -87,21 +94,13 @@
         </el-table-column>
         <el-table-column prop="city" label="城市"></el-table-column>
         <el-table-column prop="username" label="账号"></el-table-column>
-        <el-table-column prop="name" label="姓名"></el-table-column>
+        <el-table-column prop="name" label="商户姓名"></el-table-column>
+        <el-table-column prop="shopname" label="店铺名称"></el-table-column>
         <el-table-column prop="address" label="详细地址"></el-table-column>
-        <!-- <el-table-column prop="open_times" label="营业时间"></el-table-column> -->
-        <!-- <el-table-column prop="shop_info" label="商户描述">
-           <template slot-scope="scope">
-              <el-button size="mini" type="success" @click="form.shop_info=scope.row.shop_info;previewDialog=true">预览</el-button>
-            </template>
-        </el-table-column>-->
         <el-table-column prop="tel" label="手机号码"></el-table-column>
-        <!-- <el-table-column prop="good_num" label="商品数量" ></el-table-column> -->
         <el-table-column prop="guide_num" label="专引师数量"></el-table-column>
         <el-table-column prop="checker" label="审核人"></el-table-column>
-        <el-table-column prop="times" label="入驻时间">
-          <!-- <template slot-scope="scope">{{scope.row.times | formatTimeStamp}}</template> -->
-        </el-table-column>
+        <el-table-column prop="times" label="入驻时间"></el-table-column>
         <el-table-column prop label="账号状态">
           <template slot-scope="scope">
             <!-- :title="scope.row.status=='1'?'点击禁用':'点击解除禁用'"
@@ -130,7 +129,13 @@
               size="mini"
               icon="el-icon-edit"
             >编辑</el-button>
-            <!-- <el-button @click="del(scope.row.id)" type="danger" size="mini" icon="el-icon-delete">删除</el-button> -->
+            <el-button
+              @click="cancel(scope.row.id)"
+              class="mini-button"
+              type="danger"
+              size="mini"
+              icon="iconfont chexiao1"
+            >撤销</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -289,7 +294,12 @@
     <el-dialog title="惩罚" :visible.sync="punishDialog" label-width="120px" width="30%">
       <el-form :model="form">
         <el-form-item label="处罚类型">
-          <el-select v-model="punishType" clearable placeholder="请选择处罚类型" @change="changePunishType">
+          <el-select
+            v-model="punishType"
+            clearable
+            placeholder="请选择处罚类型"
+            @change="changePunishType"
+          >
             <el-option
               v-for="item in punishList"
               :key="item.value"
@@ -332,7 +342,6 @@ export default {
     return {
       loading: false,
       isShow: false,
-      height: 100,
       rules: {
         username: [
           { required: true, message: "账号不能为空", trigger: "blur" }
@@ -399,6 +408,7 @@ export default {
         ]
       },
       username: "", //名称
+      checker:"",//审核人员
       name: "",
       status: "", //用户状态
       date: "", //日期
@@ -489,18 +499,12 @@ export default {
           limit: this.limit,
           status: this.status,
           times: this.date,
-          name: this.name
+          name: this.name,
+          checker:this.checker,
         })
         .then(res => {
           console.log(res);
           this.dataList = res.data || [];
-          this.height = 100;
-          let t = res.data.total;
-          if (t >= 10) {
-            this.height = 600;
-          } else if (t != 0) {
-            this.height = t * 120;
-          }
           if (res.code) {
             this.$message[res.code ? "warning" : "success"](res.data);
           }
@@ -524,6 +528,7 @@ export default {
       this.status = "";
       this.date = "";
       this.name = "";
+      this.checker="";
       this.getDataList();
       this.isShow = false;
     },
@@ -688,6 +693,21 @@ export default {
         }
       });
     },
+
+    //撤销审核
+    cancel(id) {
+      this.$confirm("确定要重新审核该用户吗？", "提示", {
+        type: "warning"
+      }).then(() => {
+        this.loading = true;
+        this.$api.cancelSeller({ id: id }).then(res => {
+          this.$message[res.code ? "warning" : "success"](res.data.message);
+          this.loading = false;
+          this.getDataList();
+        });
+      });
+    },
+
     //删除
     del(id) {
       this.$confirm("确认删除该项吗?", "提示", { type: "warning" })
@@ -725,8 +745,8 @@ export default {
     },
 
     //类型转变，清空子类型
-    changePunishType(){
-      this.punishContent=""
+    changePunishType() {
+      this.punishContent = "";
     },
 
     //确认处罚
@@ -774,5 +794,8 @@ export default {
 .idcard_box {
   padding: 20px;
   box-sizing: border-box;
+}
+.el-button [class*="el-icon-"] + span {
+  margin-left: 5px;
 }
 </style>

@@ -226,6 +226,7 @@ export default {
      * 添加商户
      * 修改商户
      * 删除商户
+     * 撤销审核
      * 商户审核列表(status=0)
      */
     getSellerList(params) {
@@ -239,6 +240,9 @@ export default {
     },
     delSeller(params) {
         return fetchPost('/supplier/supplierAdminDel', params)
+    },
+    cancelSeller(params) {
+        return fetchPost('/supplier/cancelSupplier', params)
     },
     citySupplier(params) {
         return fetchPost('/supplier/findSupplier', params)

@@ -156,7 +156,7 @@
                 <p>
                   <img class="avatar" :src="scope.row.avatar" />
                 </p>
-                <p>{{scope.row.username}}{{scope.row.isVest | vestStatus}}</p>
+                <p>{{scope.row.username}}</p>
               </template>
             </el-table-column>
             <!-- <el-table-column prop label="头像" align="center">
