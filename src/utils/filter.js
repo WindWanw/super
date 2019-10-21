@@ -67,7 +67,7 @@ function orderStatus(type) {
             return '已发货';
             break;
         case '4':
-            return '退单'
+            return '已退单'
             break;
         case '5':
             return '交易成功'
