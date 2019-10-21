@@ -30,6 +30,14 @@
           v-model="name"
           placeholder="请输入商户姓名"
           size="mini"
+          style="width:200px;margin-right:10px;"
+          @keyup.enter.native="search"
+        ></el-input>
+        <el-input
+          clearable
+          v-model="username"
+          placeholder="请输入商户账号"
+          size="mini"
           style="width:200px"
           @keyup.enter.native="search"
         ></el-input>
@@ -66,13 +74,7 @@
       </div>
     </div>
     <div class="content">
-      <el-table
-        :data="dataList.list"
-        stripe
-        border
-        v-loading="loading"
-        @cell-click="toGoodlist"
-      >
+      <el-table :data="dataList.list" stripe border v-loading="loading" @cell-click="toGoodlist">
         <el-table-column type="expand">
           <template slot-scope="props">
             <div class="expand_wrap">
@@ -408,7 +410,7 @@ export default {
         ]
       },
       username: "", //名称
-      checker:"",//审核人员
+      checker: "", //审核人员
       name: "",
       status: "", //用户状态
       date: "", //日期
@@ -500,7 +502,8 @@ export default {
           status: this.status,
           times: this.date,
           name: this.name,
-          checker:this.checker,
+          username: this.username,
+          checker: this.checker
         })
         .then(res => {
           console.log(res);
@@ -528,7 +531,8 @@ export default {
       this.status = "";
       this.date = "";
       this.name = "";
-      this.checker="";
+      this.username = "";
+      this.checker = "";
       this.getDataList();
       this.isShow = false;
     },
