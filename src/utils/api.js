@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-09-29 13:26:02
- * @LastEditTime: 2019-10-18 14:29:56
+ * @LastEditTime: 2019-10-21 15:48:24
  * @LastEditors: Please set LastEditors
  */
 import { fetchGet, fetchPost } from './fetch';
@@ -520,5 +520,12 @@ export default {
     //清除拥有马甲的账号
     delVestUser(params) {
         return fetchPost('/Client/delVestUser', params)
+    },
+    //需求审核列表
+    needListsh(params) {
+        return fetchPost('/guide/needList', params)
+    },
+    needShRuslt(params) {
+        return fetchPost('/guide/needShRuslt', params)
     },
 }

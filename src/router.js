@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2019-09-29 13:26:02
+ * @LastEditTime: 2019-10-21 14:45:15
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: /d:\zy\super\src\router.js
+ */
 import Vue from 'vue'
 import Router from 'vue-router'
 const login = () =>
@@ -112,6 +120,8 @@ const userFlow = () =>
     //     import ( /* webpackChunkName: "userFlow" */ './views/bill.vue')
 const userbill = () =>
     import ( /* webpackChunkName: "bill" */ './views/financeMenage/userbill.vue')
+const needSh = () =>
+    import ( /* webpackChunkName: "bill" */ './views/checkMenage/needSh.vue')
 Vue.use(Router)
 
 
@@ -266,6 +276,16 @@ export const asyRouter = [{
                 component: reports,
                 meta: {
                     name: '投诉单',
+                    iconfont: 'iconfont shenhe',
+                    needLogin: true, //需要登录
+                }
+            },
+            {
+                path: '/checkMenage/needSh',
+                name: 'needSh',
+                component: needSh,
+                meta: {
+                    name: '需求审核',
                     iconfont: 'iconfont shenhe',
                     needLogin: true, //需要登录
                 }
