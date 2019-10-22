@@ -71,10 +71,11 @@
           size="mini"
           style="margin-left:10px"
         >搜索</el-button>
+        <el-button type="success" size="mini" @click="beforeExport" icon="iconfont daochu">导出</el-button>
       </div>
     </div>
     <div class="content">
-      <el-table :data="dataList.list" stripe border v-loading="loading" @cell-click="toGoodlist">
+      <el-table :data="dataList.list" stripe border v-loading="loading" @cell-click="toGoodlist" class="seller-table">
         <el-table-column type="expand">
           <template slot-scope="props">
             <div class="expand_wrap">
@@ -84,12 +85,24 @@
               </p>
               <p>
                 <span>身份证正反面:</span>
-                <img class="idcard_img" :src="props.row.picOn" />
-                <img class="idcard_img" :src="props.row.picOff" />
+                <img
+                  class="idcard_img viewBig"
+                  :src="props.row.picOn"
+                  @click="viewBigImg(props.row.picOn)"
+                />
+                <img
+                  class="idcard_img viewBig"
+                  :src="props.row.picOff"
+                  @click="viewBigImg(props.row.picOff)"
+                />
               </p>
               <p>
                 <span>营业执照:</span>
-                <img class="license_img" :src="props.row.license" />
+                <img
+                  class="license_img viewBig"
+                  :src="props.row.license"
+                  @click="viewBigImg(props.row.license)"
+                />
               </p>
             </div>
           </template>
@@ -152,6 +165,10 @@
         :total="dataList.total"
       ></el-pagination>
     </div>
+
+    <el-dialog top="50px" title="查看大图" :visible.sync="viewImg">
+      <img style="width:100%;height:100%;" :src="viewBigImage" />
+    </el-dialog>
 
     <!-- 添加dialog -->
     <el-dialog
@@ -337,6 +354,8 @@
 </template>
 
 <script>
+import FileSaver from "file-saver";
+import XLSX from "xlsx";
 import citys from "../../utils/city.js";
 import { constants } from "crypto";
 export default {
@@ -422,6 +441,8 @@ export default {
       cityData: citys, //城市数据
       selectCity: [], //选择城市
       city: "",
+      viewImg: false, //查看大图dialog
+      viewBigImage: "", //查看大图
       form: {
         username: "",
         password: "",
@@ -473,6 +494,44 @@ export default {
   },
   components: {},
   methods: {
+
+    //导出之前
+    beforeExport() {
+      this.$confirm("确定导出当前页数据吗？(选择100条/页试试)")
+        .then(_ => {
+          this.exportExcel();
+        })
+        .catch(_ => {});
+    },
+    //导出
+    exportExcel() {
+
+      /* generate workbook object from table */
+      var wb = XLSX.utils.table_to_book(document.querySelector(".seller-table"));
+
+      /* get binary string as output */
+      var wbout = XLSX.write(wb, {
+        bookType: "xlsx",
+        bookSST: true,
+        type: "array"
+      });
+      try {
+        FileSaver.saveAs(
+          new Blob([wbout], { type: "application/octet-stream" }),
+          "sellerList.xlsx"
+        );
+      } catch (e) {
+        if (typeof console !== "undefined") console.log(e, wbout);
+      }
+      return wbout;
+    },
+
+    //查看大图
+    viewBigImg(img) {
+      // this.getImageData(img);
+      this.viewImg = true;
+      this.viewBigImage = img;
+    },
     explanation() {
       this.$message({
         showClose: true,
@@ -506,7 +565,6 @@ export default {
           checker: this.checker
         })
         .then(res => {
-          console.log(res);
           this.dataList = res.data || [];
           if (res.code) {
             this.$message[res.code ? "warning" : "success"](res.data);
@@ -801,5 +859,19 @@ export default {
 }
 .el-button [class*="el-icon-"] + span {
   margin-left: 5px;
+}
+.img {
+  width: 80px;
+  height: 80px;
+  padding: 10px;
+  border: 1px dashed #ddd;
+  box-sizing: border-box;
+}
+.viewBig {
+  cursor: pointer;
+}
+.el-dialog__body {
+  max-height: 100%;
+  overflow: auto;
 }
 </style>
