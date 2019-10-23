@@ -19,10 +19,18 @@
       <div class="search_wrap">
         <el-input
           clearable
+          v-model="title"
+          placeholder="请输入店铺名称"
+          size="mini"
+          style="width:150px;margin-right:10px;"
+          @keyup.enter.native="search"
+        ></el-input>
+        <el-input
+          clearable
           v-model="checker"
           placeholder="请输入审核人员姓名"
           size="mini"
-          style="width:200px;margin-right:10px;"
+          style="width:150px;margin-right:10px;"
           @keyup.enter.native="search"
         ></el-input>
         <el-input
@@ -30,7 +38,7 @@
           v-model="name"
           placeholder="请输入商户姓名"
           size="mini"
-          style="width:200px;margin-right:10px;"
+          style="width:150px;margin-right:10px;"
           @keyup.enter.native="search"
         ></el-input>
         <el-input
@@ -38,7 +46,7 @@
           v-model="username"
           placeholder="请输入商户账号"
           size="mini"
-          style="width:200px"
+          style="width:150px"
           @keyup.enter.native="search"
         ></el-input>
         <el-select
@@ -75,7 +83,14 @@
       </div>
     </div>
     <div class="content">
-      <el-table :data="dataList.list" stripe border v-loading="loading" @cell-click="toGoodlist" class="seller-table">
+      <el-table
+        :data="dataList.list"
+        stripe
+        border
+        v-loading="loading"
+        @cell-click="toGoodlist"
+        class="seller-table"
+      >
         <el-table-column type="expand">
           <template slot-scope="props">
             <div class="expand_wrap">
@@ -430,6 +445,7 @@ export default {
       },
       username: "", //名称
       checker: "", //审核人员
+      title: "", //店铺名称
       name: "",
       status: "", //用户状态
       date: "", //日期
@@ -494,7 +510,6 @@ export default {
   },
   components: {},
   methods: {
-
     //导出之前
     beforeExport() {
       this.$confirm("确定导出当前页数据吗？(选择100条/页试试)")
@@ -505,9 +520,10 @@ export default {
     },
     //导出
     exportExcel() {
-
       /* generate workbook object from table */
-      var wb = XLSX.utils.table_to_book(document.querySelector(".seller-table"));
+      var wb = XLSX.utils.table_to_book(
+        document.querySelector(".seller-table")
+      );
 
       /* get binary string as output */
       var wbout = XLSX.write(wb, {
@@ -562,7 +578,8 @@ export default {
           times: this.date,
           name: this.name,
           username: this.username,
-          checker: this.checker
+          checker: this.checker,
+          title: this.title
         })
         .then(res => {
           this.dataList = res.data || [];
@@ -591,6 +608,7 @@ export default {
       this.name = "";
       this.username = "";
       this.checker = "";
+      this.title = "";
       this.getDataList();
       this.isShow = false;
     },
