@@ -74,8 +74,26 @@
                 {{props.row.shopname}}
               </p>
               <p>
+                <span>店铺头像:</span>
+                <img
+                  v-for="item in props.row.pics"
+                  :key="item"
+                  :src="item"
+                  @click="viewBigImg(item)"
+                  class="idcard_img viewBig"
+                />
+              </p>
+              <p>
                 <span>店铺地址:</span>
                 {{props.row.address}}
+              </p>
+              <p>
+                <span>商品:</span>
+                <span v-if="props.row.goods.length==0">无</span>
+                <span v-else class="tj" v-for="(item,index) in props.row.goods" :key="index">
+                  <img :src="item.pics" />
+                  <span>{{item.text}}</span>
+                </span>
               </p>
               <p>
                 <span>营业执照:</span>
@@ -88,9 +106,22 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="city" label="城市" align="center"></el-table-column>
+        <el-table-column prop="shopname" label="店铺名称" align="center">
+          <template slot-scope="scope">
+            <p>
+              <img
+                class="avatar"
+                :src="scope.row.avatar"
+                style="cursor: pointer;"
+                @click="lookAvatar(scope.row.pics)"
+              />
+            </p>
+            <p>{{scope.row.shopname}}</p>
+          </template>
+        </el-table-column>
         <el-table-column prop="username" label="商户账号" align="center"></el-table-column>
         <el-table-column prop="tel" label="手机号码" align="center"></el-table-column>
+        <el-table-column prop="city" label="城市" align="center"></el-table-column>
         <el-table-column prop="tags" label="店铺标签" align="center">
           <template slot-scope="scope">
             <el-tag
@@ -140,8 +171,40 @@
       ></el-pagination>
     </div>
 
-    <el-dialog top="50px" title="查看大图" :visible.sync="viewImg">
-      <img style="width:100%;height:100%;" :src="viewBigImage" />
+    <!--走马灯 -->
+    <el-dialog top="50px" title="头像" :visible.sync="avatarDialog">
+      <el-carousel :interval="4000" type="card" height="400px">
+        <el-carousel-item v-for="item in avatars" :key="item">
+          <img style="width:100%;height:100%;" :src="item" />
+        </el-carousel-item>
+      </el-carousel>
+    </el-dialog>
+
+    <!-- <el-dialog
+      top="50px"
+      title="查看大图"
+      :visible.sync="viewImg"
+      :width="width>=height ? '50%' : '30%'"
+    >
+      <div :class="width>=height ? 'view-img1' : 'view-img2'">
+        <img
+          style="width:100%;height:100%;"
+          :src="viewBigImage"
+          :class="'go'+number"
+          @click="rotate"
+        />
+      </div>
+    </el-dialog>-->
+    <el-dialog top="50px" title="查看大图" :visible.sync="viewImg" width="700">
+      <div class="view-img">
+        <img
+          style="width:100%;height:100%;"
+          :src="viewBigImage"
+          :class="'go'+number"
+          @click="rotate"
+          title="点击旋转"
+        />
+      </div>
     </el-dialog>
     <el-dialog
       title="审核"
@@ -173,6 +236,9 @@
 export default {
   data() {
     return {
+      width: "0",
+      height: "0",
+      number: 1,
       loading: false,
       isShow: false,
       pickerOptions: {
@@ -219,6 +285,8 @@ export default {
       dialogVisible: false,
       viewImg: false, //查看大图dialog
       viewBigImage: "", //查看大图
+      avatarDialog: false,
+      avatars: [],
       check: {
         id: "",
         tel: "",
@@ -226,6 +294,7 @@ export default {
         result: 1,
         remark: ""
       },
+      rotate_num: []
     };
   },
   watch: {
@@ -237,9 +306,14 @@ export default {
   },
   components: {},
   methods: {
+    //头像轮播
+    lookAvatar(avatar) {
+      this.avatarDialog = true;
+      this.avatars = avatar;
+    },
     //查看大图
     viewBigImg(img) {
-      // this.getImageData(img);
+      this.getImageData(img);
       this.viewImg = true;
       this.viewBigImage = img;
     },
@@ -270,20 +344,37 @@ export default {
           this.loading = false;
         });
     },
-    // getImageData(url) {
-    //   var img = new Image();
+    getImageData(url) {
+      var img = new Image();
 
-    //   img.src = url;
-    //   console.log(this.width);
-    //   console.log(this.height);
+      img.src = url;
 
-    //   img.onload = function() {
-    //     console.log(img.width);
-    //     console.log(img.height);
-    //     this.width = img.width;
-    //     this.height = img.height;
-    //   };
-    // },
+      if (img.complete) {
+        console.log("缓存" + img.width);
+        console.log("缓存" + img.height);
+        this.width = img.width;
+        this.height = img.height;
+        console.log("缓存" + img.width);
+        console.log("缓存" + img.height);
+      } else {
+        img.onload = function() {
+          console.log(img.width);
+          console.log(img.height);
+          this.width = img.width;
+          this.height = img.height;
+          console.log(this.width);
+          console.log(this.height);
+        };
+      }
+    },
+
+    rotate() {
+      if (this.number < 5) {
+        this.number++;
+      } else {
+        this.number = 0;
+      }
+    },
 
     //分页
     handleSizeChange(val) {
@@ -370,7 +461,78 @@ export default {
   cursor: pointer;
 }
 .el-dialog__body {
-    max-height: 100%;
-    overflow: auto;
+  max-height: 100%;
+  overflow: auto;
+}
+.el-carousel__item h3 {
+  color: #475669;
+  font-size: 14px;
+  opacity: 0.75;
+  line-height: 200px;
+  margin: 0;
+}
+
+.el-carousel__item:nth-child(2n) {
+  background-color: #99a9bf;
+}
+
+.el-carousel__item:nth-child(2n + 1) {
+  background-color: #d3dce6;
+}
+.tj {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  margin-right: 10px;
+  padding-right: 0;
+}
+.tj img {
+  width: 100%;
+  height: 100%;
+}
+.tj span {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  left: 0;
+  padding: 5px 0;
+  box-sizing: border-box;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  z-index: 2;
+}
+.view-img {
+  width: 600px;
+  height: 600px;
+  margin: auto;
+  cursor: pointer;
+}
+.view-img1 {
+  width: 100%;
+  height: 500px;
+}
+.view-img2 {
+  width: 100%;
+  height: 800px;
+}
+.go1 {
+  transition: all 1s;
+}
+.go2 {
+  transform: rotate(90deg);
+  transition: all 1s;
+}
+.go3 {
+  transform: rotate(180deg);
+  transition: all 1s;
+}
+.go4 {
+  transform: rotate(270deg);
+  transition: all 1s;
+}
+.go5 {
+  transform: rotate(360deg);
+  transition: all 1s;
 }
 </style>

@@ -14,45 +14,32 @@ const noFound = () =>
     import ( /* webpackChunkName: "404" */ './views/404.vue')
 const home = () =>
     import ( /* webpackChunkName: "home" */ './views/home.vue')
+
+/******************************************数据统计***************************************************************/
 const dataStatistics = () =>
     import ( /* webpackChunkName: "dataStatistics" */ './views/dataStatistics.vue')
 
+/******************************************需求管理***************************************************************/
 const needMenage = () =>
     import ( /* webpackChunkName: "needMenage" */ './views/needMenage')
 const needList = () =>
     import ( /* webpackChunkName: "needList" */ './views/needMenage/needList.vue')
 const keywords = () =>
     import ( /* webpackChunkName: "keywords" */ './views/needMenage/keywords.vue')
+const needShs = () =>
+    import ( /* webpackChunkName: "needShs" */ './views/needMenage/needShs.vue')
+
+/******************************************用户管理***************************************************************/
 const userMenage = () =>
     import ( /* webpackChunkName: "userMenage" */ './views/userMenage')
 const userList = () =>
     import ( /* webpackChunkName: "userList" */ './views/userMenage/userList.vue')
+const teacher = () =>
+    import ( /* webpackChunkName: "teacher" */ './views/userMenage/teacher.vue')
 const operator = () =>
     import ( /* webpackChunkName: "operator" */ './views/userMenage/operator.vue')
 
-const teacher = () =>
-    import ( /* webpackChunkName: "teacher" */ './views/userMenage/teacher.vue')
-    // const needList = () =>
-    //     import ( /* webpackChunkName: "needList" */ './views/needList.vue')
-const financeMenage = () =>
-    import ( /* webpackChunkName: "financeMenage" */ './views/financeMenage')
-const finance = () =>
-    import ( /* webpackChunkName: "finance" */ './views/financeMenage/finance.vue')
-const bill = () =>
-    import ( /* webpackChunkName: "bill" */ './views/financeMenage/bill.vue')
-const refund = () =>
-    import ( /* webpackChunkName: "refund" */ './views/financeMenage/refund.vue')
-
-const agentMenage = () =>
-    import ( /* webpackChunkName: "agentMenage" */ './views/agentMenage')
-const agent = () =>
-    import ( /* webpackChunkName: "agent" */ './views/agentMenage/agent.vue')
-
-const sellerMenage = () =>
-    import ( /* webpackChunkName: "sellerMenage" */ './views/sellerMenage')
-const seller = () =>
-    import ( /* webpackChunkName: "seller" */ './views/sellerMenage/seller.vue')
-
+/******************************************审核管理***************************************************************/
 const checkMenage = () =>
     import ( /* webpackChunkName: "checkMenage" */ './views/checkMenage')
 const agentSh = () =>
@@ -65,12 +52,24 @@ const teacherSh = () =>
     import ( /* webpackChunkName: "teacherSh" */ './views/checkMenage/teacherSh.vue')
 const reports = () =>
     import ( /* webpackChunkName: "reports" */ './views/checkMenage/reports.vue')
-
 const identification = () =>
     import ( /* webpackChunkName: "identification" */ './views/checkMenage/identification.vue')
+const needSh = () =>
+    import ( /* webpackChunkName: "needSh" */ './views/checkMenage/needSh.vue')
 
-const order = () =>
-    import ( /* webpackChunkName: "order" */ './views/order.vue')
+/******************************************代理商管理***************************************************************/
+const agentMenage = () =>
+    import ( /* webpackChunkName: "agentMenage" */ './views/agentMenage')
+const agent = () =>
+    import ( /* webpackChunkName: "agent" */ './views/agentMenage/agent.vue')
+
+/******************************************商户管理***************************************************************/
+const sellerMenage = () =>
+    import ( /* webpackChunkName: "sellerMenage" */ './views/sellerMenage')
+const seller = () =>
+    import ( /* webpackChunkName: "seller" */ './views/sellerMenage/seller.vue')
+
+/******************************************马甲商户***************************************************************/
 const vestSupplier = () =>
     import ( /* webpackChunkName: "vestSupplier" */ './views/vestSupplier')
 const vestOrder = () =>
@@ -79,19 +78,28 @@ const suGoods = () =>
     import ( /* webpackChunkName: "suGoods" */ './views/vestSupplier/suGoods.vue')
 const vestSuSale = () =>
     import ( /* webpackChunkName: "suGoods" */ './views/vestSupplier/vestSuSale.vue')
+const goods = () =>
+    import ( /* webpackChunkName: "goods" */ './views/vestSupplier/goods.vue')
 
+/******************************************计划生产***************************************************************/
 const crowdfunding = () =>
     import ( /* webpackChunkName: "crowdfunding" */ './views/crowdfunding')
 const goodsList = () =>
     import ( /* webpackChunkName: "goodsList" */ './views/crowdfunding/goodsList')
 
-const goods = () =>
-    import ( /* webpackChunkName: "goods" */ './views/vestSupplier/goods.vue')
-const sale = () =>
-    import ( /* webpackChunkName: "sale" */ './views/sale.vue')
+/******************************************财务管理***************************************************************/
+const financeMenage = () =>
+    import ( /* webpackChunkName: "financeMenage" */ './views/financeMenage')
+const finance = () =>
+    import ( /* webpackChunkName: "finance" */ './views/financeMenage/finance.vue')
+const bill = () =>
+    import ( /* webpackChunkName: "bill" */ './views/financeMenage/bill.vue')
+const refund = () =>
+    import ( /* webpackChunkName: "refund" */ './views/financeMenage/refund.vue')
+const userbill = () =>
+    import ( /* webpackChunkName: "bill" */ './views/financeMenage/userbill.vue')
 
-
-//运营管理
+/******************************************运营管理***************************************************************/
 const operationMenage = () =>
     import ( /* webpackChunkName: "operationMenage" */ './views/operationMenage')
 const ad = () =>
@@ -100,28 +108,32 @@ const systemArticle = () =>
     import ( /* webpackChunkName: "systenArticle" */ './views/operationMenage/systemArticle.vue')
 const information = () =>
     import ( /* webpackChunkName: "information" */ './views/operationMenage/information.vue')
-const card = () =>
-    import ( /* webpackChunkName: "card" */ './views/card.vue')
-const authorization = () =>
-    import ( /* webpackChunkName: "authorization" */ './views/authorization.vue')
-const userSetting = () =>
-    import ( /* webpackChunkName: "userSetting" */ './views/userSetting.vue')
+
+/******************************************招商管理***************************************************************/
 const investment = () =>
     import ( /* webpackChunkName: "investment" */ './views/investment.vue')
-const citySupplier = () =>
-    import ( /* webpackChunkName: "citySupplier" */ './views/citySupplier.vue')
-const userFlow = () =>
-    import ( /* webpackChunkName: "userFlow" */ './views/userFlow.vue')
-    // const goodList = () =>
-    //     import ( /* webpackChunkName: "goodList" */ './views/sellerMenage/goodList.vue')
-    // const guidesList = () =>
-    //     import ( /* webpackChunkName: "userFlow" */ './views/sellerMenage/guidesList.vue')
-    // const bill = () =>
-    //     import ( /* webpackChunkName: "userFlow" */ './views/bill.vue')
-const userbill = () =>
-    import ( /* webpackChunkName: "bill" */ './views/financeMenage/userbill.vue')
-const needSh = () =>
-    import ( /* webpackChunkName: "bill" */ './views/checkMenage/needSh.vue')
+    /******************************************订单管理***************************************************************/
+const order = () =>
+    import ( /* webpackChunkName: "order" */ './views/order.vue')
+
+/******************************************售后管理***************************************************************/
+const sale = () =>
+    import ( /* webpackChunkName: "sale" */ './views/sale.vue')
+
+
+/******************************************代金券管理***************************************************************/
+const card = () =>
+    import ( /* webpackChunkName: "card" */ './views/card.vue')
+
+/******************************************权限管理***************************************************************/
+const authorization = () =>
+    import ( /* webpackChunkName: "authorization" */ './views/authorization.vue')
+
+/******************************************系统设置***************************************************************/
+const userSetting = () =>
+    import ( /* webpackChunkName: "userSetting" */ './views/userSetting.vue')
+
+/******************************************运营管理***************************************************************/
 Vue.use(Router)
 
 
@@ -166,18 +178,18 @@ export const asyRouter = [{
                     needLogin: true, //需要登录
                 }
             },
+            {
+                path: '/needMenage/needShs',
+                name: 'needShs',
+                component: needShs,
+                meta: {
+                    name: '需求审核',
+                    iconfont: 'iconfont shenhe',
+                    needLogin: true, //需要登录
+                }
+            },
         ]
     },
-    // {
-    //     path: '/needList',
-    //     name: 'needList',
-    //     component: needList,
-    //     meta: {
-    //         name: '需求管理',
-    //         iconfont: 'iconfont shouhou-',
-    //         needLogin: true, //需要登录
-    //     }
-    // },
     {
         path: '/userMenage',
         name: 'userMenage',
@@ -574,46 +586,6 @@ export const asyRouter = [{
             needLogin: true, //需要登录
         }
     },
-    // {
-    //     path: '/citySupplier',
-    //     name: 'citySupplier',
-    //     component: citySupplier,
-    //     meta: {
-    //         name: '各城市下商户统计',
-    //         iconfont: 'el-icon-loading',
-    //         needLogin: true, //需要登录
-    //     }
-    // },
-    // {
-    //     path: '/userFlow',
-    //     name: 'userFlow',
-    //     component: userFlow,
-    //     meta: {
-    //         name: '用户流水列表',
-    //         iconfont: 'el-icon-loading',
-    //         needLogin: true, //需要登录
-    //     }
-    // },
-    // {
-    //     path: '/goodList',
-    //     name: 'goodList',
-    //     component: goodList,
-    //     meta: {
-    //         name: '商家商品列表',
-    //         iconfont: 'el-icon-loading',
-    //         needLogin: true, //需要登录
-    //     }
-    // },
-    // {
-    //     path: '/guidesList',
-    //     name: 'guidesList',
-    //     component: guidesList,
-    //     meta: {
-    //         name: '商家专引师列表',
-    //         iconfont: 'el-icon-loading',
-    //         needLogin: true, //需要登录
-    //     }
-    // },
 ]
 
 const router = new Router({
