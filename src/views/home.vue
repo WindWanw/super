@@ -67,9 +67,9 @@ export default {
       });
     },
     getAudio(str) {
-      var url = 
-      "http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&spd=6&text=" +
-      encodeURI(str);
+      var url =
+        "http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&spd=6&text=" +
+        encodeURI(str);
       var audio = new Audio(url);
       console.log(audio);
       audio.load();
@@ -82,10 +82,20 @@ export default {
           .catch(() => {});
       }
       // new Audio(url).play();
+    },
+
+    getCheckNotify() {
+      this.$api.getCheckNotify().then(res => {
+        let data = res.data.list;
+        data.forEach(item => {
+          this.$store.commit("UPDATE_"+item.label+"_CHECK_NUM", item.value);
+        });
+      });
     }
   },
   created() {
     this.getOrderNotify();
+    this.getCheckNotify();
   }
 };
 </script>

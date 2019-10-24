@@ -40,14 +40,7 @@
           :label="item.label"
           :name="item.name"
         >
-          <el-table
-            :data="dataList.list"
-            stripe
-            border
-            style="width:100%"
-            v-loading="loading"
-            :height="height"
-          >
+          <el-table :data="dataList.list" stripe border style="width:100%" v-loading="loading">
             <el-table-column prop="to_name" label="被处罚对象"></el-table-column>
             <el-table-column prop="from_name" label="处罚申请人"></el-table-column>
             <el-table-column prop="type" label="处罚类型"></el-table-column>
@@ -125,7 +118,6 @@ export default {
     return {
       loading: false,
       isShow: false,
-      height: 100,
       pickerOptions: {
         //快捷键
         shortcuts: [
@@ -203,13 +195,7 @@ export default {
         })
         .then(res => {
           this.dataList = res.data || [];
-          this.height = 100;
-          let t = res.data.total;
-          if (t >= 10) {
-            this.height = 600;
-          } else if (t != 0) {
-            this.height = t * 120;
-          }
+          this.$store.commit("UPDATE_PUNISH_CHECK_NUM", res.data.total);
           if (res.code) {
             this.$message[res.code ? "warning" : "success"](res.data);
           }

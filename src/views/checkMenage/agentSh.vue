@@ -23,7 +23,7 @@
       </div>
     </div>
     <div class="content">
-      <el-table :data="dataList.list" stripe border style="width:100%" v-loading="loading" :height="height">
+      <el-table :data="dataList.list" stripe border style="width:100%" v-loading="loading">
         <el-table-column type="expand">
           <template slot-scope="props">
             <div class="expand_wrap">
@@ -107,7 +107,6 @@ export default {
     return {
       loading: false,
       isShow:false,
-      height:100,
       pickerOptions: {
         //快捷键
         shortcuts: [
@@ -181,13 +180,7 @@ export default {
         })
         .then(res => {
           this.dataList = res.data || [];
-          this.height=100;
-          let t = res.data.total;
-          if (t >= 10) {
-            this.height = 600;
-          } else if (t != 0) {
-            this.height = t * 70;
-          }
+          this.$store.commit("UPDATE_AGENT_CHECK_NUM", res.data.total);
           if (res.code) {
             this.$message[res.code ? "warning" : "success"](res.data);
           }

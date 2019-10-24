@@ -337,7 +337,7 @@ export default {
         })
         .then(res => {
           this.dataList = res.data || [];
-          this.$store.commit("UPDATE_SUPPLIER_CHECK_NUM", res.data.total);
+
           if (res.code) {
             this.$message[res.code ? "warning" : "success"](res.data);
           }

@@ -52,7 +52,15 @@
             :hidden="(admin !=1 && path.length!=0 && path.indexOf(itemChild.name) ==-1)"
           >
             <i :class="itemChild.meta.iconfont"></i>
-            <span slot="title">{{itemChild.meta.name}}</span>
+
+            <span slot="title">
+              <el-badge
+                :value="getNum(itemChild.name)"
+                :max="99"
+                class="item"
+                :hidden="check.indexOf(itemChild.name) ==-1 || getNum(itemChild.name)==0"
+              >{{itemChild.meta.name}}</el-badge>
+            </span>
           </el-menu-item>
         </template>
       </el-submenu>
@@ -85,9 +93,60 @@ export default {
       var p = localStorage.getItem("path");
 
       this.path = p ? p.split(",") : [];
+    },
+    getNum(name) {
+      if (this.check.indexOf(name) != -1) {
+        switch (name) {
+          case "agentSh":
+            return this.agent_check_num;
+            break;
+          case "sellerSh":
+            return this.supplier_check_num;
+            break;
+          case "teacherSh":
+            return this.guide_check_num;
+            break;
+          case "punish":
+            return this.punish_check_num;
+            break;
+          case "reports":
+            return this.report_check_num;
+            break;
+          case "needSh":
+            return this.need_check_num;
+            break;
+          case "identification":
+            return this.identify_check_num;
+            break;
+        }
+      }
     }
   },
   computed: {
+    agent_check_num() {
+      return this.$store.state.agent_check_num;
+    },
+    supplier_check_num() {
+      return this.$store.state.supplier_check_num;
+    },
+    guide_check_num() {
+      return this.$store.state.guide_check_num;
+    },
+    punish_check_num() {
+      return this.$store.state.punish_check_num;
+    },
+    report_check_num() {
+      return this.$store.state.report_check_num;
+    },
+    need_check_num() {
+      return this.$store.state.need_check_num;
+    },
+    identify_check_num() {
+      return this.$store.state.identify_check_num;
+    },
+    check() {
+      return this.$store.getters.check;
+    },
     asideList() {
       return this.$store.getters.asideList;
     }
@@ -115,13 +174,17 @@ export default {
   min-height: 400px;
 }
 .el-menu-item i {
-    color: #fff;
+  color: #fff;
 }
 .el-submenu__title i {
-    color: #fff;
+  color: #fff;
 }
 li i {
   padding: 0 10px;
   box-sizing: border-box;
+}
+.el-badge__content.is-fixed {
+  top: 16px;
+  right: 1px;
 }
 </style>

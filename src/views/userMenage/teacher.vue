@@ -56,7 +56,7 @@
           size="mini"
           style="width:250px;margin-left:10px;"
           @keyup.enter.native="search"
-        ></el-input> -->
+        ></el-input>-->
         <el-date-picker
           style=";margin-left:10px;"
           value-format="timestamp"
@@ -119,6 +119,25 @@
             <el-table-column prop="timeout" label="到期时间" align="center"></el-table-column>
             <el-table-column prop="needs" label="抢单数" align="center"></el-table-column>
             <el-table-column prop="needs_reply" label="回复需求数" align="center"></el-table-column>
+            <el-table-column prop="posterity" label="发展专引师数" align="center">
+              <template slot-scope="scope">
+                <div
+                  @click="getPosterity(scope.row.posterity,scope.row.id,'user')"
+                  class="posterity"
+                >{{scope.row.posterity}}</div>
+              </template>
+            </el-table-column>
+            <el-table-column prop="type" label="账号类型" align="center">
+              <template slot-scope="scope">
+                <el-tag
+                  :hit="true"
+                  size="mini"
+                  v-if="scope.row.status=='1'"
+                  :type="scope.row.type ? 'success' : 'primary'"
+                >{{scope.row.type ? '已付费' : '体验'}}</el-tag>
+                <el-tag size="mini" v-else type="danger">无</el-tag>
+              </template>
+            </el-table-column>
             <el-table-column prop label="账号状态" align="center">
               <template slot-scope="scope">
                 <el-button
@@ -148,6 +167,15 @@
                     icon="iconfont qian"
                     class="mini-button"
                   >退款</el-button>
+                  <el-button
+                    :title="scope.row.posterity ? '点击查看发展的专引师信息' : '该专引师未发展专引师'"
+                    :disabled="scope.row.posterity ? false : true"
+                    size="mini"
+                    icon="iconfont yonghu5"
+                    class="mini-button"
+                    type="success"
+                    @click="getPosterity(scope.row.posterity,scope.row.id,'user')"
+                  >查看分销</el-button>
                 </div>
               </template>
             </el-table-column>
@@ -193,6 +221,82 @@
         <el-button @click="punishDialog = false">取 消</el-button>
         <el-button type="primary" @click="punishSure">确 定</el-button>
       </span>
+    </el-dialog>
+
+    <!-- 惩罚dialog -->
+    <el-dialog title="分销信息" :visible.sync="posterityDialog" width="80%">
+      <el-form :inline="true" class="demo-form-inline">
+        <el-form-item label="专引师姓名：:">
+          <el-input v-model="usernames" readonly size="mini"></el-input>
+        </el-form-item>
+        <el-form-item label="付费专引师数:">
+          <el-input v-model="pay" readonly size="mini"></el-input>
+        </el-form-item>
+        <el-form-item label="未付费专引师数:">
+          <el-input v-model="no_pay" readonly size="mini"></el-input>
+        </el-form-item>
+        
+      </el-form>
+      <el-table :data="dataList1.list" stripe border style="width:100%" v-loading="loading">
+        <el-table-column prop="id" label="UID" align="center"></el-table-column>
+        <el-table-column prop="username" label="用户名" align="center"></el-table-column>
+        <el-table-column prop="times" label="注册时间" align="center"></el-table-column>
+        <el-table-column prop="timeout" label="到期时间" align="center"></el-table-column>
+        <el-table-column prop="posterity" label="发展专引师数" align="center">
+          <template slot-scope="scope">
+            <div
+              @click="getPosterity(scope.row.posterity,scope.row.id,'user')"
+              class="posterity"
+            >{{scope.row.posterity}}</div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="type" label="账号类型" align="center">
+          <template slot-scope="scope">
+            <el-tag
+              :hit="true"
+              size="mini"
+              v-if="scope.row.status=='1'"
+              :type="scope.row.type ? 'success' : 'primary'"
+            >{{scope.row.type ? '已付费' : '体验'}}</el-tag>
+            <el-tag size="mini" v-else type="danger">无</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop label="账号状态" align="center">
+          <template slot-scope="scope">
+            <el-button
+              :type="scope.row.status | checkStatus"
+              size="mini"
+              class="mini-button"
+            >{{scope.row.status | userStatus}}</el-button>
+          </template>
+        </el-table-column>
+        <el-table-column prop label="操作">
+          <template slot-scope="scope">
+            <div class="cz_btn">
+              <el-button
+                :title="scope.row.posterity ? '点击查看发展的专引师信息' : '该专引师未发展专引师'"
+                :disabled="scope.row.posterity ? false : true"
+                size="mini"
+                icon="iconfont yonghu5"
+                class="mini-button"
+                type="success"
+                @click="getPosterity(scope.row.posterity,scope.row.id,'user')"
+              >查看分销</el-button>
+            </div>
+          </template>
+        </el-table-column>
+      </el-table>
+      
+      <el-pagination
+        background
+        @size-change="handleSizeChange1"
+        @current-change="handleCurrentChange1"
+        :current-page="page1"
+        :page-sizes="[10, 20, 50, 100]"
+        :page-size="limit1"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="dataList1.total"
+      ></el-pagination>
     </el-dialog>
   </div>
 </template>
@@ -241,6 +345,7 @@ export default {
       ],
       cityData: citys, //城市数据
       dataList: [],
+      dataList1: [],
       page: 1,
       limit: 10,
       gtype: "0",
@@ -256,7 +361,14 @@ export default {
       punishId: "", //处罚id
       punishType: "",
       punishContent: "",
-      uid: JSON.parse(localStorage.getItem("userinfo")).id
+      uid: JSON.parse(localStorage.getItem("userinfo")).id,
+      posterityDialog: false, //专引师分销信息弹窗
+      page1: 1,
+      limit1: 10,
+      uid: "0",
+      pay:0,
+      no_pay:0,
+      usernames:"",//分销专引师姓名
     };
   },
   watch: {
@@ -303,6 +415,16 @@ export default {
     handleCurrentChange(val) {
       this.page = val;
       this.getDataList();
+    },
+    //分页
+    handleSizeChange1(val) {
+      this.limit1 = val;
+      this.getPosterityInfo();
+    },
+    //分条
+    handleCurrentChange1(val) {
+      this.page1 = val;
+      this.getPosterityInfo();
     },
     // 查询
     search() {
@@ -391,6 +513,34 @@ export default {
           });
         })
         .catch(_ => {});
+    },
+    getPosterity(num, uid, type) {
+      if (num != undefined && num == 0) {
+        return this.$message.warning("该用户未发展专引师！");
+      }
+      this.posterityDialog = true;
+      this.uid = uid;
+      if (type == "user") {
+        this.page1 = 1;
+        this.limit1 = 10;
+      }
+
+      this.getPosterityInfo();
+    },
+    getPosterityInfo() {
+      this.$api
+        .getGuideList({
+          page: this.page1,
+          limit: this.limit1,
+          post_uid: this.uid,
+          gtype: this.gtype
+        })
+        .then(res => {
+          this.dataList1 = res.data || [];
+          this.pay=res.data.pay;
+          this.no_pay=res.data.no_pay;
+          this.usernames=res.data.username;
+        });
     }
   },
   created() {
@@ -412,7 +562,10 @@ export default {
   margin-right: 10px;
   margin-top: 10px;
 }
-.el-button+.el-button {
-    margin:10px 0 0 0;
+.el-button + .el-button {
+  margin: 10px 0 0 0;
+}
+.posterity {
+  cursor: pointer;
 }
 </style>

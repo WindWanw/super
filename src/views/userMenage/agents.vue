@@ -333,6 +333,8 @@ export default {
         })
         .then(res => {
           this.dataList = res.data || [];
+          this.height = 100;
+          let t = res.data.total;
           if (res.code) {
             this.$message[res.code ? "warning" : "success"](res.data);
           }

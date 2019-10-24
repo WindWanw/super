@@ -1,19 +1,15 @@
 <template>
-  <div class="teacherSh">
+  <div class="agentSh">
     <div class="table_title">
       <div>
-        <el-button
-          v-if="isShow"
-          type="primary"
-          size="mini"
-          class="el-icon-d-arrow-left"
-          @click="back()"
-        >返回</el-button>
+        <el-button v-if="isShow" type="primary" size="mini" class="el-icon-d-arrow-left" @click="back()">返回</el-button>
       </div>
       <div class="search_wrap">
+        <el-input clearable v-model="username" placeholder="请输入账号" size="small" style="width:200px" @keyup.enter.native="search"></el-input>
         <el-date-picker
+          style="margin:0 10px"
           value-format="timestamp"
-          size="mini"
+          size="small"
           v-model="times"
           type="daterange"
           align="right"
@@ -23,80 +19,49 @@
           end-placeholder="结束日期"
           :picker-options="pickerOptions"
         ></el-date-picker>
-        <el-button
-          type="primary"
-          icon="el-icon-search"
-          size="mini"
-          @click="search"
-          style="margin-left:10px"
-        >搜索</el-button>
+        <el-button type="primary" icon="el-icon-search" size="small" @click="search">搜索</el-button>
       </div>
     </div>
     <div class="content">
-      <el-table :data="dataList.list" stripe border style="width:100%" v-loading="loading">
+      <el-table :data="dataList.list" stripe border style="width:100%" v-loading="loading" :height="height">
         <el-table-column type="expand">
           <template slot-scope="props">
             <div class="expand_wrap">
-              <p>
-                <span>手机号码:</span>
-                {{props.row.tel}}
-              </p>
               <p>
                 <span>身份证号码:</span>
                 {{props.row.idcard}}
               </p>
               <p>
                 <span>身份证正反面:</span>
-                <img
-                  class="idcard_img viewBig"
-                  :src="props.row.picOn"
-                  @click="viewBigImg(props.row.picOn)"
-                />
-                <img
-                  class="idcard_img viewBig"
-                  :src="props.row.picOff"
-                  @click="viewBigImg(props.row.picOff)"
-                />
+                <img class="idcard_img viewBig" :src="props.row.picOn" @click="viewBigImg(props.row.picOn)">
+                <img class="idcard_img viewBig" :src="props.row.picOff" @click="viewBigImg(props.row.picOff)">
               </p>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="city" label="专引城市"></el-table-column>
-        <el-table-column prop="username" label="用户名"></el-table-column>
-        <el-table-column prop="tag" label="标签" width="300px">
-          <template slot-scope="scope">
-            <el-tag
-              class="mini-button"
-              style="margin-right:10px"
-              v-for="item in scope.row.tag"
-              :key="item"
-            >{{item}}</el-tag>
-          </template>
-        </el-table-column>
-        <!-- <el-table-column prop="shopname" label="商店"></el-table-column> -->
-        <el-table-column prop="times" label="注册时间">
+        <el-table-column prop="city" label="代理城市"></el-table-column>
+        <el-table-column prop="username" label="账号"></el-table-column>
+        <el-table-column prop="name" label="联系人姓名"></el-table-column>
+        <!-- <el-table-column prop="address" label="联系人地址"></el-table-column> -->
+        <el-table-column prop="tel" label="手机号码"></el-table-column>
+        
+        <el-table-column prop="times" label="代理时间">
           <template slot-scope="scope">{{scope.row.times | formatTimeStamp}}</template>
         </el-table-column>
-        <el-table-column prop label="账号状态">
-          <template slot-scope="scope">
-            <el-button
-              class="mini-button"
-              :type="scope.row.status | checkStatus"
-              size="mini"
-            >{{scope.row.status | userStatus}}</el-button>
-          </template>
+        <el-table-column label="账号状态">
+            <el-button class="mini-button" type="warning" size="mini">待审核</el-button>
         </el-table-column>
-        <el-table-column prop label="操作" width="200px">
+        <el-table-column prop label="操作">
           <template slot-scope="scope">
             <div class="cz_btn">
               <el-button
-                class="mini-button"
+               class="mini-button"
                 @click="dialogVisible=true;id=scope.row.id;pass='';remark=''"
-                :type="scope.row.status=='0' ? 'primary' : 'warning'"
+                type="primary"
                 size="mini"
                 icon="el-icon-edit-outline"
-                :disabled="scope.row.status=='0' ? false : true"
-              >{{scope.row.status=='0' ? '点击审核' : '已审核'}}</el-button>
+                title="点我对该条信息进行审核认证"
+              >点击审核</el-button>
             </div>
           </template>
         </el-table-column>
@@ -112,7 +77,9 @@
         :total="dataList.total"
       ></el-pagination>
     </div>
-    <!-- 审核dialog -->
+    <el-dialog class="big-img" top="50px" title="查看大图" :visible.sync="viewImg" width="800px">
+      <img style="width:100%;height:100%" :src="viewBigImage">
+    </el-dialog>
     <el-dialog title="审核" :visible.sync="dialogVisible" @close="pass='';remark=''" width="30%">
       <el-radio-group v-model="pass">
         <el-radio :label="1">通过</el-radio>
@@ -139,7 +106,8 @@ export default {
   data() {
     return {
       loading: false,
-      isShow: false,
+      isShow:false,
+      height:100,
       pickerOptions: {
         //快捷键
         shortcuts: [
@@ -175,15 +143,15 @@ export default {
       dataList: [],
       page: 1,
       limit: 10,
-      status: 0,
+      status: 2,
       times: "",
       username: "",
       pass: "", //通过/驳回
       remark: "", //备注消息
       dialogVisible: false,
-      id: "", //审核id
-      viewImg: false, //查看大图dialog
-      viewBigImage: "" //查看大图
+      id: "" ,//审核id
+      viewImg:false,//查看大图dialog
+      viewBigImage:'',//查看大图
     };
   },
   components: {},
@@ -195,24 +163,31 @@ export default {
     }
   },
   methods: {
-    viewBigImg(img) {
-      this.viewImg = true;
-      this.viewBigImage = img;
+
+    viewBigImg(img){
+      this.viewImg=true;
+      this.viewBigImage=img;
     },
     //获取数据列表
     getDataList() {
       this.loading = true;
       this.$api
-        .getGuideList({
+        .getAgentList({
           page: this.page,
           limit: this.limit,
           status: this.status,
           times: this.times,
-          check: 1 //审核专引师列表标志
+          username: this.username
         })
         .then(res => {
           this.dataList = res.data || [];
-          this.$store.commit("UPDATE_GUIDE_CHECK_NUM", res.data.total);
+          this.height=100;
+          let t = res.data.total;
+          if (t >= 10) {
+            this.height = 600;
+          } else if (t != 0) {
+            this.height = t * 70;
+          }
           if (res.code) {
             this.$message[res.code ? "warning" : "success"](res.data);
           }
@@ -221,31 +196,32 @@ export default {
     },
     //分页
     handleSizeChange(val) {
-      this.limit = val;
+      this.page = val;
       this.getDataList();
     },
     //分条
     handleCurrentChange(val) {
-      this.page = val;
+      this.limit = val;
       this.getDataList();
     },
     // 查询
     search() {
       this.page = 1;
       this.getDataList();
-      this.isShow = true;
+      this.isShow=true;
     },
 
-    back() {
-      this.page = 1;
-      this.limit = 10;
-      this.status = 0;
-      this.times = "";
+    back(){
+      this.page=1;
+      this.limit=10;
+      this.status=2;
+      this.times="";
+      this.username="";
       this.getDataList();
-      this.isShow = false;
+      this.isShow=false;
     },
-    //审核通过驳回
 
+    //审核通过驳回
     sure() {
       if (this.pass === "") {
         this.$message.warning("请选择通过或者驳回");
@@ -253,8 +229,10 @@ export default {
         this.$message.warning("请填写驳回原因");
       } else {
         this.$api
-          .guideStop({
-            uid: this.id
+          .userStop({
+            uid: this.id,
+            result: this.pass,
+            remark: this.remark
           })
           .then(res => {
             this.dialogVisible = res.code ? true : false;
@@ -293,7 +271,7 @@ export default {
   margin-right: 10px;
   margin-top: 10px;
 }
-.viewBig {
+.viewBig{
   cursor: pointer;
 }
 </style>

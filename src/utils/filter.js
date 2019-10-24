@@ -31,6 +31,8 @@ function userStatus(type) {
         return '禁用'
     } else if (type == 2) {
         return '待付款'
+    } else if (type == -2) {
+        return '推广'
     }
 }
 
@@ -47,6 +49,9 @@ function checkStatus(type) {
             break;
         case '2':
             return 'warning'
+            break;
+        case '-2':
+            return 'primary'
             break;
     }
 }

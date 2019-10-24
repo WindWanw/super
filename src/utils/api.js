@@ -28,6 +28,10 @@ export default {
         return fetchPost('/admin/getNotify', params)
     },
 
+    //获取审核提醒
+    getCheckNotify(params) {
+        return fetchPost('/admin/getCheckNotify', params)
+    },
     /**
      * @用户管理
      * 获取用户列表

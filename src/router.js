@@ -36,6 +36,10 @@ const userList = () =>
     import ( /* webpackChunkName: "userList" */ './views/userMenage/userList.vue')
 const teacher = () =>
     import ( /* webpackChunkName: "teacher" */ './views/userMenage/teacher.vue')
+const sellers = () =>
+    import ( /* webpackChunkName: "sellers" */ './views/userMenage/sellers.vue')
+const agents = () =>
+    import ( /* webpackChunkName: "agents" */ './views/userMenage/agents.vue')
 const operator = () =>
     import ( /* webpackChunkName: "operator" */ './views/userMenage/operator.vue')
 
@@ -62,12 +66,16 @@ const agentMenage = () =>
     import ( /* webpackChunkName: "agentMenage" */ './views/agentMenage')
 const agent = () =>
     import ( /* webpackChunkName: "agent" */ './views/agentMenage/agent.vue')
+const agentShs = () =>
+    import ( /* webpackChunkName: "agentShs" */ './views/agentMenage/agentShs.vue')
 
 /******************************************商户管理***************************************************************/
 const sellerMenage = () =>
     import ( /* webpackChunkName: "sellerMenage" */ './views/sellerMenage')
 const seller = () =>
     import ( /* webpackChunkName: "seller" */ './views/sellerMenage/seller.vue')
+const sellerShs = () =>
+    import ( /* webpackChunkName: "sellerShs" */ './views/sellerMenage/sellerShs.vue')
 
 /******************************************马甲商户***************************************************************/
 const vestSupplier = () =>
@@ -221,6 +229,26 @@ export const asyRouter = [{
                 }
             },
             {
+                path: '/userMenage/sellers',
+                name: 'sellers',
+                component: sellers,
+                meta: {
+                    name: '商户管理',
+                    iconfont: 'iconfont yonghu5',
+                    needLogin: true, //需要登录
+                }
+            },
+            {
+                path: '/userMenage/agents',
+                name: 'agents',
+                component: agents,
+                meta: {
+                    name: '代理商管理',
+                    iconfont: 'iconfont yonghu5',
+                    needLogin: true, //需要登录
+                }
+            },
+            {
                 path: '/userMenage/operator',
                 name: 'operator',
                 component: operator,
@@ -326,15 +354,26 @@ export const asyRouter = [{
         },
         redirect: '/agentMenage/agent',
         children: [{
-            path: '/agentMenage/agent',
-            name: 'agent',
-            component: agent,
-            meta: {
-                name: '代理商列表',
-                iconfont: 'iconfont yonghu3',
-                needLogin: true, //需要登录
-            }
-        }]
+                path: '/agentMenage/agent',
+                name: 'agent',
+                component: agent,
+                meta: {
+                    name: '代理商列表',
+                    iconfont: 'iconfont yonghu3',
+                    needLogin: true, //需要登录
+                }
+            },
+            {
+                path: '/agentMenage/agentShs',
+                name: 'agentShs',
+                component: agentShs,
+                meta: {
+                    name: '代理商审核',
+                    iconfont: 'iconfont shenhe',
+                    needLogin: true, //需要登录
+                }
+            },
+        ]
     },
     {
         path: '/sellerMenage',
@@ -347,15 +386,26 @@ export const asyRouter = [{
         },
         redirect: '/sellerMenage/seller',
         children: [{
-            path: '/sellerMenage/seller',
-            name: 'seller',
-            component: seller,
-            meta: {
-                name: '商户列表',
-                iconfont: 'iconfont yonghu3',
-                needLogin: true, //需要登录
-            }
-        }, ]
+                path: '/sellerMenage/seller',
+                name: 'seller',
+                component: seller,
+                meta: {
+                    name: '商户列表',
+                    iconfont: 'iconfont yonghu3',
+                    needLogin: true, //需要登录
+                }
+            },
+            {
+                path: '/sellerMenage/sellerShs',
+                name: 'sellerShs',
+                component: sellerShs,
+                meta: {
+                    name: '商户审核',
+                    iconfont: 'iconfont shenhe',
+                    needLogin: true, //需要登录
+                }
+            },
+        ]
     },
     {
         path: '/vestSupplier',
