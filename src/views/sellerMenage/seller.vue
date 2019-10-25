@@ -122,16 +122,25 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="city" label="城市"></el-table-column>
-        <el-table-column prop="username" label="账号"></el-table-column>
-        <el-table-column prop="name" label="商户姓名"></el-table-column>
-        <el-table-column prop="shopname" label="店铺名称"></el-table-column>
-        <el-table-column prop="address" label="详细地址"></el-table-column>
-        <el-table-column prop="tel" label="手机号码"></el-table-column>
-        <el-table-column prop="guide_num" label="专引师数量"></el-table-column>
-        <el-table-column prop="checker" label="审核人"></el-table-column>
-        <el-table-column prop="times" label="入驻时间"></el-table-column>
-        <el-table-column prop label="账号状态">
+        <el-table-column prop="city" label="城市" align="center"></el-table-column>
+        <el-table-column prop="username" label="账号" align="center"></el-table-column>
+        <el-table-column prop="name" label="商户姓名" align="center"></el-table-column>
+        <el-table-column prop="shopname" label="店铺名称" align="center"></el-table-column>
+        <el-table-column prop="address" label="详细地址" align="center"></el-table-column>
+        <el-table-column prop="commission" label="托管模式" align="center">
+          <template slot-scope="scope">
+            <el-tag
+              size="mini"
+              :type="scope.row.commission==1? 'success' : 'warning'"
+            >{{scope.row.commission==1?'平台托管':'自定义'}}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="discount" label="折扣率(%)" align="center"></el-table-column>
+        <el-table-column prop="tel" label="手机号码" align="center"></el-table-column>
+        <el-table-column prop="guide_num" label="专引师数量" align="center"></el-table-column>
+        <el-table-column prop="checker" label="审核人" align="center"></el-table-column>
+        <el-table-column prop="times" label="入驻时间" align="center"></el-table-column>
+        <el-table-column prop label="账号状态" align="center">
           <template slot-scope="scope">
             <!-- :title="scope.row.status=='1'?'点击禁用':'点击解除禁用'"
             @click="userStop(scope.row.id)"-->
@@ -143,7 +152,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column prop label="操作" width="300px">
+        <el-table-column prop label="操作" width="300px" v-if="isSetting">
           <template slot-scope="scope">
             <el-button
               class="mini-button"
@@ -378,6 +387,7 @@ export default {
     return {
       loading: false,
       isShow: false,
+      isSetting: true,
       rules: {
         username: [
           { required: true, message: "账号不能为空", trigger: "blur" }
@@ -512,11 +522,15 @@ export default {
   methods: {
     //导出之前
     beforeExport() {
+      this.isSetting = false;
       this.$confirm("确定导出当前页数据吗？(选择100条/页试试)")
         .then(_ => {
           this.exportExcel();
+          this.isSetting = true;
         })
-        .catch(_ => {});
+        .catch(_ => {
+          this.isSetting = true;
+        });
     },
     //导出
     exportExcel() {

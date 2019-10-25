@@ -44,7 +44,7 @@
       </div>
     </div>
     <div class="content">
-      <el-table :data="dataList.list" stripe border v-loading="loading">
+      <el-table :data="dataList.list" stripe border v-loading="loading" :highlight-current-row="true">
         <el-table-column type="expand">
           <template slot-scope="props">
             <div class="expand_wrap">

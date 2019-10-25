@@ -100,7 +100,13 @@ export default {
           case "agentSh":
             return this.agent_check_num;
             break;
+          case "agentShs":
+            return this.agent_check_num;
+            break;
           case "sellerSh":
+            return this.supplier_check_num;
+            break;
+          case "sellerShs":
             return this.supplier_check_num;
             break;
           case "teacherSh":
@@ -113,6 +119,9 @@ export default {
             return this.report_check_num;
             break;
           case "needSh":
+            return this.need_check_num;
+            break;
+          case "needShs":
             return this.need_check_num;
             break;
           case "identification":

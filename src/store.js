@@ -16,7 +16,7 @@ export default new Vuex.Store({
         need_check_num: 0, //需求审核
         identify_check_num: 0, //认证审核
 
-        check: ["agentSh", "sellerSh", "teacherSh", "punish", "reports", "needSh", "identification"], //需要显示的
+        check: ["agentSh", "agentShs", "sellerSh", "sellerShs", "teacherSh", "punish", "reports", "needSh", "needShs", "identification"], //s审核显示的
     },
     getters: {
         menuList(state) {
