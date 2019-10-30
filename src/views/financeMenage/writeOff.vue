@@ -207,18 +207,18 @@ export default {
           break;
       }
     },
-    closeW(){
-      this.checkAll= false;
-      this.isIndeterminate=true;
-      this.card=[];
+    closeW() {
+      this.checkAll = false;
+      this.isIndeterminate = true;
+      this.card = [];
     },
     handleCheckAllChange(val) {
-      if(val){
-        this.cards.forEach(item=>{
+      if (val) {
+        this.cards.forEach(item => {
           this.card.push(item.id);
-        })
-      }else{
-        this.card=[];
+        });
+      } else {
+        this.card = [];
       }
       // this.card = val ? this.cards : [];
       this.isIndeterminate = false;
@@ -254,7 +254,13 @@ export default {
           user_id: this.user_id
         })
         .then(res => {
-          this.dataList = res.data || [];
+          if (this.isShow) {
+            this.dataList = res.data || [];
+          } else {
+            this.dataList = [];
+            this.dataList.total = 0;
+          }
+
           if (res.code) {
             this.$message[res.code ? "warning" : "success"](res.data);
           }
@@ -282,12 +288,12 @@ export default {
       this.openWriteDialog = true;
       this.cards = info;
     },
-    sure(){
-      this.$api.setWriteOffCard({card:this.card}).then(res=>{
-        this.$message[res.code ? 'warning':'success'](res.data.message);
-        this.openWriteDialog=false;
+    sure() {
+      this.$api.setWriteOffCard({ card: this.card }).then(res => {
+        this.$message[res.code ? "warning" : "success"](res.data.message);
+        this.openWriteDialog = false;
         this.getDataList();
-      })
+      });
     }
   },
 
