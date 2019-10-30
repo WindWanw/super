@@ -1,3 +1,11 @@
+<!--
+ * @Author: your name
+ * @Date: 2019-09-29 13:26:02
+ * @LastEditTime: 2019-10-29 11:08:29
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \super\src\views\financeMenage\finance.vue
+ -->
 <template>
   <div class="finance">
     <div class="table_title">
@@ -63,6 +71,9 @@
                   </el-form-item>
                   <el-form-item label="银行">
                     <span>{{ props.row.bank }}</span>
+                  </el-form-item>
+                  <el-form-item label="开户支行">
+                    <span>{{ props.row.open_address }}</span>
                   </el-form-item>
                   <el-form-item label="银行卡号">
                     <span>{{ props.row.bank_account }}</span>
