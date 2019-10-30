@@ -388,6 +388,14 @@ export default {
     unquaWithdraw(params) {
         return fetchPost('/finance/unquaWithdraw', params)
     },
+
+    //核销
+    writeOffList(params) {
+        return fetchPost('/Client/writeOffList', params)
+    },
+    setWriteOffCard(params) {
+        return fetchPost('/Client/setWriteOffCard', params)
+    },
     //财务处理售后退款
     financeRefund(params) {
         return fetchPost('/refund/financeRefund', params)

@@ -106,6 +106,8 @@ const refund = () =>
     import ( /* webpackChunkName: "refund" */ './views/financeMenage/refund.vue')
 const userbill = () =>
     import ( /* webpackChunkName: "bill" */ './views/financeMenage/userbill.vue')
+const writeOff = () =>
+    import ( /* webpackChunkName: "writeOff" */ './views/financeMenage/writeOff.vue')
 
 /******************************************运营管理***************************************************************/
 const operationMenage = () =>
@@ -526,6 +528,16 @@ export const asyRouter = [{
                 component: userbill,
                 meta: {
                     name: '个人流水',
+                    iconfont: 'iconfont shouru1',
+                    needLogin: true, //需要登录
+                }
+            },
+            {
+                path: '/writeOff',
+                name: 'writeOff',
+                component: writeOff,
+                meta: {
+                    name: '核销券',
                     iconfont: 'iconfont shouru1',
                     needLogin: true, //需要登录
                 }
