@@ -2,24 +2,52 @@
   <div class="userList">
     <!-- 头部（搜索条件） -->
     <div class="table_title">
-        <div>
-        <el-button @click="returnHome" type="primary" icon="iconfont refresh" size="mini" style="margin-left:10px">   刷新</el-button>
+      <div>
+        <el-button
+          @click="returnHome"
+          type="primary"
+          icon="iconfont refresh"
+          size="mini"
+          style="margin-left:10px"
+        >刷新</el-button>
       </div>
       <div class="search_wrap">
-        <el-date-picker size="mini" v-model="date" type="daterange" align="right" unlink-panels value-format="timestamp" range-separator="至" start-placeholder="开始日期" 
-           end-placeholder="结束日期"
+        <el-date-picker
+          size="mini"
+          v-model="date"
+          type="daterange"
+          align="right"
+          unlink-panels
+          value-format="timestamp"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
           :picker-options="pickerOptions"
         ></el-date-picker>
-        <el-button @click="search" type="primary" icon="el-icon-search" size="mini" style="margin-left:10px">搜索</el-button>
+        <el-select v-model="type" placeholder="请选择需求用户类型" size="mini">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          ></el-option>
+        </el-select>
+        <el-button
+          @click="search"
+          type="primary"
+          icon="el-icon-search"
+          size="mini"
+          style="margin-left:10px"
+        >搜索</el-button>
       </div>
     </div>
     <!-- 内容（表单，分页） -->
     <div class="content">
-      <el-table :data="dataList.list" stripe border v-loading="loading" :height="height">
+      <el-table :data="dataList.list" stripe border v-loading="loading">
         <el-table-column prop="username" label="用户名" align="center"></el-table-column>
         <el-table-column prop label="头像" align="center">
           <template slot-scope="scope">
-            <img class="avatar" :src="scope.row.avatar">
+            <img class="avatar" :src="scope.row.avatar" />
           </template>
         </el-table-column>
         <el-table-column prop="info" label="内容" align="center">
@@ -33,7 +61,13 @@
         </el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
-              <el-button @click="qrcode(scope.row)" type="primary" icon="iconfont qrcode-1-copy" size="mini" class="mini-button">点击联系</el-button>
+            <el-button
+              @click="qrcode(scope.row)"
+              type="primary"
+              icon="iconfont qrcode-1-copy"
+              size="mini"
+              class="mini-button"
+            >点击联系</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -61,8 +95,7 @@
 export default {
   data() {
     return {
-      loading:false,
-      height:100,
+      loading: false,
       pickerOptions: {
         //快捷键
         shortcuts: [
@@ -98,9 +131,14 @@ export default {
       date: "", //日期
       dataList: [], //数据源
       page: 1, //页
-      limit: 10 ,//条
-      qrcodeImg:'',
-      qrcodeDialog:false,
+      limit: 10, //条
+      qrcodeImg: "",
+      qrcodeDialog: false,
+      type: "0",
+      options: [
+        { label: "真实用户", value: "0" },
+        { label: "马甲用户", value: "1" }
+      ]
     };
   },
   methods: {
@@ -115,34 +153,28 @@ export default {
       this.getDataList();
     },
 
-    qrcode(item){
-      this.qrcodeDialog=true;
-      this.$api.transWx({immuuid:item.immuuid}).then(res=>{
-        this.qrcodeImg=res.data.img;
+    qrcode(item) {
+      this.qrcodeDialog = true;
+      this.$api.transWx({ immuuid: item.immuuid }).then(res => {
+        this.qrcodeImg = res.data.img;
       });
     },
     //获取用户列表
     getDataList() {
-      this.loading=true;
+      this.loading = true;
       this.$api
         .getNeedList({
           page: this.page,
           limit: this.limit,
           date: this.date,
+          type:this.type
         })
         .then(res => {
           this.dataList = res.data || [];
-          this.height=100;
-          let t = res.data.total;
-          if (t >= 10) {
-            this.height = 750;
-          } else if (t != 0) {
-            this.height = t * 100;
-          }
-         if(res.code){
+          if (res.code) {
             this.$message[res.code ? "warning" : "success"](res.data);
-         }
-          this.loading=false;
+          }
+          this.loading = false;
         });
     },
     //查询用户
@@ -151,11 +183,12 @@ export default {
       this.getDataList();
     },
     returnHome() {
-      this.date=[];
-      this.getDataList()
+      this.date = [];
+      this.type='0';
+      this.getDataList();
+    }
   },
-  },
-  
+
   created() {
     this.getDataList();
   }
@@ -174,7 +207,7 @@ export default {
   width: 30px;
   height: 30px;
 }
-.view-img{
+.view-img {
   width: 100%;
   height: 100%;
 }
