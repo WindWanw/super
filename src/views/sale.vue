@@ -179,7 +179,7 @@
             <el-radio :label="4">拒绝</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="退货地址" v-if="form.status=='3'">
+        <el-form-item label="退货地址" v-if="form.status=='3' && sale_status=='2'">
           <el-select
             v-model="form.address"
             filterable
@@ -195,7 +195,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="联系方式" v-if="form.status=='3'">
+        <el-form-item label="联系方式" v-if="form.status=='3' && sale_status=='2'">
           <el-select
             v-model="form.phone"
             filterable
@@ -286,6 +286,7 @@ export default {
       viewImgDialog: false, //查看大图
       handleDialog: false, //处理dialog
       image: "",
+      sale_status:"1",
       form: {
         id: "",
         status: "",
@@ -380,6 +381,7 @@ export default {
     },
     openHandleDialog(item) {
       this.form.id = item.id;
+      this.sale_status=item.types
       this.clear();
       this.handleDialog = true;
       this.getAddress();
