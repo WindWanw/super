@@ -112,7 +112,6 @@
       ></el-pagination>
       <el-dialog title="核销" :visible.sync="openWriteDialog" width="56%" @close="closeW">
         <div>
-          <p>超级券：</p>
           <el-checkbox
             :indeterminate="isIndeterminate"
             v-model="checkAll"
@@ -129,7 +128,15 @@
         </div>
         <span slot="footer" class="dialog-footer">
           <el-button size="mini" @click="openWriteDialog = false">取 消</el-button>
-          <el-button size="mini" type="primary" @click="sure">确 定</el-button>
+          <el-button size="mini" type="primary" @click="openWriteRemarkDialog=true">确 定</el-button>
+        </span>
+      </el-dialog>
+
+      <el-dialog title="核销备注" :visible.sync="openWriteRemarkDialog" width="30%" v-loading="loading">
+        <el-input type="textarea" placeholder="请填写核销备注" v-model="remarks"></el-input>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="openWriteRemarkDialog = false">取 消</el-button>
+          <el-button type="primary" @click="sure">确 定</el-button>
         </span>
       </el-dialog>
     </div>
@@ -188,9 +195,11 @@ export default {
       page: 1, //页
       limit: 10, //条
       openWriteDialog: false,
+      openWriteRemarkDialog: false,
       uid: JSON.parse(localStorage.getItem("userinfo")).id,
       cards: [],
-      card: []
+      card: [],
+      remarks: "" //核销备注
     };
   },
   methods: {
@@ -289,11 +298,22 @@ export default {
       this.cards = info;
     },
     sure() {
-      this.$api.setWriteOffCard({ card: this.card }).then(res => {
-        this.$message[res.code ? "warning" : "success"](res.data.message);
-        this.openWriteDialog = false;
-        this.getDataList();
-      });
+      if(!this.card || !this.card.length){
+        this.$message.warning("请选择需要核销的优惠券！");
+        this.openWriteRemarkDialog=false;
+        return ;
+      }
+      if(!this.remarks){
+        return this.$message.warning("请填写核销备注！");
+      }
+      this.$api
+        .setWriteOffCard({ card: this.card, remarks: this.remarks })
+        .then(res => {
+          this.$message[res.code ? "warning" : "success"](res.data.message);
+          this.openWriteRemarkDialog = false;
+          this.openWriteDialog = false;
+          this.getDataList();
+        });
     }
   },
 
