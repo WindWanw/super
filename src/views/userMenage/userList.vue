@@ -30,13 +30,21 @@
           style="width:200px;margin-left:10px;"
           @keyup.enter.native="search"
         ></el-input>
+        <el-input
+          clearable
+          v-model="tel"
+          placeholder="请输入手机号"
+          size="mini"
+          style="width:200px;margin-left:10px;"
+          @keyup.enter.native="search"
+        ></el-input>
         <el-cascader
           size="mini"
           :options="cityData"
           v-model="city"
           change-on-select
           placeholder="请输入专引师所在城市名称"
-          style="width:250px;margin-left:10px;"
+          style="width:200px;margin-left:10px;"
           @keyup.enter.native="search"
         ></el-cascader>
         <!-- <el-input
@@ -63,14 +71,14 @@
           v-model="status"
           placeholder="请选择用户类型"
           size="mini"
-          style="margin-left:10px;"
+          style="width:200px;margin-left:10px;"
           @keyup.enter.native="search"
         >
           <el-option label="正常" :value="1"></el-option>
           <el-option label="禁用" :value="-1"></el-option>
         </el-select>
         <el-date-picker
-          style="margin-left:10px;"
+          style="width:200px;margin-left:10px;"
           size="mini"
           v-model="date"
           type="daterange"
@@ -321,6 +329,7 @@ export default {
       status: "", //用户状态
       date: "", //日期
       sex: "",
+      tel:"",//手机号
       city: [],
       dataList: [], //数据源
       page: 1, //页
@@ -358,6 +367,7 @@ export default {
           times: this.date,
           gender: this.sex,
           city: this.city,
+          tel:this.tel,
           username: this.username,
           user_id: this.user_id
         })
@@ -477,6 +487,7 @@ export default {
       this.user_id = "";
       this.city = [];
       this.gender = "";
+      this.tel="";
       this.getDataList();
       this.isShow = false;
     },
