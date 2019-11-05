@@ -79,7 +79,47 @@ function orderStatus(type) {
             break;
     }
 }
+//订单类型
+function orderType(type) {
+    switch (type) {
+        case '1':
+            return '线上订单';
+            break;
+        case '2':
+            return '线下订单';
+            break;
+        case '3':
+            return '专引师技术服务';
+            break;
+        case '4':
+            return '直营订单';
+            break;
+        case '5':
+            return '计划生产';
+            break;
+    }
+}
 // 订单类型按钮颜色
+function payType(status) {
+    switch (status) {
+        case '1':
+            return 'success';
+            break;
+        case '2':
+            return 'primary';
+            break;
+        case '3':
+            return 'warning';
+            break;
+        case '4':
+            return 'danger'
+            break;
+        case '5':
+            return 'success'
+            break;
+    }
+}
+// 订单状态按钮颜色
 function payStatus(status) {
     switch (status) {
         case '1':
@@ -292,6 +332,8 @@ export default {
     sexStatus,
     copyArray,
     orderStatus,
+    orderType,
+    payType,
     payStatus,
     pagination,
     withdrawStatus,
