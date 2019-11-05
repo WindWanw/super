@@ -221,6 +221,13 @@
                   class="mini-button"
                   style="margin : 10px 0 0 0;"
                 >{{scope.row.is_openid ? '还原OpenID' : '转换OpenID'}}</el-button>
+                  <el-button
+                  title="推送消息"
+                  @click="openSetMessage(scope.row)"
+                  type="primary"
+                  size="mini"
+                  class="mini-button"
+                >推送消息</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -271,6 +278,41 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click="openSetVestUserDialog = false">取 消</el-button>
         <el-button type="primary" @click="setVestUser()">确 定</el-button>
+      </div>
+    </el-dialog>
+
+        <el-dialog
+      title="推送"
+      width="750px"
+      :visible.sync="messageDialog"
+      append-to-body
+      @close="form.uids=''"
+    >
+      <el-form label-width="150px" :model="form" ref="form">
+        <el-form-item label="传输内容" v-if="vestIdTag">
+          <template v-for="item in vestIdTag">
+            <el-tag
+              closable
+              style="margin-right:10px"
+              :key="item"
+              :disable-transitions="false"
+              @close="handleClose(item)"
+            >{{item}}</el-tag>
+          </template>
+        </el-form-item>
+        <el-form-item label="标题">
+          <el-input type="text" v-model="mesaageForm.title"  placeholder="标题"></el-input>
+        </el-form-item>
+        <el-form-item label="内容">
+          <el-input type="textarea"  v-model="mesaageForm.content"  placeholder="内容"></el-input>
+        </el-form-item>
+        <el-form-item label="透传参数">
+          <el-input type="text"  v-model="mesaageForm.tc"  placeholder="透传参数,默认正意"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="messageDialog = false">取 消</el-button>
+        <el-button type="primary" @click="setMessage()">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -335,11 +377,18 @@ export default {
       page: 1, //页
       limit: 10, //条
       openSetVestUserDialog: false,
+      messageDialog:false,
       vestIdTag: [], //马甲用户id
       form: {
         id: "",
         uids: "",
         team:"",
+      },
+      mesaageForm:{
+        uid:"",
+        title:"",
+        content:"",
+        tc:"正意",
       },
       uid: JSON.parse(localStorage.getItem("userinfo")).id
     };
@@ -447,12 +496,23 @@ export default {
       this.form.team=item.belong;
       this.getTeam();
     },
+    openSetMessage(item) {
+      this.messageDialog = true;
+      this.mesaageForm.uid = item.id;
+    },
     setVestUser() {
       this.$api.setVestUser(this.form).then(res => {
         this.$message[res.code ? "warning" : "success"](res.data.message);
         if (res.code) return;
         this.openSetVestUserDialog = false;
         this.getDataList();
+      });
+    },
+    setMessage(){
+      this.$api.oneSendMessage(this.mesaageForm).then(res=>{
+        this.$message[res.code ? "warning" : "success"](res.data.message);
+        if (res.code) return;
+        this.messageDialog = false;
       });
     },
     getTeam() {
