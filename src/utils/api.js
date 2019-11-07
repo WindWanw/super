@@ -13,6 +13,12 @@ export default {
     login(params) {
         return fetchPost('/admin/login', params)
     },
+    supplierLoginQRcode(params) {
+        return fetchPost('/qrcode/supplierLoginQRcode', params)
+    },
+    ancSuperLogin(params) {
+        return fetchPost('/qrcode/ancSuperLogin', params)
+    },
     checkLogin(params) {
         return fetchPost('/admin/checkUserLogin', params)
     },
@@ -491,7 +497,9 @@ export default {
     setClear(params) {
         return fetchPost('/admin/clearGiftGuide', params)
     },
-
+    setWhiteList(params) {
+        return fetchPost('/admin/setWhiteList', params)
+    },
 
     /** 
      * 专引师退款
