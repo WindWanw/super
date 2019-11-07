@@ -14,7 +14,7 @@ export default {
         return fetchPost('/admin/login', params)
     },
     supplierLoginQRcode(params) {
-        return fetchPost('/qrcode/supplierLoginQRcode', params)
+        return fetchPost('/qrcode/superLoginQRcode', params)
     },
     ancSuperLogin(params) {
         return fetchPost('/qrcode/ancSuperLogin', params)
