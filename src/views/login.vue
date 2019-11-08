@@ -39,10 +39,10 @@ export default {
         password: "",
         character: 4, //角色，总部
         url: "",
-        uuid:""
+        uuid: ""
       },
       isShow: true,
-      qrcode: "",
+      qrcode: ""
     };
   },
   components: {},
@@ -52,7 +52,7 @@ export default {
     getQRcode() {
       this.$api.supplierLoginQRcode().then(res => {
         this.qrcode = res.data.img;
-        this.ruleForm.uuid=res.data.uuid;
+        this.ruleForm.uuid = res.data.uuid;
       });
     },
     ancSuperLogin() {
@@ -115,11 +115,13 @@ export default {
   },
   created() {
     this.getVersions();
-    this.getQRcode();
-    this.loopRequest();
+
     this.url = this.$route.query.redirect || "/home";
     if (localStorage.getItem("token")) {
       this.$router.replace(this.url);
+    } else {
+      this.getQRcode();
+      this.loopRequest();
     }
     this.keyUp();
   }
