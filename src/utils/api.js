@@ -33,6 +33,9 @@ export default {
     getNotify(params) {
         return fetchPost('/admin/getNotify', params)
     },
+    getOnlineUser(params) {
+        return fetchPost('/user/getOnlineUser', params)
+    },
 
     //获取审核提醒
     getCheckNotify(params) {

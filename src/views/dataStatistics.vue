@@ -124,15 +124,20 @@
         </div>
       </div>
     </div>
-    <!-- 消息 -->
-    <!-- <div class="message_info">
-      <div class="title">消息中心</div>
-      <div class="info" v-for="(item,index) in messageList" :key="index">
-        <div class="info_text">{{index+1}}.{{item.title}}</div>
-        <div class="info_date">{{item.times | formatTimeStamp}}</div>
-        <el-badge class="mark" :value="item.count"/>
-      </div>
-    </div>-->
+    <!-- 在线用户 -->
+    <div class="online">
+      <div class="online-user">在线用户<span style="margin-left:100px;">总人数：{{dataList.all}}</span></div>
+      <el-row>
+        <el-col :span="2" v-for="(o, index) in dataList.list" :key="o.id" :offset="0.5">
+          <el-card >
+            <img :src="o.avatar" class="avatar" />
+            <div>
+              <span style="font-size:10px;">{{o.username}}</span>
+            </div>
+          </el-card>
+        </el-col>
+      </el-row>
+    </div>
   </div>
 </template>
 
@@ -142,6 +147,7 @@ export default {
     return {
       total: "", //总计
       messageList: [],
+      dataList: [],
       ptotal: "",
       pallTotal: "",
       percentDay: 0,
@@ -177,6 +183,17 @@ export default {
   },
   components: {},
   methods: {
+    handleSizeChange(val) {
+      console.log(`每页 ${val} 条`);
+    },
+    handleCurrentChange(val) {
+      console.log(`当前页: ${val}`);
+    },
+    getOnlineUser() {
+      this.$api.getOnlineUser().then(res => {
+        this.dataList = res.data || [];
+      });
+    },
     // 获取统计数据
     getTotal() {
       this.$api.getCount().then(res => {
@@ -222,6 +239,7 @@ export default {
   created() {
     this.getTotal();
     this.countDatas();
+    this.getOnlineUser();
     // this.getMessageList();
   }
 };
@@ -286,11 +304,7 @@ export default {
 .total .item:nth-child(6) {
   background-color: #39cffb;
 }
-/* 消息 */
-.message_info {
-  background-color: #fff;
-  margin-top: 20px;
-}
+
 .info {
   padding: 10px 20px;
   display: flex;
@@ -334,8 +348,26 @@ export default {
 #count > div {
   flex: 1;
 }
-
-/* .box-card {
-  width: 480px;
-} */
+.online {
+  background-color: #fff;
+  margin-top: 1px;
+}
+.online-user {
+  border-bottom: 1px solid #eee;
+  line-height: 40px;
+  padding: 0 20px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  color: red;
+}
+.avatar {
+  width: 100%;
+  height: 70px;
+    display: block;
+}
+.el-row {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 10px;
+}
 </style>
