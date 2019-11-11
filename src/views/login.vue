@@ -22,6 +22,7 @@
       </div>
       <div v-else class="qrcode-img">
         <img class="image" :src="qrcode" alt="扫描二维码" title="扫描二维码验证信息登录" />
+        <p>请使用正意小程序扫码</p>
       </div>
     </div>
     <div class="footer">
@@ -190,5 +191,11 @@ export default {
 .image {
   width: 100%;
   height: 100%;
+}
+.qrcode-img p{
+  width: 150px;
+  font-size: 10px;
+  text-align: center;
+  color: grey;
 }
 </style>
