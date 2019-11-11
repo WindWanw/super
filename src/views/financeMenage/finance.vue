@@ -119,14 +119,15 @@
                 </el-form>
               </template>
             </el-table-column>
-            <el-table-column label="ID" prop="id"></el-table-column>
-            <el-table-column label="持卡人姓名" prop="name"></el-table-column>
-            <el-table-column label="可提现金额" prop="use_amount"></el-table-column>
-            <el-table-column label="锁定金额" prop="lock_money"></el-table-column>
-            <el-table-column label="提现金额" prop="amount"></el-table-column>
-            <el-table-column label="银行" prop="bank"></el-table-column>
-            <el-table-column label="申请时间" prop="create_times"></el-table-column>
-            <el-table-column label="状态" prop="status">
+            <el-table-column label="ID" prop="id" align="center"></el-table-column>
+            <el-table-column label="持卡人姓名" prop="name" align="center"></el-table-column>
+            <el-table-column label="提现者身份" prop="identify" align="center"></el-table-column>
+            <el-table-column label="可提现金额" prop="use_amount" align="center"></el-table-column>
+            <el-table-column label="锁定金额" prop="lock_money" align="center"></el-table-column>
+            <el-table-column label="提现金额" prop="amount" align="center"></el-table-column>
+            <el-table-column label="银行" prop="bank" align="center"></el-table-column>
+            <el-table-column label="申请时间" prop="create_times" align="center"></el-table-column>
+            <el-table-column label="状态" prop="status" align="center">
               <template slot-scope="scope">
                 <el-button
                   class="mini-button"
@@ -135,7 +136,7 @@
                 >{{scope.row.status | withdrawText}}</el-button>
               </template>
             </el-table-column>
-            <el-table-column label="操作" prop="status">
+            <el-table-column label="操作" prop="status" v-if="['0','1'].indexOf(status) !==-1">
               <template slot-scope="scope">
                 <el-button
                   class="mini-button"

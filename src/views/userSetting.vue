@@ -52,6 +52,19 @@
     </div>
     <div class="diy-content" v-if="admin==1">
       <div>
+        <span>设置登录白名单</span>
+      </div>
+      <div>
+        <el-button
+          class="mini-button"
+          type="primary"
+          size="small"
+          @click="openWhiteListDialog=true"
+        >点击设置</el-button>
+      </div>
+    </div>
+    <div class="diy-content" v-if="admin==1">
+      <div>
         <span>设置版本号</span>
       </div>
       <div>
@@ -137,6 +150,25 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click="openRoutDialog = false">取 消</el-button>
         <el-button type="primary" @click="setRouting()">确 定</el-button>
+      </div>
+    </el-dialog>
+
+    <!-- 超级管理员设置登录白名单 -->
+    <el-dialog
+      title="设置登录用户白名单"
+      width="750px"
+      :visible.sync="openWhiteListDialog"
+      append-to-body
+      @close="wl.uid=''"
+    >
+      <el-form label-width="60px" :model="wl" ref="wl">
+        <el-form-item label="用户id" prop="uid">
+          <el-input v-model="wl.uid" placeholder="请输入用户id，多个id用空格或者“,”隔开"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="openWhiteListDialog = false">取 消</el-button>
+        <el-button type="primary" @click="setWhiteList()">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -317,6 +349,7 @@ export default {
       openVestDialog: false, //马甲用户
       openVestUidDialog: false, //马甲用户id
       openRoutDialog: false, //权限
+      openWhiteListDialog: false, //登录白名单
       up1Loading: false, //上传1状态
       isIndeterminate: true,
       checkAll: false,
@@ -357,6 +390,9 @@ export default {
       rout: {
         genre: "",
         routing: []
+      },
+      wl: {
+        uid: ""
       },
       authList: "",
       rules: {
@@ -555,6 +591,15 @@ export default {
             if (!res.code) this.openRoutDialog = false;
           });
         }
+      });
+    },
+    setWhiteList() {
+      if (this.wl.uid == "") {
+        return this.$message.warning("不能为空");
+      }
+      this.$api.setWhiteList(this.wl).then(res => {
+        this.$message[res.code ? "warning" : "success"](res.data.message);
+        if (!res.code) this.openWhiteListDialog = false;
       });
     },
     //角色类型

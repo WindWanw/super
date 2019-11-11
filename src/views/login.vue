@@ -4,20 +4,25 @@
       <div class="login_title">
         <span>正意后台</span>
       </div>
-      <el-input
-        size="small"
-        placeholder="请输入账号"
-        prefix-icon="iconfont yonghu1"
-        v-model="ruleForm.username"
-      ></el-input>
-      <el-input
-        prefix-icon="iconfont mima"
-        placeholder="请输入密码"
-        v-model="ruleForm.password"
-        size="small"
-        show-password
-      ></el-input>
-      <el-button type="primary" size="small" @click="login">登录</el-button>
+      <div v-if="!isShow">
+        <el-input
+          size="small"
+          placeholder="请输入账号"
+          prefix-icon="iconfont yonghu1"
+          v-model="ruleForm.username"
+        ></el-input>
+        <el-input
+          prefix-icon="iconfont mima"
+          placeholder="请输入密码"
+          v-model="ruleForm.password"
+          size="small"
+          show-password
+        ></el-input>
+        <el-button type="primary" size="small" @click="login">登录</el-button>
+      </div>
+      <div v-else class="qrcode-img">
+        <img class="image" :src="qrcode" alt="扫描二维码" title="扫描二维码验证信息登录" />
+      </div>
     </div>
     <div class="footer">
       <div class="text">版权所有@江西多淇信息科技有限公司&nbsp;&nbsp;&nbsp;&nbsp;版本{{versions}}</div>
@@ -32,27 +37,47 @@ export default {
       ruleForm: {
         username: "",
         password: "",
-        character: 4, //角色，商家
-        url: ""
-      }
+        character: 4, //角色，总部
+        url: "",
+        uuid: ""
+      },
+      isShow: true,
+      qrcode: ""
     };
   },
   components: {},
   //页面加载调用获取cookie值
   mounted() {},
   methods: {
+    getQRcode() {
+      this.$api.supplierLoginQRcode().then(res => {
+        this.qrcode = res.data.img;
+        this.ruleForm.uuid = res.data.uuid;
+      });
+    },
+    ancSuperLogin() {
+      this.$api.ancSuperLogin({ uuid: this.ruleForm.uuid }).then(res => {
+        if (res.code) {
+          this.loopRequest();
+        } else {
+          this.isShow = false;
+        }
+      });
+    },
+    loopRequest() {
+      setTimeout(this.ancSuperLogin, 3000);
+    },
     login() {
       if (!this.ruleForm.username)
         return this.$message.error("“账号不能为空，请填写账号");
       if (!this.ruleForm.password)
         return this.$message.error("密码不能为空，请填写密码");
-      this.$api.login(this.ruleForm)
-      .then(res => {
+      this.$api.login(this.ruleForm).then(res => {
         if (!res.code) {
           localStorage.setItem("token", res.data.token);
           localStorage.setItem("userinfo", JSON.stringify(res.data.userinfo));
           localStorage.setItem("type", res.data.type);
-          localStorage.setItem("path",res.data.path)
+          localStorage.setItem("path", res.data.path);
           // this.getMessageCount(res.data.userinfo.id);
           this.$router.replace(this.url);
           return this.$message.success({
@@ -90,9 +115,13 @@ export default {
   },
   created() {
     this.getVersions();
+
     this.url = this.$route.query.redirect || "/home";
     if (localStorage.getItem("token")) {
       this.$router.replace(this.url);
+    } else {
+      this.getQRcode();
+      this.loopRequest();
     }
     this.keyUp();
   }
@@ -152,5 +181,14 @@ export default {
   text-align: center;
   margin: 10px 0;
   color: white;
+}
+.qrcode-img {
+  width: 150px;
+  height: 150px;
+  margin: 20px auto;
+}
+.image {
+  width: 100%;
+  height: 100%;
 }
 </style>

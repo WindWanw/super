@@ -68,7 +68,16 @@
         >
           <el-table :data="dataList.list" stripe border v-loading="loading">
             <el-table-column prop="order_sn" label="订单编号" align="center"></el-table-column>
-            <el-table-column prop="user_name" label="用户名" align="center"></el-table-column>
+            <el-table-column prop="order_type" label="订单类型" align="center">
+              <template slot-scope="scope">
+                <el-tag
+                  size="mini"
+                  :type="scope.row.order_type | payType"
+                >{{scope.row.order_type | orderType}}</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column prop="supplier_name" label="商户姓名" align="center"></el-table-column>
+
             <!-- <el-table-column prop="tel" label="联系方式"></el-table-column> -->
             <el-table-column prop="amount" label="订单金额(元)" width="60px" align="center"></el-table-column>
             <el-table-column prop="admin_commission" label="平台获得(元)" width="60px" align="center"></el-table-column>
@@ -84,13 +93,26 @@
             </el-table-column>
             <el-table-column prop="status" label="订单状态" align="center">
               <template slot-scope="scope">
-                <el-button
-                  class="mini-button"
+                <el-tag
                   :type="scope.row.status | payStatus"
                   size="mini"
-                >{{scope.row.status | orderStatus}}</el-button>
+                >{{scope.row.status | orderStatus}}</el-tag>
               </template>
             </el-table-column>
+            <el-table-column prop="user_name" label="消费者姓名" align="center"></el-table-column>
+            <el-table-column prop="order_goods" label="订单商品" align="center">
+              <template slot-scope="scope">
+                <el-button
+                  title="点击查看订单商品"
+                  class="mini-button"
+                  type="success"
+                  size="mini"
+                  icon="el-icon-view"
+                  @click="openOrderGoods(scope.row.order_goods)"
+                >订单商品</el-button>
+              </template>
+            </el-table-column>
+            <el-table-column prop="tel" label="联系方式" align="center"></el-table-column>
             <el-table-column
               label="操作"
               v-if="['2','3','5'].indexOf(status) !==-1 && uid==1"
@@ -121,6 +143,23 @@
         :total="dataList.total"
       ></el-pagination>
     </div>
+
+    <!-- 订单商品 -->
+    <el-dialog title="订单商品" :visible.sync="openOrderGoodsDialog">
+      <el-table :data="order_goods" stripe border v-loading="loading">
+        <el-table-column prop="title" label="商品名称" align="center"></el-table-column>
+        <el-table-column prop label="商品图片" align="center">
+          <template slot-scope="scope">
+            <img class="avatar" :src="scope.row.pics" />
+          </template>
+        </el-table-column>
+        <el-table-column prop="attr" label="商品属性" align="center">
+          <template slot-scope="scope">
+            <span>{{scope.row.goods_attr.attr_val}}</span>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-dialog>
   </div>
 </template>
 
@@ -185,7 +224,10 @@ export default {
         { label: "线下订单", val: 2 },
         { label: "技术服务费", val: 3 }
       ],
-      uid: JSON.parse(localStorage.getItem("userinfo")).id
+      uid: JSON.parse(localStorage.getItem("userinfo")).id,
+      openOrderGoodsDialog: false, //订单商品
+      order_goods: [], //订单商品列表
+      
     };
   },
   methods: {
@@ -219,6 +261,11 @@ export default {
           }
           this.loading = false;
         });
+    },
+    //订单商品
+    openOrderGoods(item) {
+      this.openOrderGoodsDialog = true;
+      this.order_goods = item;
     },
     // tab切换
     tabClick(val) {
@@ -278,5 +325,9 @@ export default {
 }
 .selectOrder {
   margin-right: 20px;
+}
+.avatar {
+  width: 50px;
+  height: 50px;
 }
 </style>
