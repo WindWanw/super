@@ -7,7 +7,7 @@
         <div class="item">
           <i class="iconfont yonghu3"></i>
           <div class="item_right">
-            <p>总用户数</p>
+            <p>总用户数(今日注册)</p>
             <p>
               {{total.userCount}}
               <span>个</span>
@@ -17,7 +17,7 @@
         <div class="item">
           <i class="iconfont yonghu5"></i>
           <div class="item_right">
-            <p>总专引师数</p>
+            <p>总专引师数(马甲专引师)</p>
             <p>
               {{total.guideCount}}({{total.vestGuide}})
               <span>个</span>
@@ -126,13 +126,16 @@
     </div>
     <!-- 在线用户 -->
     <div class="online">
-      <div class="online-user">在线用户<span style="margin-left:100px;">总人数：{{dataList.all}}</span></div>
+      <div class="online-user">
+        在线用户
+        <span style="margin-left:100px;">总人数：{{dataList.all}}</span>
+      </div>
       <el-row>
-        <el-col :span="2" v-for="(o, index) in dataList.list" :key="o.id" :offset="0.5">
-          <el-card >
+        <el-col :span="2" v-for="o in dataList.list" :key="o.id" :offset="0.5">
+          <el-card>
             <img :src="o.avatar" class="avatar" />
             <div>
-              <span style="font-size:10px;">{{o.username}}</span>
+              <span class="online-user-username">{{o.username}}</span>
             </div>
           </el-card>
         </el-col>
@@ -192,6 +195,7 @@ export default {
     getOnlineUser() {
       this.$api.getOnlineUser().then(res => {
         this.dataList = res.data || [];
+        setTimeout(this.getOnlineUser, 60000);
       });
     },
     // 获取统计数据
@@ -363,11 +367,19 @@ export default {
 .avatar {
   width: 100%;
   height: 70px;
-    display: block;
+  display: block;
 }
 .el-row {
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-    padding: 10px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 10px;
+}
+.online-user-username {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 10px;
+  width: 100px;
+  display: block;
 }
 </style>
