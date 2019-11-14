@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2019-09-29 13:26:02
- * @LastEditTime: 2019-10-21 14:45:15
+ * @LastEditTime: 2019-11-13 09:39:25
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /d:\zy\super\src\router.js
@@ -42,7 +42,8 @@ const agents = () =>
     import ( /* webpackChunkName: "agents" */ './views/userMenage/agents.vue')
 const operator = () =>
     import ( /* webpackChunkName: "operator" */ './views/userMenage/operator.vue')
-
+const userRecord = () =>
+    import ( /* webpackChunkName: "userRecord" */ './views/userMenage/userRecord.vue')
 /******************************************审核管理***************************************************************/
 const checkMenage = () =>
     import ( /* webpackChunkName: "checkMenage" */ './views/checkMenage')
@@ -216,6 +217,16 @@ export const asyRouter = [{
                 component: userList,
                 meta: {
                     name: '用户管理',
+                    iconfont: 'iconfont yonghu1',
+                    needLogin: true, //需要登录
+                }
+            },
+            {
+                path: '/userMenage/userRecord',
+                name: 'userRecord',
+                component: userRecord,
+                meta: {
+                    name: '用户记录',
                     iconfont: 'iconfont yonghu1',
                     needLogin: true, //需要登录
                 }

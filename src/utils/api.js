@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-09-29 13:26:02
- * @LastEditTime: 2019-11-04 14:33:19
+ * @LastEditTime: 2019-11-13 10:49:16
  * @LastEditors: Please set LastEditors
  */
 import { fetchGet, fetchPost } from './fetch';
@@ -554,4 +554,7 @@ export default {
     oneSendMessage(params) {
         return fetchPost('/admin/oneSendMessage', params)
     },
+    userRecord(params){
+        return fetchPost('/admin/userRecord', params)
+    }
 }
