@@ -554,7 +554,15 @@ export default {
     oneSendMessage(params) {
         return fetchPost('/admin/oneSendMessage', params)
     },
-    userRecord(params){
+    userRecord(params) {
         return fetchPost('/admin/userRecord', params)
-    }
+    },
+
+
+    /** 
+     * 日志信息
+     */
+    getRefundLogs(params) {
+        return fetchPost('/Client/getRefundLogs', params)
+    },
 }

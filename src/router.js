@@ -44,7 +44,7 @@ const operator = () =>
     import ( /* webpackChunkName: "operator" */ './views/userMenage/operator.vue')
 const userRecord = () =>
     import ( /* webpackChunkName: "userRecord" */ './views/userMenage/userRecord.vue')
-/******************************************审核管理***************************************************************/
+    /******************************************审核管理***************************************************************/
 const checkMenage = () =>
     import ( /* webpackChunkName: "checkMenage" */ './views/checkMenage')
 const agentSh = () =>
@@ -119,6 +119,12 @@ const systemArticle = () =>
     import ( /* webpackChunkName: "systenArticle" */ './views/operationMenage/systemArticle.vue')
 const information = () =>
     import ( /* webpackChunkName: "information" */ './views/operationMenage/information.vue')
+
+/******************************************日志管理***************************************************************/
+const logManage = () =>
+    import ( /* webpackChunkName: "logManage" */ './views/logManage')
+const refundLog = () =>
+    import ( /* webpackChunkName: "ad" */ './views/logManage/refundLog.vue')
 
 /******************************************招商管理***************************************************************/
 const investment = () =>
@@ -597,6 +603,27 @@ export const asyRouter = [{
                 }
             },
         ]
+    },
+    {
+        path: '/logManage',
+        name: 'logManage',
+        component: logManage,
+        meta: {
+            name: '日志管理',
+            iconfont: 'iconfont rizhi1',
+            needLogin: true, //需要登录
+        },
+        redirect: '/logManage/refundLog',
+        children: [{
+            path: '/refundLog',
+            name: 'refundLog',
+            component: refundLog,
+            meta: {
+                name: '退款日志',
+                iconfont: 'iconfont ccgl-tongbucaozuorizhi-5',
+                needLogin: true, //需要登录
+            }
+        }, ]
     },
     {
         path: '/investment',
