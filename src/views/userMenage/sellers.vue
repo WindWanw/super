@@ -125,6 +125,14 @@
         <el-table-column prop="city" label="城市" align="center"></el-table-column>
         <el-table-column prop="username" label="账号" align="center"></el-table-column>
         <el-table-column prop="name" label="商户姓名" align="center"></el-table-column>
+        <el-table-column prop="tags" label="店铺标签" align="center">
+          <template slot-scope="scope">
+            <el-tag
+              size="mini"
+              :type="scope.row.tags ? 'primary' : 'danger'"
+            >{{scope.row.tags ? scope.row.tags : '无'}}</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column prop="shopname" label="店铺名称" align="center"></el-table-column>
         <el-table-column prop="address" label="详细地址" align="center"></el-table-column>
         <el-table-column prop="commission" label="托管模式" align="center">
