@@ -565,4 +565,14 @@ export default {
     getRefundLogs(params) {
         return fetchPost('/Client/getRefundLogs', params)
     },
+
+    /** 
+     * 生成邀请函
+     */
+    getWebType(params) {
+        return fetchPost('/web/getWebType', params)
+    },
+    getInvitation(params) {
+        return fetchPost('/web/getInvitation', params)
+    },
 }

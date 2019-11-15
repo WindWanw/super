@@ -115,6 +115,19 @@
         <el-button class="mini-button" type="primary" size="small" @click="delAllGidft">一键清除</el-button>
       </div>
     </div>
+    <div class="diy-content">
+      <div>
+        <span>生成邀请函</span>
+      </div>
+      <div>
+        <el-button
+          class="mini-button"
+          type="primary"
+          size="small"
+          @click="openWebInvitationDialog=true;getWebType()"
+        >点击生成</el-button>
+      </div>
+    </div>
     <!--设置权限 -->
     <el-dialog
       title="设置用户权限"
@@ -325,6 +338,72 @@
         <el-button type="primary" @click="editPassword">确 定</el-button>
       </div>
     </el-dialog>
+
+    <!--邀请函-->
+    <el-dialog
+      title="生成邀请函"
+      width="800px"
+      :visible.sync="openWebInvitationDialog"
+      append-to-body
+      :before-close="handleClose"
+    >
+      <el-form
+        label-width="120px"
+        :model="invitation"
+        :rules="rules"
+        ref="invitation"
+        v-if="webShow"
+      >
+        <el-form-item label="类型">
+          <el-select clearable v-model="invitation.png" placeholder="请选择生成图片的类型" size="mini">
+            <el-option
+              v-for="item in webType"
+              :key="item.value"
+              :label="item.title"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="姓名" prop="name">
+          <el-input
+            type="textarea"
+            :rows="3"
+            v-model="invitation.name"
+            placeholder="请输入姓名，多个姓名以‘,’分隔"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="姓名x轴" prop="x">
+          <el-input type="number" v-model="invitation.x"></el-input>
+        </el-form-item>
+        <el-form-item label="姓名y轴" prop="y">
+          <el-input type="number" v-model="invitation.y"></el-input>
+        </el-form-item>
+      </el-form>
+      <el-table :data="webImgList" style="width: 100%" v-if="!webShow">
+        <el-table-column prop="name" label="姓名" width="150"></el-table-column>
+        <el-table-column prop="url" label="图片地址">
+          <template slot-scope="scope">
+            <a :href="scope.row.url" target="_blank">{{scope.row.url}}</a>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" width="100" align="center">
+          <template slot-scope="scope">
+            <el-button
+              type="primary"
+              size="mini"
+              v-clipboard:copy="scope.row.url"
+              v-clipboard:success="onCopy"
+              v-clipboard:error="onError"
+            >复 制</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <div slot="footer" class="dialog-footer">
+        <el-button size="mini" type="warning" @click="reset" v-show="!webShow">重 设</el-button>
+        <el-button size="mini" @click="handleClose()">取 消</el-button>
+        <el-button size="mini" type="primary" @click="setInvitation">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -350,13 +429,17 @@ export default {
       openVestUidDialog: false, //马甲用户id
       openRoutDialog: false, //权限
       openWhiteListDialog: false, //登录白名单
+      openWebInvitationDialog: false, //邀请函
       up1Loading: false, //上传1状态
       isIndeterminate: true,
       checkAll: false,
+      webShow: true,
       admin: JSON.parse(localStorage.getItem("userinfo")).id || "",
       vestuid: "", //马甲用户id
       cityData: citys, //城市数据
       routingList: [],
+      webType: [], //生成邀请函类型图片
+      webImgList: [],
       defaultProps: {
         children: "children",
         label: "label"
@@ -393,6 +476,12 @@ export default {
       },
       wl: {
         uid: ""
+      },
+      invitation: {
+        png: "",
+        name: "",
+        x: 150,
+        y: 615
       },
       authList: "",
       rules: {
@@ -677,6 +766,42 @@ export default {
           this.$api.setClear().then(res => {
             this.$message[res.code ? "warning" : "success"](res.data.message);
           });
+        })
+        .catch(_ => {});
+    },
+    getWebType() {
+      this.$api.getWebType().then(res => {
+        this.webType = res.data.list || [];
+      });
+    },
+    setInvitation() {
+      if (this.invitation.png == "") {
+        return this.$message.warning("类型不能为空");
+      }
+      if (this.invitation.name == "") {
+        return this.$message.warning("姓名不能为空");
+      }
+      this.$api.getInvitation(this.invitation).then(res => {
+        this.webImgList = res.data.list;
+        this.webShow = false;
+      });
+    },
+    reset() {
+      this.webShow = !this.webShow;
+      this.invitation.png = "";
+      this.invitation.name = "";
+    },
+    cancelInvitation() {
+      this.openWebInvitationDialog = false;
+      this.invitation.png = "";
+      this.invitation.name = "";
+      this.webShow = true;
+    },
+    handleClose(done) {
+      this.$confirm("确认关闭？")
+        .then(_ => {
+          this.cancelInvitation();
+          done();
         })
         .catch(_ => {});
     }
